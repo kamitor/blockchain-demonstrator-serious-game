@@ -7,5 +7,6 @@ namespace Blockchain_Demonstrator_Web_App.Models
 {
     public class Test
     {
+        public int testInt = 420;
     }
 }
