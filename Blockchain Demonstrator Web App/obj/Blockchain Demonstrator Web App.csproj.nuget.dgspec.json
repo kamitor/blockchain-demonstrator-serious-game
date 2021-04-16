@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mees\\RiderProjects\\Beer-Game\\Blockchain Demonstrator Web App\\Blockchain Demonstrator Web App.csproj": {}
+    "C:\\Users\\unkno\\source\\repos\\Beer-Game\\Blockchain Demonstrator Web App\\Blockchain Demonstrator Web App.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mees\\RiderProjects\\Beer-Game\\Blockchain Demonstrator Web App\\Blockchain Demonstrator Web App.csproj": {
+    "C:\\Users\\unkno\\source\\repos\\Beer-Game\\Blockchain Demonstrator Web App\\Blockchain Demonstrator Web App.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mees\\RiderProjects\\Beer-Game\\Blockchain Demonstrator Web App\\Blockchain Demonstrator Web App.csproj",
+        "projectUniqueName": "C:\\Users\\unkno\\source\\repos\\Beer-Game\\Blockchain Demonstrator Web App\\Blockchain Demonstrator Web App.csproj",
         "projectName": "Blockchain Demonstrator Web App",
-        "projectPath": "C:\\Users\\Mees\\RiderProjects\\Beer-Game\\Blockchain Demonstrator Web App\\Blockchain Demonstrator Web App.csproj",
-        "packagesPath": "C:\\Users\\Mees\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mees\\RiderProjects\\Beer-Game\\Blockchain Demonstrator Web App\\obj\\",
+        "projectPath": "C:\\Users\\unkno\\source\\repos\\Beer-Game\\Blockchain Demonstrator Web App\\Blockchain Demonstrator Web App.csproj",
+        "packagesPath": "C:\\Users\\unkno\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\unkno\\source\\repos\\Beer-Game\\Blockchain Demonstrator Web App\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Mees\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\unkno\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +29,6 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -38,7 +40,6 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
           "imports": [
             "net461",
             "net462",
@@ -57,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
         }
       }
     }
