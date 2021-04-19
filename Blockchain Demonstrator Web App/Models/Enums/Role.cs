@@ -10,6 +10,7 @@ namespace Blockchain_Demonstrator_Web_App.Models.Enums
         Retailer,
         Manufacturer,
         Processor,
-        Farmer
+        Farmer,
+        Customer
     }
 }

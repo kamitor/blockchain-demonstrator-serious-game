@@ -9,9 +9,52 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
 {
     public class Farmer : IRole
     {
-        public string Destination { get; set; }
-        public int LeadTime { get; set; }
-        public Dictionary<Option, IOption> MyProperty { get; set; }
-        public Product Product { get; set; }
+        public Role Destination { get; set; } = Role.Processor;
+        public int LeadTime { get; set; } = 22;
+        //TODO: replace dummy values
+        public Dictionary<Option, IOption> Options { get; set; } = new Dictionary<Option, IOption>()
+        {
+            {
+                Option.YouProvide, new YouProvide()
+                {
+                    CostOfStartUp = 0,
+                    GuaranteedCapacity = 0,
+                    LeadTime = 0,
+                    Flexibility = 0,
+                    CostOfMaintenance = 0
+                }
+            },
+            {
+                Option.TrustedParty, new TrustedParty()
+                {
+                    CostOfStartUp = 0,
+                    GuaranteedCapacity = 0,
+                    LeadTime = 0,
+                    Flexibility = 0,
+                    CostOfMaintenance = 0
+                }
+            },
+            {
+                Option.DLT, new Dlt()
+                {
+                    CostOfStartUp = 0,
+                    GuaranteedCapacity = 0,
+                    LeadTime = 0,
+                    Flexibility = 0,
+                    CostOfMaintenance = 0
+                }
+            },
+            {
+                Option.YouProvideWithHelp, new YouProvideWithHelp()
+                {
+                    CostOfStartUp = 0,
+                    GuaranteedCapacity = 0,
+                    LeadTime = 0,
+                    Flexibility = 0,
+                    CostOfMaintenance = 0
+                }
+            }
+        };
+        public Product Product { get; set; } = Product.Seeds;
     }
 }
