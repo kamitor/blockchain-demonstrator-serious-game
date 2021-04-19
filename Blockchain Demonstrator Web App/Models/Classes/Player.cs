@@ -11,10 +11,11 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
         public string Id { get; set; }
         public string Name { get; set; }
         public IRole Role { get; set; }
-        public int Inventory { get; set; }
-        public List<Order> BackOrder { get; set; }
-        public List<Order> IncomingOrder { get; set; }
-        public Order OutgoingOrder { get; set; }
+        public int Inventory { get; set; } = 20;
+        public int Backorder { get; set; }
+        public int IncomingOrder { get; set; }
+        public int CurrentOrder { get; set; }
+        public List<Order> IncomingDelivery { get; set; }
         //TODO: implement runningscosts factors
         /*public int RunningCosts
         {
@@ -23,5 +24,39 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
                 return (Inventory + 
             }
         }*/
+
+        public Order SendDelivery(int currentDay)
+        {
+            return new Order() { ArrivalDay = Role.LeadTime + currentDay, Volume = Shipment() };
+        }
+
+        public int Shipment()
+        {
+            int shipment = 0;
+            Backorder += IncomingOrder;
+
+            if (Inventory < Backorder)
+            {
+                shipment = Inventory;
+                Backorder -= Inventory;
+                Inventory = 0;
+            }
+            else
+            {
+                Inventory -= Backorder;
+                shipment = Backorder;
+                Backorder = 0;
+            }
+
+            return shipment;
+        }
+
+        public void GetDeliveries(int currentday)
+        {
+            Inventory += IncomingDelivery
+                .Where(d => d.ArrivalDay == currentday)
+                .Sum(d => d.Volume);
+        }
+
     }
 }

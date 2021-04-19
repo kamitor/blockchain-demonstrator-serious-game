@@ -8,9 +8,7 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
 {
     public class Order
     {
-        public Product Product { get; set; }
-        public int OrderWeek { get; set; }
-        public int ArrivalWeek { get; set; }
+        public int ArrivalDay { get; set; }
         public int Volume { get; set; }
     }
 }
