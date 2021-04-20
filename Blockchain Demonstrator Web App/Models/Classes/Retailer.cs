@@ -10,7 +10,7 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
     public class Retailer : IRole
     {
         public Role Destination { get; set; } = Role.Customer;
-        public int LeadTime { get; set; } = 2;
+        public double LeadTime { get; set; } = 2;
         //TODO: replace dummy values
         public Dictionary<Option, IOption> Options { get; set; } = new Dictionary<Option, IOption>()
         {

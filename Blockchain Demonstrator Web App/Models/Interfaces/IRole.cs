@@ -9,7 +9,7 @@ namespace Blockchain_Demonstrator_Web_App.Models.Interfaces
     public interface IRole
     {
         public Role Destination { get; set; }
-        public int LeadTime { get; set; }
+        public double LeadTime { get; set; }
         public Dictionary<Option, IOption> Options { get; set; }
         public Product Product { get; set; }
     }

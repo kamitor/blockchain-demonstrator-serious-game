@@ -24,8 +24,8 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
         public void Progress()
         {
             SendOrders();
-            CallSendDeliveries();
             CallGetDeliveries();
+            CallSendDeliveries();
             CurrentDay += 5; //TODO: Implement day factor
         }
 

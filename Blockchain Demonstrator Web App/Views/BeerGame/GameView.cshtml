@@ -1,0 +1,60 @@
+﻿@using Microsoft.CodeAnalysis
+@model Blockchain_Demonstrator_Web_App.Models.Classes.Game
+
+
+<head>
+    <title>Game Page</title>
+</head>
+
+<body>
+<section class="actor-display">
+    @if (Model != null)
+    {
+        @foreach (var item in Model.Players)
+        {
+            <section id="section-@item.Key">
+                <h4>Name: @item.Value.Name</h4>
+                <h4>Role: @item.Key</h4>
+                <h4>Inventory: @item.Value.Inventory</h4>
+                <h4>Backorder: @item.Value.Backorder</h4>
+    
+                <form>
+                    <h6>Order volume: </h6>
+                    <input type="number" name="order">
+                    <input type="submit" value="Place order">
+                </form>
+                
+                <section>
+                    <h4>Order history:</h4>
+                    <table class="order-history">
+                        <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Order</th>
+                        </tr>
+                        </thead>
+    
+                        @for (int i = 0 + 1; i < 15 + 1; i++)
+                        {
+                            <tr>
+                                <td class="order-history">@i</td>
+                                <td class="order-history"></td>
+                            </tr>
+                        }
+                    </table>
+                </section>
+                
+            </section>
+        }
+    }
+</section>
+
+</body>
+
+@section Scripts
+{
+    <script src="~/js/BeerGame.js"></script>
+    <script>
+        console.log(BeerGame.getGame());
+    </script>
+}

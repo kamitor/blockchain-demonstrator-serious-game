@@ -28,12 +28,20 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
                 _money = value; //TODO: Implement cost calculation and replace with better name
             }
         }
-        public int RunningCosts
+        // public int RunningCosts
+        // {
+        //     get
+        //     {
+        //         return (Inventory * 1) + (Backorder * 1 * 2) + (IncomingOrder.Volume * 1); //TODO: implement factors
+        //     }
+        // }
+
+        public Player(string name, IRole role)
         {
-            get
-            {
-                return (Inventory * 1) + (Backorder * 1 * 2) + (IncomingOrder.Volume * 1); //TODO: implement factors
-            }
+            Id = Guid.NewGuid().ToString();
+            Name = name;
+            Role = role;
+            IncomingDelivery = new List<Order>();
         }
 
         public Order SendDelivery(int currentDay)
@@ -71,6 +79,5 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
                 .Where(d => d.ArrivalDay < currentday && d.ArrivalDay > currentday - 5) //Todo: make 5 a changeable factor later
                 .Sum(d => d.Volume);
         }
-
     }
 }

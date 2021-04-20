@@ -1,0 +1,10 @@
+﻿.order-history{
+    border: solid 2px black;
+    border-collapse: collapse;
+    
+}
+
+.actor-display {
+    display: flex;
+    
+}
