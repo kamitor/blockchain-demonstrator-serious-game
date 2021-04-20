@@ -13,27 +13,41 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
         public IRole Role { get; set; }
         public int Inventory { get; set; } = 20;
         public int Backorder { get; set; }
-        public int IncomingOrder { get; set; }
-        public int CurrentOrder { get; set; }
+        public Order IncomingOrder { get; set; }
+        public Order CurrentOrder { get; set; }
         public List<Order> IncomingDelivery { get; set; }
-        //TODO: implement runningscosts factors
-        /*public int RunningCosts
+        private double _money;
+        public double Money 
         {
             get
             {
-                return (Inventory + 
+                return _money;
             }
-        }*/
+            set
+            {
+                _money = value; //TODO: Implement cost calculation and replace with better name
+            }
+        }
+        public int RunningCosts
+        {
+            get
+            {
+                return (Inventory * 1) + (Backorder * 1 * 2) + (IncomingOrder.Volume * 1); //TODO: implement factors
+            }
+        }
 
         public Order SendDelivery(int currentDay)
         {
-            return new Order() { ArrivalDay = Role.LeadTime + currentDay, Volume = Shipment() };
+            IncomingOrder.ArrivalDay = Role.LeadTime + currentDay;
+            IncomingOrder.Volume = Shipment();
+            return IncomingOrder;
+            //return new Order() { ArrivalDay = Role.LeadTime + currentDay, Volume = Shipment() };
         }
 
         public int Shipment()
         {
             int shipment = 0;
-            Backorder += IncomingOrder;
+            Backorder += IncomingOrder.Volume;
 
             if (Inventory < Backorder)
             {
@@ -54,7 +68,7 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
         public void GetDeliveries(int currentday)
         {
             Inventory += IncomingDelivery
-                .Where(d => d.ArrivalDay == currentday)
+                .Where(d => d.ArrivalDay < currentday && d.ArrivalDay > currentday - 5) //Todo: make 5 a changeable factor later
                 .Sum(d => d.Volume);
         }
 

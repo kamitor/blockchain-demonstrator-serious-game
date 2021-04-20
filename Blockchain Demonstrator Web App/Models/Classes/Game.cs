@@ -26,18 +26,23 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
             SendOrders();
             CallSendDeliveries();
             CallGetDeliveries();
-            CurrentDay++;
+            CurrentDay += 5; //TODO: Implement day factor
         }
 
-        public void SendOrders()
+        private void SendOrders()
         {
-            Players[Role.Retailer].IncomingOrder = new Random().Next(5,15); //TODO: Implemement later
+            Players[Role.Retailer].CurrentOrder.OrderDay = CurrentDay;
+            Players[Role.Manufacturer].CurrentOrder.OrderDay = CurrentDay;
+            Players[Role.Processor].CurrentOrder.OrderDay = CurrentDay;
+            Players[Role.Farmer].CurrentOrder.OrderDay = CurrentDay;
+
+            Players[Role.Retailer].IncomingOrder = new Order() { OrderDay = CurrentDay, Volume = 10 }; //TODO: Implemement later new Random().Next(5,15)
             Players[Role.Manufacturer].IncomingOrder = Players[Role.Retailer].CurrentOrder;
             Players[Role.Processor].IncomingOrder = Players[Role.Manufacturer].CurrentOrder;
             Players[Role.Farmer].IncomingOrder = Players[Role.Processor].CurrentOrder;
         }
 
-        public void CallSendDeliveries()
+        private void CallSendDeliveries()
         {
             Players[Role.Retailer].IncomingDelivery.Add(Players[Role.Manufacturer].SendDelivery(CurrentDay));
             Players[Role.Manufacturer].IncomingDelivery.Add(Players[Role.Processor].SendDelivery(CurrentDay));
@@ -45,7 +50,7 @@ namespace Blockchain_Demonstrator_Web_App.Models.Classes
             Players[Role.Farmer].IncomingDelivery.Add(new Order() { ArrivalDay = new Random().Next(1, 5), Volume = new Random().Next(5, 15) }); //TODO: Implement later
         }
 
-        public void CallGetDeliveries()
+        private void CallGetDeliveries()
         {
             Players[Role.Retailer].GetDeliveries(CurrentDay);
             Players[Role.Manufacturer].GetDeliveries(CurrentDay);
