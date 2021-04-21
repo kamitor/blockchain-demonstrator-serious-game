@@ -22,6 +22,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
             set 
             {
+                if (value == null) throw new ArgumentNullException();
                 value.Role = new Retailer();
                 Players.Add(value);
                 _retailer = value;
@@ -36,6 +37,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
             set
             {
+                if (value == null) throw new ArgumentNullException();
                 value.Role = new Manufacturer();
                 Players.Add(value);
                 _manufacturer = value;
@@ -50,6 +52,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
             set
             {
+                if (value == null) throw new ArgumentNullException();
                 value.Role = new Processor();
                 Players.Add(value);
                 _processor = value;
@@ -64,6 +67,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
             set
             {
+                if (value == null) throw new ArgumentNullException();
                 value.Role = new Farmer();
                 Players.Add(value);
                 _processor = value;
@@ -75,7 +79,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public Game()
         {
             Players = new List<Player>();
-            Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString();  //TODO: Write simple algorithm for unique id's
             CurrentPhase = Phase.Phase1;
             CurrentDay = 1;
         }
