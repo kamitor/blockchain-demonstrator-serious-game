@@ -23,6 +23,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set 
             {
                 value.Role = new Retailer();
+                Players.Add(value);
                 _retailer = value;
             }
         }
@@ -36,6 +37,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set
             {
                 value.Role = new Manufacturer();
+                Players.Add(value);
                 _manufacturer = value;
             }
         }
@@ -49,6 +51,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set
             {
                 value.Role = new Processor();
+                Players.Add(value);
                 _processor = value;
             }
         }
@@ -62,17 +65,19 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set
             {
                 value.Role = new Farmer();
+                Players.Add(value);
                 _processor = value;
             }
         }
-        //public Dictionary<Role, Player> Players { get; set; }
+        [NotMapped]
+        public List<Player> Players { get; set; }
 
         public Game()
         {
+            Players = new List<Player>();
             Id = Guid.NewGuid().ToString();
             CurrentPhase = Phase.Phase1;
             CurrentDay = 1;
-            //Players = new Dictionary<Role, Player>();
         }
 
         public void Progress()

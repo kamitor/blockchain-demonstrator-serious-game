@@ -83,5 +83,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 .Where(d => d.ArrivalDay < currentday && d.ArrivalDay > currentday - 5) //Todo: make 5 a changeable factor later
                 .Sum(d => d.Volume);
         }
+
+        
     }
 }
