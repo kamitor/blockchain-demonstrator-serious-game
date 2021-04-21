@@ -1,11 +1,11 @@
-﻿using Blockchain_Demonstrator_Web_App.Models.Enums;
-using Blockchain_Demonstrator_Web_App.Models.Interfaces;
+﻿using BlockchainDemonstratorApi.Models.Enums;
+using BlockchainDemonstratorApi.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Blockchain_Demonstrator_Web_App.Models.Classes
+namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Manufacturer : IRole
     {

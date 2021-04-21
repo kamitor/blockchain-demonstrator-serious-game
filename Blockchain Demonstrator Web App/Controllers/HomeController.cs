@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Blockchain_Demonstrator_Web_App.Models;
+using BlockchainDemonstratorApi.Models;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
 {

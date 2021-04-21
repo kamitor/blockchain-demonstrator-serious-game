@@ -1,6 +1,6 @@
 using System;
 
-namespace Blockchain_Demonstrator_Web_App.Models
+namespace BlockchainDemonstratorApi.Models
 {
     public class ErrorViewModel
     {

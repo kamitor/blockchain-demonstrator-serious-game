@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blockchain_Demonstrator_Web_App.Models.Classes;
-using Blockchain_Demonstrator_Web_App.Models.Enums;
+using BlockchainDemonstratorApi.Models.Classes;
+using BlockchainDemonstratorApi.Models.Enums;
 using Newtonsoft.Json;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers

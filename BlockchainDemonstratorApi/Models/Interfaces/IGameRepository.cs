@@ -1,10 +1,10 @@
-﻿using Blockchain_Demonstrator_Web_App.Models.Classes;
+﻿using BlockchainDemonstratorApi.Models.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Blockchain_Demonstrator_Web_App.Models.Interfaces
+namespace BlockchainDemonstratorApi.Models.Interfaces
 {
     public interface IGameRepository
     {
