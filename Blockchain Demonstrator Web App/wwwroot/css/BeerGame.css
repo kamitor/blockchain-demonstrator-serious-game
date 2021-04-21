@@ -8,3 +8,20 @@
     display: flex;
     
 }
+
+.game-pin {
+    display: flex;
+    flex-direction: row;
+    margin: 3px auto;
+    border: 2px solid;
+    border-radius: 5px;
+    width: 40%;
+    padding: 0px;
+}
+
+.game-pin--item {
+    align-self: center;
+    width: 90%;
+    margin: 5px;
+    padding: 0px;
+}

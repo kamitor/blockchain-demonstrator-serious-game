@@ -38,5 +38,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             string blabla = JsonConvert.SerializeObject(gm);
             return blabla;
         }
+
+        public IActionResult GamePinView()
+        {
+            return View();
+        }
     }
 }
