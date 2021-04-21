@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BlockchainDemonstratorApi.Data;
 using BlockchainDemonstratorApi.Models.Classes;
+using BlockchainDemonstratorApi.Models.Enums;
+using Newtonsoft.Json;
 
 namespace BlockchainDemonstratorApi.Controllers
 {
@@ -21,18 +23,81 @@ namespace BlockchainDemonstratorApi.Controllers
             _context = context;
         }
 
+        [HttpPost("CreateGame")]
+        public ActionResult CreateGame()
+        {
+            Game game = new Game(); //TODO: Make try catch
+            _context.Game.Add(game);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost("JoinGame")]
+        public ActionResult JoinGame([FromBody] dynamic data)
+        {
+            if (data.gameId == null || data.role == null || data.name == null) return BadRequest();
+            string gameId = (string) data.gameId;
+            Role role = (Role) data.role;
+            string name = (string) data.name;
+            
+            Game game = _context.Game.Find(gameId);
+            if (game == null) return NotFound();
+
+            bool joined = false;
+            if (role == Role.Retailer)
+            {
+                game.Retailer = new Player(name);
+                joined = true;
+            }
+            else if (role == Role.Manufacturer)
+            {
+                game.Manufacturer = new Player(name);
+                joined = true;
+            }
+            else if (role == Role.Processor)
+            {
+                game.Processor = new Player(name);
+                joined = true;
+            }
+            else if (role == Role.Farmer)
+            {
+                game.Farmer = new Player(name);
+                joined = true;
+            }
+
+            if (joined)
+            {
+                _context.Game.Update(game);
+                _context.SaveChanges();
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
         // GET: api/BeerGame
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Game>>> GetGame()
         {
-            return await _context.Game.ToListAsync();
+            return await _context.Game
+                .Include(g => g.Retailer)
+                .Include(g => g.Manufacturer)
+                .Include(g => g.Processor)
+                .Include(g => g.Farmer)
+                .ToListAsync();
         }
 
-        // GET: api/BeerGame/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Game>> GetGame(string id)
+        // POST: api/BeerGame/GetGame
+        [HttpPost("GetGame")]
+        public ActionResult<Game> GetGame([FromBody] string gameId)
         {
-            var game = await _context.Game.FindAsync(id);
+            //string gameId = (string) data.gameId;
+            var game =  _context.Game
+                .Include(g => g.Retailer)
+                .Include(g => g.Manufacturer)
+                .Include(g => g.Processor)
+                .Include(g => g.Farmer)
+                .FirstOrDefault(game => game.Id == gameId);
 
             if (game == null)
             {
