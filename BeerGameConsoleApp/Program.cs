@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Channels;
-using Blockchain_Demonstrator_Web_App.Models.Classes;
-using Blockchain_Demonstrator_Web_App.Models.Enums;
+using BlockchainDemonstratorApi.Models.Classes;
+using BlockchainDemonstratorApi.Models.Enums;
 
 namespace BeerGameConsoleApp
 {
@@ -12,12 +12,12 @@ namespace BeerGameConsoleApp
         {
             
             Game gm = new Game();
-            gm.Players.Add(Role.Farmer, new Player("Farmer", new Farmer()));
+            /*gm.Players.Add(Role.Farmer, new Player("Farmer", new Farmer()));
             gm.Players.Add(Role.Retailer, new Player("Retailer", new Retailer()));
             gm.Players.Add(Role.Manufacturer, new Player("Manufacturer", new Manufacturer()));
-            gm.Players.Add(Role.Processor, new Player("Processor", new Processor()));
+            gm.Players.Add(Role.Processor, new Player("Processor", new Processor()));*/
 
-            while (true)
+            /*while (true)
             {
                 foreach (var player in gm.Players)
                 {
@@ -40,7 +40,7 @@ namespace BeerGameConsoleApp
                     Console.WriteLine($"input for {player.Key}");
                     var input = Console.ReadLine();
                     player.Value.CurrentOrder = new Order() {Volume = int.Parse(input)};
-                }
+                }*/
                 
                 gm.Progress();
                 

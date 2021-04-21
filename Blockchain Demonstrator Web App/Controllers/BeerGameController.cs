@@ -14,10 +14,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         public Game gm = new Game();
         public void Init()
         {
-            gm.Players.Add(Role.Farmer, new Player("Farmer", new Farmer()));
+           /* gm.Players.Add(Role.Farmer, new Player("Farmer", new Farmer()));
             gm.Players.Add(Role.Retailer, new Player("Retailer", new Retailer()));
             gm.Players.Add(Role.Manufacturer, new Player("Manufacturer", new Manufacturer()));
-            gm.Players.Add(Role.Processor, new Player("Processor", new Processor()));
+            gm.Players.Add(Role.Processor, new Player("Processor", new Processor()));*/
         }
 
         public IActionResult Index()

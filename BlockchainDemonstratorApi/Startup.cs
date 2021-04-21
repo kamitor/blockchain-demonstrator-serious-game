@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlockchainDemonstratorApi.Models.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using BlockchainDemonstratorApi.Data;
 
 namespace BlockchainDemonstratorApi
 {
@@ -26,10 +29,14 @@ namespace BlockchainDemonstratorApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<BeerGameContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("BeerGameContext")));
+            //services.AddSingleton<IGameRepository>()
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BeerGameContext beerGameContext)
         {
             if (env.IsDevelopment())
             {
@@ -39,6 +46,8 @@ namespace BlockchainDemonstratorApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            beerGameContext.Database.Migrate();
 
             app.UseAuthorization();
 

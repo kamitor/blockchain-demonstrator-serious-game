@@ -1,6 +1,8 @@
 ﻿using BlockchainDemonstratorApi.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,8 +10,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Player
     {
+        [Key]
         public string Id { get; set; }
+        [Required]
         public string Name { get; set; }
+        [NotMapped]
         public IRole Role { get; set; }
         public int Inventory { get; set; } = 20;
         public int Backorder { get; set; }
@@ -36,11 +41,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
         //     }
         // }
 
-        public Player(string name, IRole role)
+        public Player(string name)
         {
             Id = Guid.NewGuid().ToString();
             Name = name;
-            Role = role;
             IncomingDelivery = new List<Order>();
         }
 

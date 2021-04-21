@@ -1,5 +1,5 @@
 ﻿@using Microsoft.CodeAnalysis
-@model Blockchain_Demonstrator_Web_App.Models.Classes.Game
+@model BlockchainDemonstratorApi.Models.Classes.Game
 
 
 <head>
@@ -10,7 +10,7 @@
 <section class="actor-display">
     @if (Model != null)
     {
-        @foreach (var item in Model.Players)
+        @*@foreach (var item in Model.Players)
         {
             <section id="section-@item.Key">
                 <h4>Name: @item.Value.Name</h4>
@@ -45,7 +45,7 @@
                 </section>
                 
             </section>
-        }
+        }*@
     }
 </section>
 
