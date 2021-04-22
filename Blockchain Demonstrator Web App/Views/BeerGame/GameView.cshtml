@@ -7,48 +7,48 @@
 </head>
 
 <body>
-    <section class="actor-display">
-        @if (Model != null)
+<section class="actor-display">
+    @if (Model != null)
+    {
+        @foreach (var item in Model.Players)
         {
-            @foreach (var item in Model.Players)
-            {
-                <section id="section-@item.Role.GetType().Name">
-                    <h4>Name: @item.Name</h4>
-                    <h4>Role: @item.Role.GetType().Name</h4>
-                    <h4>Inventory: @item.Inventory</h4>
-                    <h4>Backorder: @item.Backorder</h4>
+            <section id="section-@item.Role.GetType().Name">
+                <h4>Name: @item.Name</h4>
+                <h4>Role: @item.Role.GetType().Name</h4>
+                <h4>Inventory: @item.Inventory</h4>
+                <h4>Backorder: @item.Backorder</h4>
 
-                    <form>
-                        <h6>Order volume: </h6>
-                        <input type="number" name="order">
-                    </form>
+                <form>
+                    <h6>Order volume: </h6>
+                    <input type="number" name="order">
+                </form>
 
-                    <section>
-                        <h4>Order history:</h4>
-                        <table class="order-history">
-                            <thead>
-                                <tr>
-                                    <th>Day</th>
-                                    <th>Order</th>
-                                </tr>
-                            </thead>
+                <section>
+                    <h4>Order history:</h4>
+                    <table class="order-history">
+                        <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Order</th>
+                        </tr>
+                        </thead>
 
-                            @for (int i = 0 + 1; i < 15 + 1; i++)
-                            {
-                                <tr>
-                                    <td class="order-history">@i</td>
-                                    <td class="order-history"></td>
-                                </tr>
-                            }
-                        </table>
-                    </section>
-
+                        @for (int i = 0 + 1; i < 15 + 1; i++)
+                        {
+                            <tr>
+                                <td class="order-history">@i</td>
+                                <td class="order-history"></td>
+                            </tr>
+                        }
+                    </table>
                 </section>
-            }
 
+            </section>
         }
-    </section>
-    <button onclick="BeerGame.sendOrders('@Model.Id')">Send orders</button>
+
+    }
+</section>
+<button onclick="BeerGame.sendOrders('@Model.Id')">Send orders</button>
 </body>
 
 @section Scripts

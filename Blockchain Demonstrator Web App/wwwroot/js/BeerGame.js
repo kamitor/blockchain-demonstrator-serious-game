@@ -1,16 +1,21 @@
 const BeerGame = (() => {
-    const init = () => {
-        //TODO: move gameId out of function parameters and into configMap
-    }
-
+    
     const configMap = {
-        baseUrl: "https://localhost:44393"
+        baseUrl: "https://localhost:44393",
+        gameId: ""
+    }
+    
+    const init = (gameId) => {
+        configMap.gameId = gameId
     }
     
     const getGame = () => {
         return  $.ajax({
-            url: `${configMap.baseUrl}/BeerGame/GetGame`,
-            type: "POST"
+            url: `${configMap.baseUrl}/api/BeerGame/GetGame`,
+            type: "POST",
+            data: JSON.stringify(configMap.gameId),
+            contentType: "application/JSON",
+            dataType: "text"
         })
     }
 
@@ -44,8 +49,22 @@ const BeerGame = (() => {
         })
     }
     
+    const joinGame = (role, name) => {
+        if (configMap.gameId !== null){
+            $.ajax({
+                url: `${configMap.baseUrl}/BeerGame/JoinGame`,
+                type: "POST",
+                data: JSON.stringify({gameId: configMap.gameId, role: role, name: name}),
+                contentType: "application/JSON",
+                dataType: "text"
+            })
+        }
+    }
+    
     return{
+        init: init,
         getGame: getGame,
+        joinGame: joinGame,
         updateGame: updateGame,
         sendOrders: sendOrders
     }

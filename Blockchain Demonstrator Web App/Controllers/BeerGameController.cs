@@ -14,21 +14,12 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 {
     public class BeerGameController : Controller
     {
-        //private static IConfiguration _iconfiguration;
-        //private static string _appUrl = _iconfiguration.GetValue<string>("applicationUrl");
-
-        //public BeerGameController(IConfiguration iconfiguration)
-        //{
-        //    _iconfiguration = iconfiguration;
-        //}
-
         public IActionResult Index()
         {
             //var test = _appUrl;
             return RedirectToAction("GameView", "BeerGame", new { gameId = "1530d834-3984-4fc4-96dc-69e85b694f3c" });
             //return View();
         }
-
         
         public IActionResult GameView(string gameId)
         {
