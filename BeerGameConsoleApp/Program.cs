@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Channels;
+using Blockchain_Demonstrator_Web_App.Models;
 using BlockchainDemonstratorApi.Models.Classes;
 using BlockchainDemonstratorApi.Models.Enums;
 
@@ -10,7 +11,7 @@ namespace BeerGameConsoleApp
     {
         static void Main(string[] args)
         {
-            Game gm = new Game();
+            //Game gm = new Game();
             // gm.Players.Add(Role.Farmer, new Player("Farmer", new Farmer()));
             // gm.Players.Add(Role.Retailer, new Player("Retailer", new Retailer()));
             // gm.Players.Add(Role.Manufacturer, new Player("Manufacturer", new Manufacturer()));

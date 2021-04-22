@@ -2,6 +2,7 @@
 using BlockchainDemonstratorApi.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,52 +10,19 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Retailer : IRole
     {
-        public Role Destination { get; set; } = Role.Customer;
+        [Key]
+        public string Id { get; set; }
+        [Required]
         public double LeadTime { get; set; } = 2;
-        //TODO: replace dummy values
-        public Dictionary<Option, IOption> Options { get; set; } = new Dictionary<Option, IOption>()
-        {
-            {
-                Option.YouProvide, new YouProvide()
-                {
-                    CostOfStartUp = 0,
-                    GuaranteedCapacity = 0,
-                    LeadTime = 0,
-                    Flexibility = 0,
-                    CostOfMaintenance = 0
-                }
-            },
-            {
-                Option.TrustedParty, new TrustedParty()
-                {
-                    CostOfStartUp = 0,
-                    GuaranteedCapacity = 0,
-                    LeadTime = 0,
-                    Flexibility = 0,
-                    CostOfMaintenance = 0
-                }
-            },
-            {
-                Option.DLT, new Dlt()
-                {
-                    CostOfStartUp = 0,
-                    GuaranteedCapacity = 0,
-                    LeadTime = 0,
-                    Flexibility = 0,
-                    CostOfMaintenance = 0
-                }
-            },
-            {
-                Option.YouProvideWithHelp, new YouProvideWithHelp()
-                {
-                    CostOfStartUp = 0,
-                    GuaranteedCapacity = 0,
-                    LeadTime = 0,
-                    Flexibility = 0,
-                    CostOfMaintenance = 0
-                }
-            }
-        };
+        [Required]
+        public IOption YouProvide { get; set; }
+        [Required]
+        public IOption YouProvideWithHelp { get; set; }
+        [Required]
+        public IOption TrustedParty { get; set; }
+        [Required]
+        public IOption DLT { get; set; }
+        [Required]
         public Product Product { get; set; } = Product.Packs;
     }
 }

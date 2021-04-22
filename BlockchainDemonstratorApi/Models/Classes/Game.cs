@@ -22,10 +22,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
             set 
             {
-                if (value == null) throw new ArgumentNullException();
-                value.Role = new Retailer();
-                Players.Add(value);
-                _retailer = value;
+                if (value != null) 
+                {
+                    value.Role = new Retailer();
+                    Players.Add(value);
+                    _retailer = value;
+                }
             }
         }
         private Player _manufacturer;
@@ -37,10 +39,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
             set
             {
-                if (value == null) throw new ArgumentNullException();
-                value.Role = new Manufacturer();
-                Players.Add(value);
-                _manufacturer = value;
+                if (value != null) 
+                {
+                    value.Role = new Manufacturer();
+                    Players.Add(value);
+                    _manufacturer = value;
+                }
             }
         }
         private Player _processor;
@@ -52,10 +56,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
             set
             {
-                if (value == null) throw new ArgumentNullException();
-                value.Role = new Processor();
-                Players.Add(value);
-                _processor = value;
+                if (value != null) 
+                {
+                    value.Role = new Processor();
+                    Players.Add(value);
+                    _processor = value;
+                }
             }
         }
         private Player _farmer;
@@ -63,14 +69,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             get
             {
-                return _processor;
+                return _farmer;
             }
             set
             {
-                if (value == null) throw new ArgumentNullException();
-                value.Role = new Farmer();
-                Players.Add(value);
-                _processor = value;
+                if (value != null) 
+                {
+                    value.Role = new Farmer();
+                    Players.Add(value);
+                    _farmer = value;
+                }
             }
         }
         [NotMapped]

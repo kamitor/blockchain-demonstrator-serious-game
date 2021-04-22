@@ -107,6 +107,30 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
+        // POST: api/BeerGame/SendOrders
+        [HttpPost("SendOrders")]
+        public ActionResult<Game> SendOrders([FromBody] dynamic data) //TODO: make singular later
+        {
+            if (data.gameId == null) return NotFound();
+            string gameId = data.gameId;
+            var game = _context.Game
+                .Include(g => g.Retailer)
+                .Include(g => g.Manufacturer)
+                .Include(g => g.Processor)
+                .Include(g => g.Farmer)
+                .FirstOrDefault(game => game.Id == gameId);
+
+            game.Retailer.CurrentOrder = new Order() { Volume = (data.retailerOrder != null) ? Int32.Parse((string)data.retailerOrder) : 0 };
+            game.Manufacturer.CurrentOrder = new Order() { Volume = (data.manufacturerOrder != null) ? Int32.Parse((string)data.manufacturerOrder) : 0 };
+            game.Processor.CurrentOrder = new Order() { Volume = (data.processorOrder != null) ? Int32.Parse((string)data.processorOrder) : 0 };
+            game.Farmer.CurrentOrder = new Order() { Volume = (data.farmerOrder != null) ? Int32.Parse((string)data.farmerOrder) : 0 };
+
+            game.Progress();
+            _context.Game.Update(game);
+            _context.SaveChanges();
+            return game;
+        }
+
         // PUT: api/BeerGame/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

@@ -7,14 +7,26 @@ using BlockchainDemonstratorApi.Models.Classes;
 using BlockchainDemonstratorApi.Models.Enums;
 using Newtonsoft.Json;
 using System.Net.Http;
+using Microsoft.Extensions.Configuration;
+using Blockchain_Demonstrator_Web_App.Models;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
 {
     public class BeerGameController : Controller
     {
+        //private static IConfiguration _iconfiguration;
+        //private static string _appUrl = _iconfiguration.GetValue<string>("applicationUrl");
+
+        //public BeerGameController(IConfiguration iconfiguration)
+        //{
+        //    _iconfiguration = iconfiguration;
+        //}
+
         public IActionResult Index()
         {
-            return View();
+            //var test = _appUrl;
+            return RedirectToAction("GameView", "BeerGame", new { gameId = "1530d834-3984-4fc4-96dc-69e85b694f3c" });
+            //return View();
         }
 
         
@@ -23,7 +35,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             using (var client = new HttpClient())
             {
                 var stringContent = new StringContent(JsonConvert.SerializeObject(gameId), System.Text.Encoding.UTF8, "application/json");
-                var response = client.PostAsync("http://localhost:56404/api/BeerGame/GetGame",stringContent).Result;
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/GetGame",stringContent).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -40,7 +52,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         {
             using (var client = new HttpClient())
             {
-                var response = client.PostAsync($"http://localhost:56404/api/BeerGame/CreateGame", null).Result; //TODO: Make static baseURL later
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/CreateGame", null).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -55,7 +67,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             using (var client = new HttpClient())
             {
                 var stringContent = new StringContent(JsonConvert.SerializeObject(new { gameId, role, name }), System.Text.Encoding.UTF8, "application/json");
-                var response = client.PostAsync($"http://localhost:56404/api/BeerGame/JoinGame", stringContent).Result;
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/JoinGame", stringContent).Result;
 
                 if (response.IsSuccessStatusCode)
                 {

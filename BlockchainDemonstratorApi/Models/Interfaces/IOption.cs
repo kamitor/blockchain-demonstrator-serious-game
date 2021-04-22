@@ -7,6 +7,7 @@ namespace BlockchainDemonstratorApi.Models.Interfaces
 {
     public interface IOption
     {
+        public string Id { get; set; }
         public int CostOfStartUp { get; set; }
         public int CostOfMaintenance { get; set; }
         public int LeadTime { get; set; }

@@ -18,6 +18,8 @@ namespace BlockchainDemonstratorApi
 {
     public class Startup
     {
+        readonly string BlockchainDemonstratorWebApp = "_blockchainDemonstratorWebApp";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,6 +34,15 @@ namespace BlockchainDemonstratorApi
 
             services.AddDbContext<BeerGameContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("BeerGameContext")));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: BlockchainDemonstratorWebApp,
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:44313").AllowAnyHeader().AllowAnyMethod(); //TODO: use static URL
+                    });
+            });
             //services.AddSingleton<IGameRepository>()
         }
 
@@ -48,6 +59,8 @@ namespace BlockchainDemonstratorApi
             app.UseRouting();
 
             beerGameContext.Database.Migrate();
+
+            app.UseCors(BlockchainDemonstratorWebApp);
 
             app.UseAuthorization();
 

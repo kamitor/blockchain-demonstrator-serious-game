@@ -8,9 +8,12 @@ namespace BlockchainDemonstratorApi.Models.Interfaces
 {
     public interface IRole
     {
-        public Role Destination { get; set; }
+        public string Id { get; set; }
         public double LeadTime { get; set; }
-        public Dictionary<Option, IOption> Options { get; set; }
+        public IOption YouProvide { get; set; }
+        public IOption YouProvideWithHelp { get; set; }
+        public IOption TrustedParty { get; set; }
+        public IOption DLT { get; set; }
         public Product Product { get; set; }
     }
 }

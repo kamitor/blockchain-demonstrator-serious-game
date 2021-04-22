@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockchain_Demonstrator_Web_App.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +17,8 @@ namespace Blockchain_Demonstrator_Web_App
     {
         public Startup(IConfiguration configuration)
         {
+            //var builder = new ConfigurationBuilder().AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "Properties", "launchSettings.json"));
+            //Configuration = builder.Build();
             Configuration = configuration;
         }
 
@@ -24,6 +28,7 @@ namespace Blockchain_Demonstrator_Web_App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            //services.AddSingleton<IConfiguration>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -31,10 +36,14 @@ namespace Blockchain_Demonstrator_Web_App
         {
             if (env.IsDevelopment())
             {
+                Config.WebApplicationUrl = "https://localhost:44313";
+                Config.RestApiUrl = "https://localhost:44393"; //TODO: set for Javascript as well
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                Config.WebApplicationUrl = "https://localhost:5001"; //TODO: set local ip's for kersel web server
+                Config.RestApiUrl = "https://localhost:5001";
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
