@@ -3,14 +3,16 @@ using BlockchainDemonstratorApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlockchainDemonstratorApi.Migrations
 {
     [DbContext(typeof(BeerGameContext))]
-    partial class BeerGameContextModelSnapshot : ModelSnapshot
+    [Migration("20210422144438_RolesAndOptionsMigration")]
+    partial class RolesAndOptionsMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,41 +53,32 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasIndex("RetailerId");
 
-                    b.ToTable("Games");
+                    b.ToTable("Game");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Option", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("CostOfMaintenance")
-                        .HasColumnType("float");
-
-                    b.Property<double>("CostOfStartUp")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Flexibility")
-                        .HasColumnType("float");
-
-                    b.Property<double>("GuaranteedCapacity")
-                        .HasColumnType("float");
-
-                    b.Property<double>("LeadTime")
-                        .HasColumnType("float");
-
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.Property<int>("CostOfMaintenance")
+                        .HasColumnType("int");
 
-                    b.HasIndex("RoleId");
+                    b.Property<int>("CostOfStartUp")
+                        .HasColumnType("int");
 
-                    b.ToTable("Options");
+                    b.Property<int>("Flexibility")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GuaranteedCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LeadTime")
+                        .HasColumnType("int");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("Option");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Order", b =>
@@ -136,7 +129,7 @@ namespace BlockchainDemonstratorApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
+                    b.Property<string>("RoleName")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -145,14 +138,17 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasIndex("IncomingOrderId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleName");
 
                     b.ToTable("Player");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Role", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DltName")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("LeadTime")
@@ -161,9 +157,26 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("Product")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<string>("TrustedPartyName")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.ToTable("Roles");
+                    b.Property<string>("YouProvideName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("YouProvideWithHelpName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("DltName");
+
+                    b.HasIndex("TrustedPartyName");
+
+                    b.HasIndex("YouProvideName");
+
+                    b.HasIndex("YouProvideWithHelpName");
+
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Game", b =>
@@ -185,13 +198,6 @@ namespace BlockchainDemonstratorApi.Migrations
                         .HasForeignKey("RetailerId");
                 });
 
-            modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Option", b =>
-                {
-                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Role", null)
-                        .WithMany("Options")
-                        .HasForeignKey("RoleId");
-                });
-
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Order", b =>
                 {
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", null)
@@ -211,7 +217,26 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleName");
+                });
+
+            modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Role", b =>
+                {
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Option", "Dlt")
+                        .WithMany()
+                        .HasForeignKey("DltName");
+
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Option", "TrustedParty")
+                        .WithMany()
+                        .HasForeignKey("TrustedPartyName");
+
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Option", "YouProvide")
+                        .WithMany()
+                        .HasForeignKey("YouProvideName");
+
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Option", "YouProvideWithHelp")
+                        .WithMany()
+                        .HasForeignKey("YouProvideWithHelpName");
                 });
 #pragma warning restore 612, 618
         }

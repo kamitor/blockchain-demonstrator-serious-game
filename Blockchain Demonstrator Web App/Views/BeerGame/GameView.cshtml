@@ -12,9 +12,9 @@
     {
         @foreach (var item in Model.Players)
         {
-            <section id="section-@item.Role.GetType().Name">
+            <section id="section-@item.Role.Id">
                 <h4>Name: @item.Name</h4>
-                <h4>Role: @item.Role.GetType().Name</h4>
+                <h4>Role: @item.Role.Id</h4>
                 <h4>Inventory: @item.Inventory</h4>
                 <h4>Backorder: @item.Backorder</h4>
 

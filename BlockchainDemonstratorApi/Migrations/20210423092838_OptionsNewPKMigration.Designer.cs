@@ -3,14 +3,16 @@ using BlockchainDemonstratorApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlockchainDemonstratorApi.Migrations
 {
     [DbContext(typeof(BeerGameContext))]
-    partial class BeerGameContextModelSnapshot : ModelSnapshot
+    [Migration("20210423092838_OptionsNewPKMigration")]
+    partial class OptionsNewPKMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -3,14 +3,16 @@ using BlockchainDemonstratorApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlockchainDemonstratorApi.Migrations
 {
     [DbContext(typeof(BeerGameContext))]
-    partial class BeerGameContextModelSnapshot : ModelSnapshot
+    [Migration("20210422145135_RoleFixMigration")]
+    partial class RoleFixMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,41 +53,7 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasIndex("RetailerId");
 
-                    b.ToTable("Games");
-                });
-
-            modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Option", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("CostOfMaintenance")
-                        .HasColumnType("float");
-
-                    b.Property<double>("CostOfStartUp")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Flexibility")
-                        .HasColumnType("float");
-
-                    b.Property<double>("GuaranteedCapacity")
-                        .HasColumnType("float");
-
-                    b.Property<double>("LeadTime")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Options");
+                    b.ToTable("Game");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Order", b =>
@@ -136,7 +104,7 @@ namespace BlockchainDemonstratorApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
+                    b.Property<string>("RoleName")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -145,14 +113,14 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasIndex("IncomingOrderId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleName");
 
                     b.ToTable("Player");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Role", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("LeadTime")
@@ -161,9 +129,9 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("Product")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Game", b =>
@@ -185,13 +153,6 @@ namespace BlockchainDemonstratorApi.Migrations
                         .HasForeignKey("RetailerId");
                 });
 
-            modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Option", b =>
-                {
-                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Role", null)
-                        .WithMany("Options")
-                        .HasForeignKey("RoleId");
-                });
-
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Order", b =>
                 {
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", null)
@@ -211,7 +172,7 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleName");
                 });
 #pragma warning restore 612, 618
         }

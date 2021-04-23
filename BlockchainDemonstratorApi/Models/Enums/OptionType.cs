@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Enums
 {
-    public enum Option
+    public enum OptionType
     {
         YouProvide,
         YouProvideWithHelp,

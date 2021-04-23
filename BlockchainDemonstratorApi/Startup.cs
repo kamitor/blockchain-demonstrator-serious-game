@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using BlockchainDemonstratorApi.Data;
+using BlockchainDemonstratorApi.Models.Classes;
 
 namespace BlockchainDemonstratorApi
 {
@@ -58,7 +59,7 @@ namespace BlockchainDemonstratorApi
 
             app.UseRouting();
 
-            beerGameContext.Database.Migrate();
+            SeedData.Initialize(beerGameContext);
 
             app.UseCors(BlockchainDemonstratorWebApp);
 

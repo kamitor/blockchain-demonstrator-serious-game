@@ -10,7 +10,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
     public class Order
     {
         [Key]
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public int OrderDay { get; set; }
         public double ArrivalDay { get; set; }
         public int Volume { get; set; }

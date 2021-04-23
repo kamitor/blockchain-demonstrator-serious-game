@@ -14,6 +14,8 @@ namespace BlockchainDemonstratorApi.Data
         {
         }
 
-        public DbSet<BlockchainDemonstratorApi.Models.Classes.Game> Game { get; set; }
+        public DbSet<Game> Games { get; set; } //TODO: check if every usage of this dbset is now Games instead of Game
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Option> Options { get; set; }
     }
 }

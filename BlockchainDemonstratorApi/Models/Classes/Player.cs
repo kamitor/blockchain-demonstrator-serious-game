@@ -14,8 +14,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public string Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [NotMapped]
-        public IRole Role { get; set; }
+        public Role Role { get; set; }
         public int Inventory { get; set; } = 20;
         public int Backorder { get; set; }
         public Order IncomingOrder { get; set; }

@@ -24,7 +24,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 if (value != null) 
                 {
-                    value.Role = new Retailer();
                     Players.Add(value);
                     _retailer = value;
                 }
@@ -41,7 +40,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 if (value != null) 
                 {
-                    value.Role = new Manufacturer();
                     Players.Add(value);
                     _manufacturer = value;
                 }
@@ -58,7 +56,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 if (value != null) 
                 {
-                    value.Role = new Processor();
                     Players.Add(value);
                     _processor = value;
                 }
@@ -75,7 +72,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 if (value != null) 
                 {
-                    value.Role = new Farmer();
                     Players.Add(value);
                     _farmer = value;
                 }

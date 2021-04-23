@@ -17,8 +17,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         public IActionResult Index()
         {
             //var test = _appUrl;
-            return RedirectToAction("GameView", "BeerGame", new { gameId = "1530d834-3984-4fc4-96dc-69e85b694f3c" });
-            //return View();
+            return View();
         }
         
         public IActionResult GameView(string gameId)
@@ -53,7 +52,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return BadRequest();
         }
 
-        public IActionResult JoinGame(string gameId, Role role, string name)
+        public IActionResult JoinGame(string gameId, RoleType role, string name)
         {
             using (var client = new HttpClient())
             {

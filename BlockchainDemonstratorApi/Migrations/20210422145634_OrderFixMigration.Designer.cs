@@ -3,14 +3,16 @@ using BlockchainDemonstratorApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlockchainDemonstratorApi.Migrations
 {
     [DbContext(typeof(BeerGameContext))]
-    partial class BeerGameContextModelSnapshot : ModelSnapshot
+    [Migration("20210422145634_OrderFixMigration")]
+    partial class OrderFixMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +53,7 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasIndex("RetailerId");
 
-                    b.ToTable("Games");
+                    b.ToTable("Game");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Option", b =>
@@ -59,24 +61,20 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("CostOfMaintenance")
-                        .HasColumnType("float");
+                    b.Property<int>("CostOfMaintenance")
+                        .HasColumnType("int");
 
-                    b.Property<double>("CostOfStartUp")
-                        .HasColumnType("float");
+                    b.Property<int>("CostOfStartUp")
+                        .HasColumnType("int");
 
-                    b.Property<double>("Flexibility")
-                        .HasColumnType("float");
+                    b.Property<int>("Flexibility")
+                        .HasColumnType("int");
 
-                    b.Property<double>("GuaranteedCapacity")
-                        .HasColumnType("float");
+                    b.Property<int>("GuaranteedCapacity")
+                        .HasColumnType("int");
 
-                    b.Property<double>("LeadTime")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("LeadTime")
+                        .HasColumnType("int");
 
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
@@ -85,7 +83,7 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Options");
+                    b.ToTable("Option");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Order", b =>
@@ -163,7 +161,7 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Game", b =>
