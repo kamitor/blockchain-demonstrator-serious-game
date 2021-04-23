@@ -15,6 +15,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public Phase CurrentPhase { get; set; }
         public int CurrentDay { get; set; }
         private Player _retailer;
+
+        
+
+
         public Player Retailer {
             get
             {
@@ -93,6 +97,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             SendOrders();
             CallGetDeliveries();
             CallSendDeliveries();
+           
             CurrentDay += 5; //TODO: Implement day factor
         }
 
@@ -102,11 +107,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Manufacturer.CurrentOrder.OrderDay = CurrentDay;
             Processor.CurrentOrder.OrderDay = CurrentDay;
             Farmer.CurrentOrder.OrderDay = CurrentDay;
-
+            AddingPrice();
             Retailer.IncomingOrder = new Order() { OrderDay = CurrentDay, Volume = 10 }; //TODO: Implemement later new Random().Next(5,15)
             Manufacturer.IncomingOrder = Retailer.CurrentOrder;
             Processor.IncomingOrder = Manufacturer.CurrentOrder;
             Farmer.IncomingOrder = Processor.CurrentOrder;
+            
         }
 
         private void CallSendDeliveries()
@@ -124,5 +130,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Processor.GetDeliveries(CurrentDay);
             Farmer.GetDeliveries(CurrentDay);
         }
+
+        public void AddingPrice()
+        {
+
+            Retailer.CurrentOrder.Price = Manufacturer.ItemPrice *  Retailer.CurrentOrder.Volume ;
+            Manufacturer.CurrentOrder.Price = Processor.ItemPrice * Manufacturer.CurrentOrder.Volume;
+            Processor.CurrentOrder.Price = Farmer.ItemPrice * Processor.CurrentOrder.Volume;
+            Farmer.CurrentOrder.Price = 2080 * Farmer.CurrentOrder.Volume;
+
+        }
+
     }
 }
