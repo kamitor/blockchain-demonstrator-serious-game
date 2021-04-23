@@ -114,7 +114,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Retailer.IncomingDelivery.Add(Manufacturer.SendDelivery(CurrentDay));
             Manufacturer.IncomingDelivery.Add(Processor.SendDelivery(CurrentDay));
             Processor.IncomingDelivery.Add(Farmer.SendDelivery(CurrentDay));
-            Farmer.IncomingDelivery.Add(new Order() { ArrivalDay = new Random().Next(1, 5), Volume = new Random().Next(5, 15) }); //TODO: Implement later
+            Farmer.IncomingDelivery.Add(new Order() { OrderDay = CurrentDay, ArrivalDay = CurrentDay + new Random().Next(1, 5), Volume = new Random().Next(5, 15) }); //TODO: Implement later
         }
 
         private void CallGetDeliveries()

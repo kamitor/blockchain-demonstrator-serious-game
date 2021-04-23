@@ -96,12 +96,7 @@ namespace BlockchainDemonstratorApi.Controllers
         public ActionResult<Game> GetGame([FromBody] string gameId)
         {
             //string gameId = (string) data.gameId;
-            var game =  _context.Games
-                .Include(g => g.Retailer).ThenInclude(p => p.Role)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.Role)
-                .Include(g => g.Processor).ThenInclude(p => p.Role)
-                .Include(g => g.Farmer).ThenInclude(p => p.Role)
-                .FirstOrDefault(game => game.Id == gameId);
+            var game = GetGameFromContext(gameId);
 
             if (game == null)
             {
@@ -117,12 +112,7 @@ namespace BlockchainDemonstratorApi.Controllers
         {
             if (data.gameId == null) return NotFound();
             string gameId = data.gameId;
-            var game = _context.Games
-                .Include(g => g.Retailer).ThenInclude(p => p.Role)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.Role)
-                .Include(g => g.Processor).ThenInclude(p => p.Role)
-                .Include(g => g.Farmer).ThenInclude(p => p.Role)
-                .FirstOrDefault(game => game.Id == gameId);
+            var game = GetGameFromContext(gameId);
 
             game.Retailer.CurrentOrder = new Order() {Volume = (data.retailerOrder != null) ? Int32.Parse((string)data.retailerOrder) : 0 };
             game.Manufacturer.CurrentOrder = new Order() {Volume = (data.manufacturerOrder != null) ? Int32.Parse((string)data.manufacturerOrder) : 0 };
@@ -212,6 +202,28 @@ namespace BlockchainDemonstratorApi.Controllers
         private bool GameExists(string id)
         {
             return _context.Games.Any(e => e.Id == id);
+        }
+
+        private Game GetGameFromContext(string gameId)
+        {
+            return _context.Games
+                .Include(g => g.Retailer).ThenInclude(p => p.Role)
+                .Include(g => g.Retailer).ThenInclude(p => p.IncomingOrder)
+                .Include(g => g.Retailer).ThenInclude(p => p.CurrentOrder)
+                .Include(g => g.Retailer).ThenInclude(p => p.IncomingDelivery)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.Role)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingOrder)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.CurrentOrder)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingDelivery)
+                .Include(g => g.Processor).ThenInclude(p => p.Role)
+                .Include(g => g.Processor).ThenInclude(p => p.IncomingOrder)
+                .Include(g => g.Processor).ThenInclude(p => p.CurrentOrder)
+                .Include(g => g.Processor).ThenInclude(p => p.IncomingDelivery)
+                .Include(g => g.Farmer).ThenInclude(p => p.Role)
+                .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrder)
+                .Include(g => g.Farmer).ThenInclude(p => p.CurrentOrder)
+                .Include(g => g.Farmer).ThenInclude(p => p.IncomingDelivery)
+                .FirstOrDefault(game => game.Id == gameId);
         }
     }
 }

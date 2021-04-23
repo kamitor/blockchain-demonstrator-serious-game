@@ -10,13 +10,13 @@
 <section class="actor-display">
     @if (Model != null)
     {
-        @foreach (var item in Model.Players)
+        @foreach (var player in Model.Players)
         {
-            <section id="section-@item.Role.Id">
-                <h4>Name: @item.Name</h4>
-                <h4>Role: @item.Role.Id</h4>
-                <h4>Inventory: @item.Inventory</h4>
-                <h4>Backorder: @item.Backorder</h4>
+            <section id="section-@player.Role.Id">
+                <h4>Name: @player.Name</h4>
+                <h4>Role: @player.Role.Id</h4>
+                <h4>Inventory: @player.Inventory</h4>
+                <h4>Backorder: @player.Backorder</h4>
 
                 <form>
                     <h6>Order volume: </h6>
@@ -37,9 +37,36 @@
                         {
                             <tr>
                                 <td class="order-history">@i</td>
-                                <td class="order-history"></td>
+                                <td class="order-history">
+                                @if (i < player.IncomingDelivery.Count())
+                                { 
+                                    @if (player.IncomingDelivery[i] != null) { @Html.Raw(player.IncomingDelivery[i].Volume); } //TODO: Make new order number to get history, incomingDelivery volume != order volume
+                                }
+                                </td>
                             </tr>
                         }
+                    </table>
+                </section>
+                <section>
+                    <h4>Incoming deliveries</h4>
+                    <table class="order-history">
+                        <thead>
+                            <tr>
+                                <th>Order Date</th>
+                                <th>Arrival Date</th>
+                                <th>Volume</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in player.IncomingDelivery)
+                            {
+                                <tr>
+                                    <td>@order.OrderDay</td>
+                                    <td>@order.ArrivalDay</td>
+                                    <td>@order.Volume</td>
+                                </tr>
+                            }
+                        </tbody>
                     </table>
                 </section>
 
