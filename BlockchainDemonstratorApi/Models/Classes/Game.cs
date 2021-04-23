@@ -15,11 +15,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public Phase CurrentPhase { get; set; }
         public int CurrentDay { get; set; }
         private Player _retailer;
-
-        
-
-
-        public Player Retailer {
+        public Player Retailer 
+        {
             get
             {
                 return _retailer;
@@ -107,34 +104,28 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Manufacturer.CurrentOrder.OrderDay = CurrentDay;
             Processor.CurrentOrder.OrderDay = CurrentDay;
             Farmer.CurrentOrder.OrderDay = CurrentDay;
-
-
-
+            
             // AddingPrice
             Retailer.CurrentOrder.Price = Manufacturer.ItemPrice * Retailer.CurrentOrder.Volume;
             Manufacturer.CurrentOrder.Price = Processor.ItemPrice * Manufacturer.CurrentOrder.Volume;
             Processor.CurrentOrder.Price = Farmer.ItemPrice * Processor.CurrentOrder.Volume;
             Farmer.CurrentOrder.Price = 2080 * Farmer.CurrentOrder.Volume;
-
-
+            
             //paying 
             Retailer.Money -= Retailer.CurrentOrder.Price;
             Manufacturer.Money -= Manufacturer.CurrentOrder.Price;
             Processor.Money -= Processor.CurrentOrder.Price;
             Farmer.Money -= Farmer.CurrentOrder.Price;
 
-            //gettingpayed
-
-            int CustomerOrderVolume = new Random().Next(5, 15);  
+            //getting payed
+            int customerOrderVolume = new Random().Next(5, 15);  
             Manufacturer.Money += Retailer.CurrentOrder.Price;
             Processor.Money += Manufacturer.CurrentOrder.Price;
             Farmer.Money += Processor.CurrentOrder.Price;
-            Retailer.Money += CustomerOrderVolume * Retailer.ItemPrice;  
-
-
-
+            Retailer.Money += customerOrderVolume * Retailer.ItemPrice;  
+            
             // making new order
-            Retailer.IncomingOrder = new Order() { OrderDay = CurrentDay, Volume = CustomerOrderVolume }; 
+            Retailer.IncomingOrder = new Order() { OrderDay = CurrentDay, Volume = customerOrderVolume }; 
             Manufacturer.IncomingOrder = Retailer.CurrentOrder;
             Processor.IncomingOrder = Manufacturer.CurrentOrder;
             Farmer.IncomingOrder = Processor.CurrentOrder;
@@ -157,7 +148,5 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Processor.GetDeliveries(CurrentDay);
             Farmer.GetDeliveries(CurrentDay);
         }
-
-
     }
 }

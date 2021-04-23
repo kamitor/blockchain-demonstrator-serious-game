@@ -21,16 +21,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public Order CurrentOrder { get; set; }
         public List<Order> IncomingDelivery { get; set; }
         private double _money;
-
-        private int HoldingFactor;
-        static int BackOrderFactor;
-        public int BackorderFactor = BackOrderFactor * 2;
-
-
-        public int ItemPrice { get; set; }
-
-        
-
         public double Money 
         {
             get
@@ -43,12 +33,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
+        public int ItemPrice { get; set; }
+
+        public int holdingFactor = 1;
+        
         public int RunningCosts
         {
             get
             {
                 //running cost= (volume of inventory* holding cost factor)+ (backorder factor* backorder* holding cost)+ (incoming order* holding cost) 
-                return (Inventory * HoldingFactor) + (HoldingFactor * 2 * Backorder * HoldingFactor) + (IncomingOrder.Volume * HoldingFactor); //TODO: implement factors 
+                return (Inventory * holdingFactor) + (holdingFactor * 2 * Backorder * holdingFactor) /*+ (IncomingOrder.Volume * holdingFactor) why? pay for something you buy*/; //TODO: implement factors 
             }
         }
 
