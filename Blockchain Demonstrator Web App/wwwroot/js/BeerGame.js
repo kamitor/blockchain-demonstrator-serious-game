@@ -45,24 +45,36 @@ const BeerGame = (() => {
         updateOrderHistory("Processor");
         updateOrderHistory("Farmer");
 
-        debugger;
-        $("#section-Retailer > h4").eq(2).text("Invetory: " + gameSerialized.Retailer.Inventory);
-        $("#section-Manufacturer > h4").eq(2).text("Invetory: " + gameSerialized.Manufacturer.Inventory);
-        $("#section-Processor > h4").eq(2).text("Invetory: " + gameSerialized.Processor.Inventory);
-        $("#section-Farmer > h4").eq(2).text("Invetory: " + gameSerialized.Farmer.Inventory);
+        updateIncomingDeliveries("Retailer", gameSerialized);
+        updateIncomingDeliveries("Manufacturer", gameSerialized);
+        updateIncomingDeliveries("Processor", gameSerialized);
+        updateIncomingDeliveries("Farmer", gameSerialized);
 
-        $("#section-Retailer > h4").eq(3).text("Backorder: " + gameSerialized.Retailer.Backorder);
-        $("#section-Manufacturer > h4").eq(3).text("Backorder: " + gameSerialized.Manufacturer.Backorder);
-        $("#section-Processor > h4").eq(3).text("Backorder: " + gameSerialized.Processor.Backorder);
-        $("#section-Farmer > h4").eq(3).text("Backorder: " + gameSerialized.Farmer.Backorder);
+        $("#section-Retailer > h4").eq(2).text("Inventory: " + gameSerialized.retailer.inventory);
+        $("#section-Manufacturer > h4").eq(2).text("Inventory: " + gameSerialized.manufacturer.inventory);
+        $("#section-Processor > h4").eq(2).text("Inventory: " + gameSerialized.processor.inventory);
+        $("#section-Farmer > h4").eq(2).text("Inventory: " + gameSerialized.farmer.inventory);
+
+        $("#section-Retailer > h4").eq(3).text("Backorder: " + gameSerialized.retailer.backorder);
+        $("#section-Manufacturer > h4").eq(3).text("Backorder: " + gameSerialized.manufacturer.backorder);
+        $("#section-Processor > h4").eq(3).text("Backorder: " + gameSerialized.processor.backorder);
+        $("#section-Farmer > h4").eq(3).text("Backorder: " + gameSerialized.farmer.backorder);
     }
 
     const updateOrderHistory = (id) => {
-        $(`#section-${id} > section > table > tbody > tr`).each((index, element) => {
-            if (element.lastChild.text() == null) {
-                element.lastChild.text($(`#section-${id} > form > input`).val());
+        $(`#section-${id} > section:eq(0) > table > tbody > tr`).each((index, element) => {
+            if ($(element).find("td:eq(1)").text() == "") {
+                $(element).find("td:eq(1)").text($(`#section-${id} > form > input`).val());
                 return false;
             }
+        });
+    }
+
+    const updateIncomingDeliveries = (id, game) => {
+        $(`#section-${id} > section:eq(1) > table > tbody > tr`).each((index, element) => {
+            $(element).find("td:eq(0)").text(game[id].incomingdelivery[index].orderday);
+            $(element).find("td:eq(1)").text(game[id].incomingdelivery[index].arrivalday);
+            $(element).find("td:eq(2)").text(game[id].incomingdelivery[index].volume);
         });
     }
     
