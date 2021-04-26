@@ -112,17 +112,17 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.CurrentOrder.Price = 2080 * Farmer.CurrentOrder.Volume;
             
             //paying 
-            Retailer.Money -= Retailer.CurrentOrder.Price;
-            Manufacturer.Money -= Manufacturer.CurrentOrder.Price;
-            Processor.Money -= Processor.CurrentOrder.Price;
-            Farmer.Money -= Farmer.CurrentOrder.Price;
+            Retailer.Balance -= Retailer.CurrentOrder.Price;
+            Manufacturer.Balance -= Manufacturer.CurrentOrder.Price;
+            Processor.Balance -= Processor.CurrentOrder.Price;
+            Farmer.Balance -= Farmer.CurrentOrder.Price;
 
             //getting payed
             int customerOrderVolume = new Random().Next(5, 15);  
-            Manufacturer.Money += Retailer.CurrentOrder.Price;
-            Processor.Money += Manufacturer.CurrentOrder.Price;
-            Farmer.Money += Processor.CurrentOrder.Price;
-            Retailer.Money += customerOrderVolume * Retailer.ItemPrice;  
+            Manufacturer.Balance += Retailer.CurrentOrder.Price;
+            Processor.Balance += Manufacturer.CurrentOrder.Price;
+            Farmer.Balance += Processor.CurrentOrder.Price;
+            Retailer.Balance += customerOrderVolume * Retailer.ItemPrice;  
             
             // making new order
             Retailer.IncomingOrder = new Order() { OrderDay = CurrentDay, Volume = customerOrderVolume }; 

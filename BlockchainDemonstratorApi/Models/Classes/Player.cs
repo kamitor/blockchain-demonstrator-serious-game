@@ -20,24 +20,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public Order IncomingOrder { get; set; }
         public Order CurrentOrder { get; set; }
         public List<Order> IncomingDelivery { get; set; }
-        private double _money;
-        public double Money 
-        {
-            get
-            {
-                return _money;
-            }
-            set
-            {
-                _money = value; //TODO: Implement cost calculation and replace with better name
-            }
-        }
-
-        public int ItemPrice { get; set; }
-
-        public int holdingFactor = 1;
-        
-        public int RunningCosts
+        public double Balance { get; set; }
+        public double ItemPrice { get; set; }
+        public double holdingFactor = 1;
+        [NotMapped]
+        public double RunningCosts
         {
             get
             {

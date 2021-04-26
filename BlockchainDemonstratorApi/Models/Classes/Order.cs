@@ -14,7 +14,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public int OrderDay { get; set; }
         public double ArrivalDay { get; set; }
         public int Volume { get; set; }
-        public int Price { get; set; }
+        public double Price { get; set; }
 
     }
 }
