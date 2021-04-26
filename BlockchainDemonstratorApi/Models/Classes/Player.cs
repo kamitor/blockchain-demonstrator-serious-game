@@ -64,23 +64,23 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         public int GetOutgoingVolume()
         {
-            int shipment = 0;
+            int volume = 0;
             Backorder += IncomingOrder.Volume;
 
             if (Inventory < Backorder)
             {
-                shipment = Inventory;
+                volume = Inventory;
                 Backorder -= Inventory;
                 Inventory = 0;
             }
             else
             {
                 Inventory -= Backorder;
-                shipment = Backorder;
+                volume = Backorder;
                 Backorder = 0;
             }
 
-            return shipment;
+            return volume;
         }
 
         /**

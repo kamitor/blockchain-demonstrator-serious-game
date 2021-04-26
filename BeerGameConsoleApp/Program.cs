@@ -48,6 +48,8 @@ namespace BeerGameConsoleApp
             //
             //     gm.Progress();
             // }
+
+            Order o = new Order() {Volume = -1};
         }
     }
 }
