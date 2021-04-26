@@ -48,7 +48,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             return new Order()
             {
-                ArrivalDay = Role.LeadTime + currentDay,
+                ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0,3),
                 Volume = GetOutgoingVolume(),
                 OrderDay = IncomingOrder.OrderDay
             };
