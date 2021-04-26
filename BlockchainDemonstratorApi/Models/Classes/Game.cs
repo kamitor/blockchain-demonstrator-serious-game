@@ -89,64 +89,76 @@ namespace BlockchainDemonstratorApi.Models.Classes
             CurrentDay = 1;
         }
 
+        /**
+         * <summary>Makes game Progress to next round</summary>
+         */
         public void Progress()
         {
             SendOrders();
-            CallGetDeliveries();
-            CallSendDeliveries();
+            ProcessDeliveries();
+            SendDeliveries();
            
             CurrentDay += 5; 
         }
 
+        /**
+         * <summary>Sets IncomingOrder for every actor</summary>
+         */
+        //TODO: seperate functions (SOLID)
         private void SendOrders()
         {
+            // Adding current day
             Retailer.CurrentOrder.OrderDay = CurrentDay;
             Manufacturer.CurrentOrder.OrderDay = CurrentDay;
             Processor.CurrentOrder.OrderDay = CurrentDay;
             Farmer.CurrentOrder.OrderDay = CurrentDay;
             
-            // AddingPrice
-            Retailer.CurrentOrder.Price = Manufacturer.ItemPrice * Retailer.CurrentOrder.Volume;
-            Manufacturer.CurrentOrder.Price = Processor.ItemPrice * Manufacturer.CurrentOrder.Volume;
-            Processor.CurrentOrder.Price = Farmer.ItemPrice * Processor.CurrentOrder.Volume;
+            // Adding Price
+            Retailer.CurrentOrder.Price = Manufacturer.ProductPrice * Retailer.CurrentOrder.Volume;
+            Manufacturer.CurrentOrder.Price = Processor.ProductPrice * Manufacturer.CurrentOrder.Volume;
+            Processor.CurrentOrder.Price = Farmer.ProductPrice * Processor.CurrentOrder.Volume;
             Farmer.CurrentOrder.Price = 2080 * Farmer.CurrentOrder.Volume;
             
-            //paying 
+            // Paying supplier
             Retailer.Balance -= Retailer.CurrentOrder.Price;
             Manufacturer.Balance -= Manufacturer.CurrentOrder.Price;
             Processor.Balance -= Processor.CurrentOrder.Price;
             Farmer.Balance -= Farmer.CurrentOrder.Price;
 
-            //getting payed
+            // Getting payed
             int customerOrderVolume = new Random().Next(5, 15);  
             Manufacturer.Balance += Retailer.CurrentOrder.Price;
             Processor.Balance += Manufacturer.CurrentOrder.Price;
             Farmer.Balance += Processor.CurrentOrder.Price;
-            Retailer.Balance += customerOrderVolume * Retailer.ItemPrice;  
+            Retailer.Balance += customerOrderVolume * Retailer.ProductPrice;  
             
-            // making new order
+            // Making new order
             Retailer.IncomingOrder = new Order() { OrderDay = CurrentDay, Volume = customerOrderVolume }; 
             Manufacturer.IncomingOrder = Retailer.CurrentOrder;
             Processor.IncomingOrder = Manufacturer.CurrentOrder;
             Farmer.IncomingOrder = Processor.CurrentOrder;
-            
-
         }
 
-        private void CallSendDeliveries()
+        /**
+         * <summary>Adds outgoing deliveries to the IncomingDelivery list</summary>
+         */
+        private void SendDeliveries()
         {
-            Retailer.IncomingDelivery.Add(Manufacturer.SendDelivery(CurrentDay));
-            Manufacturer.IncomingDelivery.Add(Processor.SendDelivery(CurrentDay));
-            Processor.IncomingDelivery.Add(Farmer.SendDelivery(CurrentDay));
+            Retailer.IncomingDelivery.Add(Manufacturer.GetOutgoingDelivery(CurrentDay));
+            Manufacturer.IncomingDelivery.Add(Processor.GetOutgoingDelivery(CurrentDay));
+            Processor.IncomingDelivery.Add(Farmer.GetOutgoingDelivery(CurrentDay));
             Farmer.IncomingDelivery.Add(new Order() { OrderDay = CurrentDay, ArrivalDay = CurrentDay + new Random().Next(1, 5), Volume = new Random().Next(5, 15) }); //TODO: Implement later
         }
 
-        private void CallGetDeliveries()
+        /**
+         * <summary>Causes each actor to increase their inventory</summary>
+         */
+        private void ProcessDeliveries()
         {
-            Retailer.GetDeliveries(CurrentDay);
-            Manufacturer.GetDeliveries(CurrentDay);
-            Processor.GetDeliveries(CurrentDay);
-            Farmer.GetDeliveries(CurrentDay);
+            Retailer.IncreaseInventory(CurrentDay);
+            Manufacturer.IncreaseInventory(CurrentDay);
+            Processor.IncreaseInventory(CurrentDay);
+            Farmer.IncreaseInventory(CurrentDay);
         }
     }
 }

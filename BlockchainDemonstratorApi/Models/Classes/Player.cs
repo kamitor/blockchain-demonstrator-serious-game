@@ -17,11 +17,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public Role Role { get; set; }
         public int Inventory { get; set; } = 20;
         public int Backorder { get; set; }
-        public Order IncomingOrder { get; set; }
+        public Order IncomingOrder { get; set; } //sent from your customer
         public Order CurrentOrder { get; set; }
-        public List<Order> IncomingDelivery { get; set; }
+        public List<Order> IncomingDelivery { get; set; } //sent from your supplier
         public double Balance { get; set; }
-        public double ItemPrice { get; set; }
+        public double ProductPrice { get; set; } //Price of product per volume
         public double holdingFactor = 1;
         [NotMapped]
         public double RunningCosts
@@ -29,7 +29,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             get
             {
                 //running cost= (volume of inventory* holding cost factor)+ (backorder factor* backorder* holding cost)+ (incoming order* holding cost) 
-                return (Inventory * holdingFactor) + (holdingFactor * 2 * Backorder * holdingFactor) /*+ (IncomingOrder.Volume * holdingFactor) why? pay for something you buy*/; //TODO: implement factors 
+                return (Inventory * holdingFactor) + (holdingFactor * 2 * Backorder * holdingFactor) /*+ (IncomingOrder.Volume * holdingFactor)*/; //TODO: implement factors 
             }
         }
 
@@ -40,15 +40,29 @@ namespace BlockchainDemonstratorApi.Models.Classes
             IncomingDelivery = new List<Order>();
         }
 
-        public Order SendDelivery(int currentDay)
+        /**
+         * <summary>Gets outgoing delivery</summary>
+         * <returns>Order object with available stock</returns>
+         */
+        public Order GetOutgoingDelivery(int currentDay)
         {
-            IncomingOrder.ArrivalDay = Role.LeadTime + currentDay;
-            IncomingOrder.Volume = Shipment();
-            return IncomingOrder;
-            //return new Order() { ArrivalDay = Role.LeadTime + currentDay, Volume = Shipment() };
+            return new Order()
+            {
+                ArrivalDay = Role.LeadTime + currentDay,
+                Volume = GetOutgoingVolume(),
+                OrderDay = IncomingOrder.OrderDay
+            };
         }
 
-        public int Shipment()
+        /**
+         * <summary>
+         * Gets volume for outgoing orders also handles inventory and backorder.
+         * If incoming order request more volume than we have.
+         * all available stock will be send and excess will be added to backorder.
+         * </summary>
+         * <returns>Order Volume as an int</returns>
+         */
+        public int GetOutgoingVolume()
         {
             int shipment = 0;
             Backorder += IncomingOrder.Volume;
@@ -69,13 +83,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
             return shipment;
         }
 
-        public void GetDeliveries(int currentday)
+        /**
+         * <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>
+         */
+        public void IncreaseInventory(int currentday)
         {
             Inventory += IncomingDelivery
                 .Where(d => d.ArrivalDay < currentday && d.ArrivalDay > currentday - 5) //Todo: make 5 a changeable factor later
                 .Sum(d => d.Volume);
         }
-
-        
     }
 }
