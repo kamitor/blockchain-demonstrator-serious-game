@@ -25,6 +25,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 if (value != null) 
                 {
+                    if (value.Role.Id != "Retailer") throw new ArgumentException("Given role id does not match the expected role Retailer");
                     Players.Add(value);
                     _retailer = value;
                 }
@@ -41,6 +42,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 if (value != null) 
                 {
+                    if (value.Role.Id != "Manufacturer") throw new ArgumentException("Given role id does not match the expected role Manufacturer");
                     Players.Add(value);
                     _manufacturer = value;
                 }
@@ -57,6 +59,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 if (value != null) 
                 {
+                    if (value.Role.Id != "Processor") throw new ArgumentException("Given role id does not match the expected role Processor");
                     Players.Add(value);
                     _processor = value;
                 }
@@ -73,6 +76,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 if (value != null) 
                 {
+                    if (value.Role.Id != "Farmer") throw new ArgumentException("Given role id does not match the expected role Farmer");
                     Players.Add(value);
                     _farmer = value;
                 }

@@ -44,29 +44,40 @@ namespace BlockchainDemonstratorApi.Controllers
             if (game == null) return NotFound();
 
             bool joined = false;
-            if (role == RoleType.Retailer)
+            try
             {
-                game.Retailer = new Player(name);
-                game.Retailer.Role = _context.Roles.FirstOrDefault(r => r.Id == "Retailer");
-                joined = true;
+                if (role == RoleType.Retailer)
+                {
+                    Player player = new Player(name);
+                    player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Retailer");
+                    game.Retailer = player;
+                    joined = true;
+                }
+                else if (role == RoleType.Manufacturer)
+                {
+                    Player player = new Player(name);
+                    player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Manufacturer");
+                    game.Manufacturer = player;
+                    joined = true;
+                }
+                else if (role == RoleType.Processor)
+                {
+                    Player player = new Player(name);
+                    player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Processor");
+                    game.Processor = player;
+                    joined = true;
+                }
+                else if (role == RoleType.Farmer)
+                {
+                    Player player = new Player(name);
+                    player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Farmer");
+                    game.Farmer = player;
+                    joined = true;
+                }
             }
-            else if (role == RoleType.Manufacturer)
+            catch (ArgumentException e)
             {
-                game.Manufacturer = new Player(name);
-                game.Manufacturer.Role = _context.Roles.FirstOrDefault(r => r.Id == "Manufacturer");
-                joined = true;
-            }
-            else if (role == RoleType.Processor)
-            {
-                game.Processor = new Player(name);
-                game.Processor.Role = _context.Roles.FirstOrDefault(r => r.Id == "Processor");
-                joined = true;
-            }
-            else if (role == RoleType.Farmer)
-            {
-                game.Farmer = new Player(name);
-                game.Farmer.Role = _context.Roles.FirstOrDefault(r => r.Id == "Farmer");
-                joined = true;
+                return BadRequest(e.Message);
             }
 
             if (joined)
