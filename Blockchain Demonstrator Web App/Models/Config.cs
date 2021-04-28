@@ -10,7 +10,7 @@ namespace Blockchain_Demonstrator_Web_App.Models
 {
     public static class Config
     {
-        public static string WebApplicationUrl { get; set; }
+        public static string WebApplicationUrl { get; set; } //TODO: remove if not used later on, don't describe in TO for now
         public static string RestApiUrl { get; set; }
     }
 }
