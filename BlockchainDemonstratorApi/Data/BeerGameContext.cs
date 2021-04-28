@@ -17,5 +17,16 @@ namespace BlockchainDemonstratorApi.Data
         public DbSet<Game> Games { get; set; } //TODO: check if every usage of this dbset is now Games instead of Game
         public DbSet<Role> Roles { get; set; }
         public DbSet<Option> Options { get; set; }
+        public DbSet<Order> Orders { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.RequestForPlayer)
+                .WithMany(p => p.IncomingOrders);
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.DeliveryToPlayer)
+                .WithMany(p => p.IncomingDeliveries);
+        }
     }
 }

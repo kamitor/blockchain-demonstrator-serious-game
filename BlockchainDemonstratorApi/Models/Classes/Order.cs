@@ -10,10 +10,15 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Order
     {
-        [Key] public string Id { get; set; } = Guid.NewGuid().ToString();
+        [Key] 
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public Player RequestForPlayer { get; set; }
+        public Player DeliveryToPlayer { get; set; }
+        public int OrderNumber { get; set; }
         public int OrderDay { get; set; }
         public double ArrivalDay { get; set; }
-        [NotMapped] private int _volume;
+        [NotMapped] 
+        private int _volume;
 
         [Range(0, double.MaxValue)]
         public int Volume

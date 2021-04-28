@@ -38,9 +38,9 @@
                             <tr>
                                 <td class="order-history">@i</td>
                                 <td class="order-history">
-                                @if (i < player.IncomingDelivery.Count())
+                                @if (i < player.IncomingDeliveries.Count())
                                 { 
-                                    @if (player.IncomingDelivery[i] != null) { @Html.Raw(player.IncomingDelivery[i].Volume); } //TODO: Make new order number to get history, incomingDelivery volume != order volume
+                                    @if (player.IncomingDeliveries[i] != null) { @Html.Raw(player.IncomingDeliveries[i].Volume); } //TODO: Make new order number to get history, incomingDelivery volume != order volume
                                 }
                                 </td>
                             </tr>
@@ -58,7 +58,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var order in player.IncomingDelivery)
+                            @foreach (var order in player.IncomingDeliveries)
                             {
                                 <tr>
                                     <td>@order.OrderDay</td>

@@ -219,21 +219,21 @@ namespace BlockchainDemonstratorApi.Controllers
         {
             return _context.Games
                 .Include(g => g.Retailer).ThenInclude(p => p.Role)
-                .Include(g => g.Retailer).ThenInclude(p => p.IncomingOrder)
+                .Include(g => g.Retailer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Retailer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Retailer).ThenInclude(p => p.IncomingDelivery)
+                .Include(g => g.Retailer).ThenInclude(p => p.IncomingDeliveries)
                 .Include(g => g.Manufacturer).ThenInclude(p => p.Role)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingOrder)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Manufacturer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingDelivery)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingDeliveries)
                 .Include(g => g.Processor).ThenInclude(p => p.Role)
-                .Include(g => g.Processor).ThenInclude(p => p.IncomingOrder)
+                .Include(g => g.Processor).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Processor).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Processor).ThenInclude(p => p.IncomingDelivery)
+                .Include(g => g.Processor).ThenInclude(p => p.IncomingDeliveries)
                 .Include(g => g.Farmer).ThenInclude(p => p.Role)
-                .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrder)
+                .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Farmer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Farmer).ThenInclude(p => p.IncomingDelivery)
+                .Include(g => g.Farmer).ThenInclude(p => p.IncomingDeliveries)
                 .FirstOrDefault(game => game.Id == gameId);
         }
     }

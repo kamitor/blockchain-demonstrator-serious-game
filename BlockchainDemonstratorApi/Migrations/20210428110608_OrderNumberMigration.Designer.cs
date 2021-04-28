@@ -3,14 +3,16 @@ using BlockchainDemonstratorApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlockchainDemonstratorApi.Migrations
 {
     [DbContext(typeof(BeerGameContext))]
-    partial class BeerGameContextModelSnapshot : ModelSnapshot
+    [Migration("20210428110608_OrderNumberMigration")]
+    partial class OrderNumberMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,29 +98,24 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<double>("ArrivalDay")
                         .HasColumnType("float");
 
-                    b.Property<string>("DeliveryToPlayerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("OrderDay")
                         .HasColumnType("int");
 
                     b.Property<int>("OrderNumber")
                         .HasColumnType("int");
 
+                    b.Property<string>("PlayerId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
-
-                    b.Property<string>("RequestForPlayerId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Volume")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeliveryToPlayerId");
-
-                    b.HasIndex("RequestForPlayerId");
+                    b.HasIndex("PlayerId");
 
                     b.ToTable("Order");
                 });
@@ -128,10 +125,16 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("Backorder")
+                        .HasColumnType("int");
+
                     b.Property<double>("Balance")
                         .HasColumnType("float");
 
                     b.Property<string>("CurrentOrderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("IncomingOrderId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Inventory")
@@ -150,6 +153,8 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CurrentOrderId");
+
+                    b.HasIndex("IncomingOrderId");
 
                     b.HasIndex("RoleId");
 
@@ -200,13 +205,9 @@ namespace BlockchainDemonstratorApi.Migrations
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Order", b =>
                 {
-                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", "DeliveryToPlayer")
-                        .WithMany("IncomingDeliveries")
-                        .HasForeignKey("DeliveryToPlayerId");
-
-                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", "RequestForPlayer")
-                        .WithMany("IncomingOrders")
-                        .HasForeignKey("RequestForPlayerId");
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", null)
+                        .WithMany("IncomingDelivery")
+                        .HasForeignKey("PlayerId");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Player", b =>
@@ -214,6 +215,10 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Order", "CurrentOrder")
                         .WithMany()
                         .HasForeignKey("CurrentOrderId");
+
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Order", "IncomingOrder")
+                        .WithMany()
+                        .HasForeignKey("IncomingOrderId");
 
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Role", "Role")
                         .WithMany()
