@@ -118,21 +118,24 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Manufacturer.CurrentOrder.OrderDay = CurrentDay;
             Processor.CurrentOrder.OrderDay = CurrentDay;
             Farmer.CurrentOrder.OrderDay = CurrentDay;
-            
+
+            // Adding order number
+            Retailer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
+            Manufacturer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
+            Processor.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
+            Farmer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
+
             // Adding Price
             Retailer.CurrentOrder.Price = Manufacturer.ProductPrice * Retailer.CurrentOrder.Volume;
             Manufacturer.CurrentOrder.Price = Processor.ProductPrice * Manufacturer.CurrentOrder.Volume;
             Processor.CurrentOrder.Price = Farmer.ProductPrice * Processor.CurrentOrder.Volume;
             Farmer.CurrentOrder.Price = 2080 * Farmer.CurrentOrder.Volume;
             
-          
-
             // Making new order
-            int customerOrderVolume = new Random().Next(5, 15);
-            Retailer.IncomingOrder = new Order() { OrderDay = CurrentDay, Volume = customerOrderVolume }; 
-            Manufacturer.IncomingOrder = Retailer.CurrentOrder;
-            Processor.IncomingOrder = Manufacturer.CurrentOrder;
-            Farmer.IncomingOrder = Processor.CurrentOrder;
+            Retailer.IncomingOrders.Add(new Order() { OrderDay = CurrentDay, Volume = new Random().Next(5, 15) }); 
+            Manufacturer.IncomingOrders.Add(Retailer.CurrentOrder);
+            Processor.IncomingOrders.Add(Manufacturer.CurrentOrder);
+            Farmer.IncomingOrders.Add(Processor.CurrentOrder);
         }
 
         private void SendPayments()
@@ -151,16 +154,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Retailer.Balance += customerOrderVolume * Retailer.ProductPrice;
         }
 
-            /**
-             * <summary>Adds outgoing deliveries to the IncomingDelivery list</summary>
-             */
-            private void SendDeliveries()
+        /**
+         * <summary>Adds outgoing deliveries to the IncomingDelivery list</summary>
+         */
+        private void SendDeliveries()
         {
-            Retailer.GetOutgoingDelivery(CurrentDay);
-            Retailer.IncomingDelivery.Add(Manufacturer.GetOutgoingDelivery(CurrentDay));
-            Manufacturer.IncomingDelivery.Add(Processor.GetOutgoingDelivery(CurrentDay));
-            Processor.IncomingDelivery.Add(Farmer.GetOutgoingDelivery(CurrentDay));
-            Farmer.IncomingDelivery.Add(new Order() { OrderDay = CurrentDay, ArrivalDay = CurrentDay + new Random().Next(3, 6), Volume = Farmer.CurrentOrder.Volume }); //TODO: Implement later
+            Retailer.GetOutgoingDeliveries(CurrentDay);
+            Retailer.IncomingDeliveries.AddRange(Manufacturer.GetOutgoingDeliveries(CurrentDay));
+            Manufacturer.IncomingDeliveries.AddRange(Processor.GetOutgoingDeliveries(CurrentDay));
+            Processor.IncomingDeliveries.AddRange(Farmer.GetOutgoingDeliveries(CurrentDay));
+            Farmer.IncomingDeliveries.Add(new Order() { OrderDay = CurrentDay, ArrivalDay = CurrentDay + new Random().Next(3, 6), Volume = Farmer.CurrentOrder.Volume }); //TODO: Implement later
         }
 
         /**
