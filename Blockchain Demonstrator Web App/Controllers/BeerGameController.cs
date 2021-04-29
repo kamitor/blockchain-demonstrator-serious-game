@@ -17,8 +17,6 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
     {
         public IActionResult Index()
         {
-            
-
             return View();
         }
         
@@ -38,10 +36,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     if (responseString != null) 
                     {
                         Game game = JsonConvert.DeserializeObject<Game>(responseString);
-                        game.Retailer.OrderHistory = GetOrdersFromPlayer(game.Retailer.Id);
-                        game.Manufacturer.OrderHistory = GetOrdersFromPlayer(game.Manufacturer.Id);
-                        game.Processor.OrderHistory = GetOrdersFromPlayer(game.Processor.Id);
-                        game.Farmer.OrderHistory = GetOrdersFromPlayer(game.Farmer.Id);
+                        if (game.Retailer != null) game.Retailer.OrderHistory = GetOrdersFromPlayer(game.Retailer.Id);
+                        if (game.Manufacturer != null) game.Manufacturer.OrderHistory = GetOrdersFromPlayer(game.Manufacturer.Id);
+                        if (game.Processor != null) game.Processor.OrderHistory = GetOrdersFromPlayer(game.Processor.Id);
+                        if (game.Farmer != null) game.Farmer.OrderHistory = GetOrdersFromPlayer(game.Farmer.Id);
                         return View(game);
                     }
                 }

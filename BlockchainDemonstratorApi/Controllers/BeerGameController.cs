@@ -224,24 +224,28 @@ namespace BlockchainDemonstratorApi.Controllers
 
         private Game GetGameFromContext(string gameId)
         {
-            return _context.Games
+            Game game = _context.Games.FirstOrDefault(game => game.Id == gameId); //Seperated into chunks to reduce load time
+            game.Retailer = _context.Games
                 .Include(g => g.Retailer).ThenInclude(p => p.Role)
                 .Include(g => g.Retailer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Retailer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Retailer).ThenInclude(p => p.IncomingDeliveries)
+                .Include(g => g.Retailer).ThenInclude(p => p.IncomingDeliveries).FirstOrDefault().Retailer;
+            game.Manufacturer = _context.Games
                 .Include(g => g.Manufacturer).ThenInclude(p => p.Role)
                 .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Manufacturer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingDeliveries)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingDeliveries).FirstOrDefault().Manufacturer;
+            game.Processor = _context.Games
                 .Include(g => g.Processor).ThenInclude(p => p.Role)
                 .Include(g => g.Processor).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Processor).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Processor).ThenInclude(p => p.IncomingDeliveries)
+                .Include(g => g.Processor).ThenInclude(p => p.IncomingDeliveries).FirstOrDefault().Processor;
+            game.Farmer = _context.Games
                 .Include(g => g.Farmer).ThenInclude(p => p.Role)
                 .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Farmer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Farmer).ThenInclude(p => p.IncomingDeliveries)
-                .FirstOrDefault(game => game.Id == gameId);
+                .Include(g => g.Farmer).ThenInclude(p => p.IncomingDeliveries).FirstOrDefault().Farmer;
+            return game;
         }
     }
 }
