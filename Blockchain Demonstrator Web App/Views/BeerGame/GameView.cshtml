@@ -30,8 +30,6 @@
                         <thead>
                             <tr>
                                 <th>Order number</th>
-                                <th>Order date</th>
-                                <th>Arrival date</th>
                                 <th>Volume</th>
                             </tr>
                         </thead>
@@ -39,8 +37,6 @@
                         {
                     <tr>
                         <td class="order-history">@order.OrderNumber</td>
-                        <td class="order-history">@order.OrderDay</td>
-                        <td class="order-history">@order.ArrivalDay</td>
                         <td class="order-history">@order.Volume</td>
                     </tr>
                         }
@@ -83,6 +79,6 @@
 {
     <script src="~/js/BeerGame.js"></script>
     <script>
-    BeerGame.init(@Model.Id)
+    BeerGame.init('@Model.Id')
     </script>
 }

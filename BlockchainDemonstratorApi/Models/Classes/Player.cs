@@ -24,8 +24,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 return IncomingOrders.Sum(o => o.Volume);
             }
         }
-        public List<Order> IncomingOrders { get; set; } //sent from your customer
         public Order CurrentOrder { get; set; }
+        public List<Order> IncomingOrders { get; set; } //sent from your customer
         public List<Order> IncomingDeliveries { get; set; } //sent from your supplier
         public double Balance { get; set; }
         //TODO: ProductPrice does not belong to the user, it is something that should either be placed in the role class or in a new product class. Update database with migrations when changed!

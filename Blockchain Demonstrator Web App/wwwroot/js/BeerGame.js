@@ -40,10 +40,10 @@ const BeerGame = (() => {
     
     const updateGame = (game) => {
         gameSerialized = JSON.parse(game);
-        updateOrderHistory("Retailer");
-        updateOrderHistory("Manufacturer");
-        updateOrderHistory("Processor");
-        updateOrderHistory("Farmer");
+        updateOrderHistory("Retailer", gameSerialized.retailer.currentOrder.orderNumber, gameSerialized.retailer.currentOrder.volume);
+        updateOrderHistory("Manufacturer", gameSerialized.manufacturer.currentOrder.orderNumber, gameSerialized.manufacturer.currentOrder.volume);
+        updateOrderHistory("Processor", gameSerialized.processor.currentOrder.orderNumber, gameSerialized.processor.currentOrder.volume);
+        updateOrderHistory("Farmer", gameSerialized.farmer.currentOrder.orderNumber, gameSerialized.farmer.currentOrder.volume);
 
         updateIncomingDeliveries("Retailer", gameSerialized);
         updateIncomingDeliveries("Manufacturer", gameSerialized);
@@ -61,24 +61,24 @@ const BeerGame = (() => {
         $("#section-Farmer > h4").eq(3).text("Backorder: " + gameSerialized.farmer.backorder);
     }
 
-    const updateOrderHistory = (id) => {
-        $(`#section-${id} > section:eq(0) > table > tbody > tr`).each((index, element) => {
-            if ($(element).find("td:eq(1)").text() == "") {
-                $(element).find("td:eq(1)").text($(`#section-${id} > form > input`).val());
-                return false;
-            }
-        });
+    const updateOrderHistory = (id, orderNumber, orderVolume) => {
+        $(`#section-${id} > section:eq(0) > table > tbody`)
+            .append($(`<tr><td class="order-history">${orderNumber}</td><td class="order-history">${orderVolume}</td></tr>`));
     }
 
     const updateIncomingDeliveries = (id, game) => {
-        let orderHistory = getOrders(game[id].id);
-
-        $(`#section-${id} > section:eq(1) > table > tbody > tr`).each((index, element) => {
-            $(element).find("td:eq(0)").text(orderHistory.ordernumber);
-            $(element).find("td:eq(0)").text(orderHistory.orderday);
-            $(element).find("td:eq(1)").text(orderHistory.arrivalday);
-            $(element).find("td:eq(2)").text(orderHistory.volume);
-        });
+        $(`#section-${id} > section:eq(1) > table > tbody`).empty();
+        game[id].incomingdelivery.forEach(order => {
+            $(`#section-${id} > section:eq(1) > table > tbody`)
+                .append($(`<tr>
+                        <td class="order-history">${order.ordernumber}</td>
+                        <td class="order-history">${order.orderday}</td>
+                        <td class="order-history">${order.arrivalday}</td>
+                        <td class="order-history">${order.volume}</td>
+                        </tr>`));
+        })
+       
+            
     }
 
     const getOrders = (playerId) => {

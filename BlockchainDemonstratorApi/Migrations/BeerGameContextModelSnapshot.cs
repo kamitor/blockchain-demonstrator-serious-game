@@ -200,11 +200,11 @@ namespace BlockchainDemonstratorApi.Migrations
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Order", b =>
                 {
-                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", "DeliveryToPlayer")
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", null)
                         .WithMany("IncomingDeliveries")
                         .HasForeignKey("DeliveryToPlayerId");
 
-                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", "RequestForPlayer")
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", null)
                         .WithMany("IncomingOrders")
                         .HasForeignKey("RequestForPlayerId");
                 });
