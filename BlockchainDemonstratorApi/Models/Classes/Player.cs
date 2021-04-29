@@ -16,8 +16,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public string Name { get; set; }
         public Role Role { get; set; }
         public int Inventory { get; set; } = 20;
-        [NotMapped]
-        private int backOrder;
+        //TODO: backorder is now volume of every order
         public int Backorder 
         {
             get
@@ -51,55 +50,42 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         /**
-         * <summary>Gets outgoing delivery</summary>
-         * <returns>Order object with available stock</returns>
+         * <summary>Gets list of outgoing deliveries</summary>
+         * <returns>List of Order objects with available stock</returns>
+         * <param name="currentDay">integer that specifies the current day</param>
          */
         public List<Order> GetOutgoingDeliveries(int currentDay) //TODO: rework to send only possible outgoing deliveries
         {
             List<Order> outgoingDeliveries = new List<Order>();
-            for (int i = 0; i < IncomingOrders.Count - 1; i++)
+            
+            for (int i = 0; i < IncomingOrders.Count; i++)
             {
                 if(IncomingOrders[i].Volume <= Inventory)
                 {
                     Inventory -= IncomingOrders[i].Volume;
-                    IncomingOrders[i].ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0, 3);
+                    IncomingOrders[i].ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0, 4);
                     outgoingDeliveries.Add(IncomingOrders[i]);
                     IncomingOrders.RemoveAt(i);
                     i--;
+                }
+                else if (Inventory > 0)
+                {
+                    outgoingDeliveries.Add(new Order()
+                    {
+                        OrderDay = IncomingOrders[i].OrderDay,
+                        ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0, 4),
+                        Volume = Inventory
+                    });
+                    
+                    IncomingOrders[i].Volume -= Inventory;
+                    Inventory = 0;
+                    
+                    break;
                 }
             }
 
             return outgoingDeliveries;
         }
-
-        /**
-         * <summary>
-         * Gets volume for outgoing orders also handles inventory and backorder.
-         * If incoming order request more volume than we have.
-         * all available stock will be send and excess will be added to backorder.
-         * </summary>
-         * <returns>Order Volume as an int</returns>
-         */
-        /*public int GetOutgoingVolume() //TODO: rework to work per order instead of as a whole
-        {
-            int volume = 0;
-            Backorder += IncomingOrders.Volume;
-
-            if (Inventory < Backorder)
-            {
-                volume = Inventory;
-                Backorder -= Inventory;
-                Inventory = 0;
-            }
-            else
-            {
-                Inventory -= Backorder;
-                volume = Backorder;
-                Backorder = 0;
-            }
-
-            return volume;
-        }*/
 
         /**
          * <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>

@@ -3,7 +3,9 @@ using BlockchainDemonstratorApi.Models.Enums;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using NuGet.Frameworks;
 
 namespace BlockchainDemonstratorNUnitTest
 {
@@ -113,6 +115,70 @@ namespace BlockchainDemonstratorNUnitTest
             }
 
             Assert.Fail();
+        }
+
+        [Test]
+        public void EachActorHasDifferentLeadtime_True()
+        {
+            int leadtimeRetailer = (int)_game.Retailer.Role.LeadTime;
+            int leadtimeManufacturer = (int)_game.Manufacturer.Role.LeadTime;
+            int leadtimeProcessor = (int)_game.Processor.Role.LeadTime;
+            int leadtimeFarmer = (int)_game.Farmer.Role.LeadTime;
+            bool result = false;
+
+            if (leadtimeRetailer != leadtimeManufacturer && leadtimeRetailer != leadtimeProcessor && leadtimeRetailer != leadtimeFarmer)
+            {
+                result = true;
+            }
+            else
+            {
+                result = false;
+            }
+            if (leadtimeManufacturer != leadtimeProcessor && leadtimeManufacturer != leadtimeFarmer)
+            {
+                result = true;
+            }
+            else
+            {
+                result = false;
+            }
+            if (leadtimeProcessor != leadtimeFarmer)
+            {
+                result = true;
+            }
+            else
+            {
+                result = false;
+            }
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void OrderLeadtimeRandomlyIncreases()
+        {
+            _game.Manufacturer.Inventory = 20;
+            _game.Manufacturer.IncomingOrders.Add(new Order() {Volume = 20});
+            
+            List<Order> result = _game.Manufacturer.GetOutgoingDeliveries(1);
+            
+            if (result.First().ArrivalDay >= _game.Manufacturer.Role.LeadTime + 1)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void OrderFailedToDeliverFullVolume_ExcessAddedToBackorder()
+        {
+            _game.Manufacturer.Inventory = 10;
+            _game.Manufacturer.IncomingOrders.Add(new Order() {Volume = 20});
+
+            _game.Manufacturer.GetOutgoingDeliveries(1);
+
+            int result = _game.Manufacturer.Backorder;
+            
+            Assert.AreEqual(10, result);
         }
     }
 }

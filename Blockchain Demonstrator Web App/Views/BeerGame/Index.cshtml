@@ -3,192 +3,25 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Test..........</h1>
-</div>
+<form id="join-game-form" asp-action="GameView" style="display: none">
+    <h4>Seems like you are already part of an ongoing game. Would you like to join this game?</h4>
+    <input id="join-game-form--textinput" type="text" name="gameId" style="display: none">
+    <input type="submit" value="Join game">
+</form>
 
-
-
-
-<!DOCTYPE html>
-
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-
-    <div class="container">
-        <div class="title">submit</div>
-        <div class="content">
-            <form action="#">
-                <div class="user-details">
-                    <div class="input-box">
-                        <span class="details">value</span>
-                        <input type="text" placeholder="Enter your wanted value" required>
-                    </div>
-                </div>
-                <div class="role-details">
-                    <input type="radio" name="role" id="dot-1">
-                    <input type="radio" name="role" id="dot-2">
-                    <input type="radio" name="role" id="dot-3">
-                    <input type="radio" name="role" id="dot-4">
-                    <span class="role-title">role</span>
-                    <div class="category">
-                        <label for="dot-1">
-                            <span class="dot one"></span>
-                            <span class="role">1-Retailer</span>
-                        </label>
-                        <label for="dot-2">
-                            <span class="dot two"></span>
-                            <span class="role">2-Farmer</span>
-                        </label>
-                        <label for="dot-3">
-                            <span class="dot three"></span>
-                            <span class="role">3-Manufacture</span>
-                        </label>
-                        <label for="dot-4">
-                            <span class="dot four"></span>
-                            <span class="role">4-processor</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="button">
-                    <input type="submit" value="submit">
-                    <p> <hr /></p>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="title">submit</div>
-        <div class="content">
-            <form action="#">
-                <div class="user-details">
-                    <div class="input-box">
-                        <span class="details">value</span>
-                        <input type="text" placeholder="Enter your wanted value" required>
-                    </div>
-                </div>
-                <div class="role-details">
-                    <input type="radio" name="role" id="dot-1">
-                    <input type="radio" name="role" id="dot-2">
-                    <input type="radio" name="role" id="dot-3">
-                    <input type="radio" name="role" id="dot-4">
-                    <span class="role-title">role</span>
-                    <div class="category">
-                        <label for="dot-1">
-                            <span class="dot one"></span>
-                            <span class="role">1-Retailer</span>
-                        </label>
-                        <label for="dot-2">
-                            <span class="dot two"></span>
-                            <span class="role">2-Farmer</span>
-                        </label>
-                        <label for="dot-3">
-                            <span class="dot three"></span>
-                            <span class="role">3-Manufacture</span>
-                        </label>
-                        <label for="dot-4">
-                            <span class="dot four"></span>
-                            <span class="role">4-processor</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="button">
-                    <input type="submit" value="submit">
-                    <p> <hr /></p>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="container">
-        <div class="title">submit</div>
-        <div class="content">
-            <form action="#">
-                <div class="user-details">
-                    <div class="input-box">
-                        <span class="details">value</span>
-                        <input type="text" placeholder="Enter your wanted value" required>
-                    </div>
-                </div>
-                <div class="role-details">
-                    <input type="radio" name="role" id="dot-1">
-                    <input type="radio" name="role" id="dot-2">
-                    <input type="radio" name="role" id="dot-3">
-                    <input type="radio" name="role" id="dot-4">
-                    <span class="role-title">role</span>
-                    <div class="category">
-                        <label for="dot-1">
-                            <span class="dot one"></span>
-                            <span class="role">1-Retailer</span>
-                        </label>
-                        <label for="dot-2">
-                            <span class="dot two"></span>
-                            <span class="role">2-Farmer</span>
-                        </label>
-                        <label for="dot-3">
-                            <span class="dot three"></span>
-                            <span class="role">3-Manufacture</span>
-                        </label>
-                        <label for="dot-4">
-                            <span class="dot four"></span>
-                            <span class="role">4-processor</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="button">
-                    <input type="submit" value="submit">
-                    <p> <hr /></p>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="container">
-        <div class="title">submit</div>
-        <div class="content">
-            <form action="#">
-                <div class="user-details">
-                    <div class="input-box">
-                        <span class="details">value</span>
-                        <input type="text" placeholder="Enter your wanted value" required>
-                    </div>
-                </div>
-                <div class="role-details">
-                    <input type="radio" name="role" id="dot-1">
-                    <input type="radio" name="role" id="dot-2">
-                    <input type="radio" name="role" id="dot-3">
-                    <input type="radio" name="role" id="dot-4">
-                    <span class="role-title">role</span>
-                    <div class="category">
-                        <label for="dot-1">
-                            <span class="dot one"></span>
-                            <span class="role">1-Retailer</span>
-                        </label>
-                        <label for="dot-2">
-                            <span class="dot two"></span>
-                            <span class="role">2-Farmer</span>
-                        </label>
-                        <label for="dot-3">
-                            <span class="dot three"></span>
-                            <span class="role">3-Manufacture</span>
-                        </label>
-                        <label for="dot-4">
-                            <span class="dot four"></span>
-                            <span class="role">4-processor</span>
-
-                        </label>
-                    </div>
-                </div>
-                <div class="button">
-                    <input type="submit" value="submit">
-                    <p> <hr /></p>
-
-                </div>
-            </form>
-        </div>
-    </div>
-
-</body> 
+@section Scripts
+{
+    <script>
+    
+       function getCookie(name) {
+       const value = `; ${document.cookie}`;
+       const parts = value.split(`; ${name}=`);
+       if (parts.length === 2) return parts.pop().split(';').shift();
+       }         
+       
+       if (typeof getCookie("JoinedGame") !== "undefined"){
+           $("#join-game-form--textinput").val(getCookie("JoinedGame"));
+           $("#join-game-form").css("display", "block")     
+       }
+    </script>
+}
