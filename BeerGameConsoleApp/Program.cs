@@ -49,7 +49,7 @@ namespace BeerGameConsoleApp
             //     gm.Progress();
             // }
 
-            Order o = new Order() {Volume = -1};
+            Console.WriteLine(-20 * -1);
         }
     }
 }

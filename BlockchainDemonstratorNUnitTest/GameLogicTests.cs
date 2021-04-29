@@ -180,5 +180,28 @@ namespace BlockchainDemonstratorNUnitTest
             
             Assert.AreEqual(10, result);
         }
+
+        [Test]
+        public void OrderPriceSubtractedFromBalance_expectTrue()
+        {
+            _game.Manufacturer.IncomingDeliveries.Add(new Order() {Volume = 20, Price = 2000, ArrivalDay = 1});
+            _game.Manufacturer.IncreaseInventory(1);
+            _game.Manufacturer.UpdateBalance(2);
+            
+            Assert.AreEqual(-2000, _game.Manufacturer.Balance);
+        }
+        
+        [Test]
+        public void OrderPriceAddedToBalance_expectTrue()
+        {
+            _game.Manufacturer.IncomingDeliveries.Add(new Order() {Volume = 20, Price = 2000, ArrivalDay = 1});
+
+            _game.CurrentDay = 3;
+            _game.Progress();
+            
+            _game.Processor.UpdateBalance(3);
+            
+            Assert.AreEqual(2000, _game.Processor.Balance);
+        }
     }
 }

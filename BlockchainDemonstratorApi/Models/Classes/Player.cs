@@ -10,38 +10,42 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Player
     {
-        [Key]
-        public string Id { get; set; }
-        [Required]
-        public string Name { get; set; }
+        [Key] public string Id { get; set; }
+        [Required] public string Name { get; set; }
         public Role Role { get; set; }
+
         public int Inventory { get; set; } = 20;
+
         //TODO: backorder is now volume of every order
-        public int Backorder 
+        public int Backorder
         {
-            get
-            {
-                return IncomingOrders.Sum(o => o.Volume);
-            }
+            get { return IncomingOrders.Sum(o => o.Volume); }
         }
+
         public List<Order> IncomingOrders { get; set; } //sent from your customer
         public Order CurrentOrder { get; set; }
         public List<Order> IncomingDeliveries { get; set; } //sent from your supplier
+        public List<Payment> Payments { get; set; }
+
         public double Balance { get; set; }
+
         //TODO: ProductPrice does not belong to the user, it is something that should either be placed in the role class or in a new product class. Update database with migrations when changed!
         public double ProductPrice { get; set; } //Price of product per volume
         public double holdingFactor = 1;
+
         [NotMapped]
-        public double RunningCosts
+        public double HoldingCosts
         {
             get
             {
                 //running cost= (volume of inventory* holding cost factor)+ (backorder factor* backorder* holding cost)+ (incoming order* holding cost) 
-                return (Inventory * holdingFactor) + (holdingFactor * 2 * Backorder * holdingFactor) /*+ (IncomingOrder.Volume * holdingFactor)*/; //TODO: implement factors 
+                return (Inventory * holdingFactor) +
+                       (holdingFactor * 2 * Backorder) /*+ (IncomingOrder.Volume * holdingFactor)*/
+                    ; //TODO: implement factors 
             }
         }
-        [NotMapped]
-        public List<Order> OrderHistory { get; set; }
+
+        [NotMapped] public List<Order> OrderHistory { get; set; }
 
         public Player(string name)
         {
@@ -49,6 +53,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Name = name;
             IncomingOrders = new List<Order>();
             IncomingDeliveries = new List<Order>();
+            Payments = new List<Payment>();
         }
 
         /**
@@ -56,13 +61,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <returns>List of Order objects with available stock</returns>
          * <param name="currentDay">integer that specifies the current day</param>
          */
-        public List<Order> GetOutgoingDeliveries(int currentDay) //TODO: rework to send only possible outgoing deliveries
+        public List<Order> GetOutgoingDeliveries(int currentDay)
         {
             List<Order> outgoingDeliveries = new List<Order>();
-            
+
             for (int i = 0; i < IncomingOrders.Count; i++)
             {
-                if(IncomingOrders[i].Volume <= Inventory)
+                if (IncomingOrders[i].Volume <= Inventory)
                 {
                     Inventory -= IncomingOrders[i].Volume;
                     IncomingOrders[i].ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0, 4);
@@ -78,10 +83,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
                         ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0, 4),
                         Volume = Inventory
                     });
-                    
+
                     IncomingOrders[i].Volume -= Inventory;
                     Inventory = 0;
-                    
+
                     break;
                 }
             }
@@ -91,12 +96,56 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         /**
          * <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>
+         * <param name="currentDay">integer that specifies the current day</param>
          */
+        //TODO: make currentday -5 parameter in game logic, when round time changes this will break
+        //TODO: change name
         public void IncreaseInventory(int currentday)
         {
-            Inventory += IncomingDeliveries
-                .Where(d => d.ArrivalDay < currentday && d.ArrivalDay > currentday - 5) //Todo: make 5 a changeable factor later
-                .Sum(d => d.Volume);
+            for (int i = 0; i < IncomingDeliveries.Count; i++)
+            {
+                if ((int) IncomingDeliveries[i].ArrivalDay <= currentday &&
+                    (int) IncomingDeliveries[i].ArrivalDay > currentday - 5)
+                {
+                    Inventory += IncomingDeliveries[i].Volume;
+                    //TODO: send payment to supplier
+                    Payments.Add(new Payment()
+                    {
+                        Amount = IncomingDeliveries[i].Price * -1, DueDay = IncomingDeliveries[i].ArrivalDay + 1,
+                        toPlayer = true
+                    });
+                }
+            }
+        }
+
+        public List<Payment> GetOutgoingPayments(int currentday)
+        {
+            List<Payment> payments = new List<Payment>();
+
+            for (int i = 0; i < Payments.Count; i++)
+            {
+                if (Payments[i].toPlayer && (int) Payments[i].DueDay <= currentday &&
+                    (int) Payments[i].DueDay > currentday - 5)
+                {
+                    payments.Add(new Payment()
+                        {Amount = Payments[i].Amount * -1, DueDay = Payments[i].DueDay + 1, toPlayer = true});
+                }
+            }
+
+            return payments;
+        }
+
+        //TODO: make currentday -5 parameter in game logic, when round time changes this will break
+        //TODO: add transportation cost
+        public void UpdateBalance(int currentday)
+        {
+            for (int i = 0; i < Payments.Count; i++)
+            {
+                if ((int) Payments[i].DueDay <= currentday && (int) Payments[i].DueDay > currentday - 5)
+                {
+                    Balance += Payments[i].Amount;
+                }
+            }
         }
     }
 }
