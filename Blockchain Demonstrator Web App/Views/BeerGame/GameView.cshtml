@@ -2,6 +2,7 @@
 @model BlockchainDemonstratorApi.Models.Classes.Game
 
 
+
 <head>
     <title>Game Page</title>
 </head>
@@ -27,23 +28,21 @@
                     <h4>Order history:</h4>
                     <table class="order-history">
                         <thead>
-                        <tr>
-                            <th>Day</th>
-                            <th>Order</th>
-                        </tr>
-                        </thead>
-
-                        @for (int i = 0 + 1; i < 15 + 1; i++)
-                        {
                             <tr>
-                                <td class="order-history">@i</td>
-                                <td class="order-history">
-                                @if (i < player.IncomingDeliveries.Count())
-                                { 
-                                    @if (player.IncomingDeliveries[i] != null) { @Html.Raw(player.IncomingDeliveries[i].Volume); } //TODO: Make new order number to get history, incomingDelivery volume != order volume
-                                }
-                                </td>
+                                <th>Order number</th>
+                                <th>Order date</th>
+                                <th>Arrival date</th>
+                                <th>Volume</th>
                             </tr>
+                        </thead>
+                        @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory)
+                        {
+                    <tr>
+                        <td class="order-history">@order.OrderNumber</td>
+                        <td class="order-history">@order.OrderDay</td>
+                        <td class="order-history">@order.ArrivalDay</td>
+                        <td class="order-history">@order.Volume</td>
+                    </tr>
                         }
                     </table>
                 </section>
@@ -52,19 +51,21 @@
                     <table class="order-history">
                         <thead>
                             <tr>
-                                <th>Order Date</th>
-                                <th>Arrival Date</th>
+                                <th>Order number</th>
+                                <th>Order date</th>
+                                <th>Arrival date</th>
                                 <th>Volume</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var order in player.IncomingDeliveries)
                             {
-                                <tr>
-                                    <td>@order.OrderDay</td>
-                                    <td>@order.ArrivalDay</td>
-                                    <td>@order.Volume</td>
-                                </tr>
+                            <tr>
+                                <td>@order.OrderNumber</td>
+                                <td>@order.OrderDay</td>
+                                <td>@order.ArrivalDay</td>
+                                <td>@order.Volume</td>
+                            </tr>
                             }
                         </tbody>
                     </table>

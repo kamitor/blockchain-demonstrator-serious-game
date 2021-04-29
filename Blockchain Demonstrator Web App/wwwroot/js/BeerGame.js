@@ -71,11 +71,26 @@ const BeerGame = (() => {
     }
 
     const updateIncomingDeliveries = (id, game) => {
+        let orderHistory = getOrders(game[id].id);
+
         $(`#section-${id} > section:eq(1) > table > tbody > tr`).each((index, element) => {
-            $(element).find("td:eq(0)").text(game[id].incomingdelivery[index].orderday);
-            $(element).find("td:eq(1)").text(game[id].incomingdelivery[index].arrivalday);
-            $(element).find("td:eq(2)").text(game[id].incomingdelivery[index].volume);
+            $(element).find("td:eq(0)").text(orderHistory.ordernumber);
+            $(element).find("td:eq(0)").text(orderHistory.orderday);
+            $(element).find("td:eq(1)").text(orderHistory.arrivalday);
+            $(element).find("td:eq(2)").text(orderHistory.volume);
         });
+    }
+
+    const getOrders = (playerId) => {
+        $.ajax({
+            url: `${configMap.baseUrl}/api/BeerGame/GetOrders`,
+            type: "POST",
+            data: JSON.stringify(playerId),
+            contentType: "application/JSON",
+            dataType: "text"
+        }).then(result => {
+            return JSON.parse(result);
+        })
     }
     
     const joinGame = (role, name) => {

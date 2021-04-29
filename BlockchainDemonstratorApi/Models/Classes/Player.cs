@@ -40,6 +40,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 return (Inventory * holdingFactor) + (holdingFactor * 2 * Backorder * holdingFactor) /*+ (IncomingOrder.Volume * holdingFactor)*/; //TODO: implement factors 
             }
         }
+        [NotMapped]
+        public List<Order> OrderHistory { get; set; }
 
         public Player(string name)
         {
