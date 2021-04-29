@@ -136,6 +136,13 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
+        [HttpPost("GetOrders")]
+        public ActionResult<List<Order>> GetOrders([FromBody] string playerId)
+        {
+            List<Order> orders = _context.Orders.Include(o => o.DeliveryToPlayer).Where(o => o.DeliveryToPlayer.Id == playerId).ToList();
+            return orders;
+        }
+
         // PUT: api/BeerGame/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

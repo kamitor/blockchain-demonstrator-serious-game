@@ -30,8 +30,16 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = response.Content;
-                    string responseString =  responseContent.ReadAsStringAsync().Result;
-                    if (responseString != null) return View(JsonConvert.DeserializeObject<Game>(responseString));
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null) 
+                    {
+                        Game game = JsonConvert.DeserializeObject<Game>(responseString);
+                        game.Retailer.OrderHistory = GetOrdersFromPlayer(game.Retailer.Id);
+                        game.Manufacturer.OrderHistory = GetOrdersFromPlayer(game.Manufacturer.Id);
+                        game.Processor.OrderHistory = GetOrdersFromPlayer(game.Processor.Id);
+                        game.Farmer.OrderHistory = GetOrdersFromPlayer(game.Farmer.Id);
+                        return View(game);
+                    }
                 }
             }
 
@@ -71,5 +79,22 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         {
             return View();
         }
+
+        public List<Order> GetOrdersFromPlayer(string playerId)
+        {
+            using (var client = new HttpClient())
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(playerId), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/GetOrders", stringContent).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null) return JsonConvert.DeserializeObject<List<Order>>(responseString);
+                }
+            }
+            return null;
+        } 
     }
 }

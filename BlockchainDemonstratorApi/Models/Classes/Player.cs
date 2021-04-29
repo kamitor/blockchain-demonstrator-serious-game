@@ -41,6 +41,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 return (Inventory * holdingFactor) + (holdingFactor * 2 * Backorder * holdingFactor) /*+ (IncomingOrder.Volume * holdingFactor)*/; //TODO: implement factors 
             }
         }
+        [NotMapped]
+        public List<Order> OrderHistory { get; set; }
 
         public Player(string name)
         {
@@ -56,13 +58,24 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         public List<Order> GetOutgoingDeliveries(int currentDay) //TODO: rework to send only possible outgoing deliveries
         {
+            List<string> test = new List<string>() { "nul","een","twee","drie","vier","vijf" };
+            for (int i = 0; i < test.Count; i++)
+            {
+                if (i == 2)
+                {
+                    test.RemoveAt(i);
+                    i--;
+                }
+            }
+
+
             List<Order> outgoingDeliveries = new List<Order>();
-            for (int i = 0; i < IncomingOrders.Count - 1; i++)
+            for (int i = 0; i < IncomingOrders.Count; i++)
             {
                 if(IncomingOrders[i].Volume <= Inventory)
                 {
                     Inventory -= IncomingOrders[i].Volume;
-                    IncomingOrders[i].ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0, 3);
+                    IncomingOrders[i].ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0, 4);
                     outgoingDeliveries.Add(IncomingOrders[i]);
                     IncomingOrders.RemoveAt(i);
                     i--;
