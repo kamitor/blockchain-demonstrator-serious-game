@@ -50,6 +50,11 @@ const BeerGame = (() => {
         updateIncomingDeliveries("Processor", gameSerialized);
         updateIncomingDeliveries("Farmer", gameSerialized);
 
+        updateIncomingOrder("Retailer", gameSerialized);
+        updateIncomingOrder("Manufacturer", gameSerialized);
+        updateIncomingOrder("Processor", gameSerialized);
+        updateIncomingOrder("Farmer", gameSerialized);
+
         $("#section-Retailer > h4").eq(2).text("Inventory: " + gameSerialized.retailer.inventory);
         $("#section-Manufacturer > h4").eq(2).text("Inventory: " + gameSerialized.manufacturer.inventory);
         $("#section-Processor > h4").eq(2).text("Inventory: " + gameSerialized.processor.inventory);
@@ -66,14 +71,28 @@ const BeerGame = (() => {
             .append($(`<tr><td class="order-history">${orderNumber}</td><td class="order-history">${orderVolume}</td></tr>`));
     }
 
-    const updateIncomingDeliveries = (id, game) => {
+    const updateIncomingOrder = (id, game) => {
         $(`#section-${id} > section:eq(1) > table > tbody`).empty();
-        game[id].incomingdelivery.forEach(order => {
-            $(`#section-${id} > section:eq(1) > table > tbody`)
+        game[id.toLowerCase()].incomingOrders.forEach(order => {
+            if (order.orderDay == game.currentDay - 5)
+                $(`#section-${id} > section:eq(1) > table > tbody`)
+                    .append($(`<tr>
+                        <td class="order-history">${order.orderNumber}</td>
+                        <td class="order-history">${order.orderDay}</td>
+                        <td class="order-history">${order.volume}</td>
+                        </tr>`));
+        })
+    }
+
+    const updateIncomingDeliveries = (id, game) => {
+        $(`#section-${id} > section:eq(2) > table > tbody`).empty();
+        game[id.toLowerCase()].incomingDeliveries.forEach(order => {
+            if (order.arrivalDay <= game.currentDay && order.arrivalDay > game.currentDay - 5)
+            $(`#section-${id} > section:eq(2) > table > tbody`)
                 .append($(`<tr>
-                        <td class="order-history">${order.ordernumber}</td>
-                        <td class="order-history">${order.orderday}</td>
-                        <td class="order-history">${order.arrivalday}</td>
+                        <td class="order-history">${order.orderNumber}</td>
+                        <td class="order-history">${order.orderDay}</td>
+                        <td class="order-history">${order.arrivalDay}</td>
                         <td class="order-history">${order.volume}</td>
                         </tr>`));
         })
@@ -110,7 +129,9 @@ const BeerGame = (() => {
         getGame: getGame,
         joinGame: joinGame,
         updateGame: updateGame,
-        sendOrders: sendOrders
+        sendOrders: sendOrders,
+        updateIncomingOrder: updateIncomingOrder,
+        updateIncomingDeliveries: updateIncomingDeliveries
     }
 })();
  

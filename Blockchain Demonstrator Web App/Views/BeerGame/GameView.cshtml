@@ -13,61 +13,91 @@
     {
         @foreach (var player in Model.Players)
         {
-            <section id="section-@player.Role.Id">
-                <h4>Name: @player.Name</h4>
-                <h4>Role: @player.Role.Id</h4>
-                <h4>Inventory: @player.Inventory</h4>
-                <h4>Backorder: @player.Backorder</h4>
+    <section id="section-@player.Role.Id">
+        <h4>Name: @player.Name</h4>
+        <h4>Role: @player.Role.Id</h4>
+        <h4>Inventory: @player.Inventory</h4>
+        <h4>Backorder: @player.Backorder</h4>
 
-                <form>
-                    <h6>Order volume: </h6>
-                    <input type="number" name="order">
-                </form>
+        <form>
+            <h6>Order volume: </h6>
+            <input type="number" name="order">
+        </form>
 
-                <section>
-                    <h4>Order history:</h4>
-                    <table class="order-history">
-                        <thead>
-                            <tr>
-                                <th>Order number</th>
-                                <th>Volume</th>
-                            </tr>
-                        </thead>
-                        @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory)
+        <section>
+            <h4>Order history:</h4>
+            <table class="order-history">
+                <thead>
+                    <tr>
+                        <th>Order number</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory)
+                    {
+                        <tr>
+                            <td class="order-history">@order.OrderNumber</td>
+                            <td class="order-history">@order.Volume</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <h4>Incoming order</h4>
+            <table class="order-history">
+                <thead>
+                    <tr>
+                        <th>Order number</th>
+                        <th>Order date</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in player.IncomingOrders)
+                    {
+                        @if(order.OrderDay == Model.CurrentDay - 5)
                         {
                     <tr>
-                        <td class="order-history">@order.OrderNumber</td>
-                        <td class="order-history">@order.Volume</td>
+                        <td>@order.OrderNumber</td>
+                        <td>@order.OrderDay</td>
+                        <td>@order.Volume</td>
                     </tr>
                         }
-                    </table>
-                </section>
-                <section>
-                    <h4>Incoming deliveries</h4>
-                    <table class="order-history">
-                        <thead>
-                            <tr>
-                                <th>Order number</th>
-                                <th>Order date</th>
-                                <th>Arrival date</th>
-                                <th>Volume</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var order in player.IncomingDeliveries)
-                            {
-                            <tr>
-                                <td>@order.OrderNumber</td>
-                                <td>@order.OrderDay</td>
-                                <td>@order.ArrivalDay</td>
-                                <td>@order.Volume</td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
-                </section>
+                    }
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <h4>Incoming deliveries</h4>
+            <table class="order-history">
+                <thead>
+                    <tr>
+                        <th>Order number</th>
+                        <th>Order date</th>
+                        <th>Arrival date</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in player.IncomingDeliveries)
+                    {
+                        @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - 5)
+                        {
+                    <tr>
+                        <td>@order.OrderNumber</td>
+                        <td>@order.OrderDay</td>
+                        <td>@order.ArrivalDay</td>
+                        <td>@order.Volume</td>
+                    </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </section>
 
-            </section>
+    </section>
         }
 
     }

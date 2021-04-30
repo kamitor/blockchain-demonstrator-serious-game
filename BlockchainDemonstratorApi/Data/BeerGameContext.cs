@@ -19,7 +19,7 @@ namespace BlockchainDemonstratorApi.Data
         public DbSet<Option> Options { get; set; }
         public DbSet<Order> Orders { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.RequestForPlayer)
@@ -27,6 +27,9 @@ namespace BlockchainDemonstratorApi.Data
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.DeliveryToPlayer)
                 .WithMany(p => p.IncomingDeliveries);
-        }
+            modelBuilder.Entity<Order>()
+               .HasOne(o => o.HistoryOfPlayer)
+               .WithMany(p => p.OrderHistory);
+        }*/
     }
 }

@@ -136,13 +136,6 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
-        [HttpPost("GetOrders")]
-        public ActionResult<List<Order>> GetOrders([FromBody] string playerId)
-        {
-            List<Order> orders = _context.Orders.Include(o => o.DeliveryToPlayer).Where(o => o.DeliveryToPlayer.Id == playerId).ToList();
-            return orders;
-        }
-
         // PUT: api/BeerGame/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -227,24 +220,29 @@ namespace BlockchainDemonstratorApi.Controllers
             Game game = _context.Games.FirstOrDefault(game => game.Id == gameId); //Seperated into chunks to reduce load time
             game.Retailer = _context.Games
                 .Include(g => g.Retailer).ThenInclude(p => p.Role)
-                .Include(g => g.Retailer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Retailer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Retailer).ThenInclude(p => p.IncomingDeliveries).FirstOrDefault().Retailer;
+                .Include(g => g.Retailer).ThenInclude(p => p.IncomingOrders)
+                .Include(g => g.Retailer).ThenInclude(p => p.IncomingDeliveries)
+                .Include(g => g.Retailer).ThenInclude(p => p.OrderHistory).FirstOrDefault(game => game.Id == gameId).Retailer;
             game.Manufacturer = _context.Games
                 .Include(g => g.Manufacturer).ThenInclude(p => p.Role)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Manufacturer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingDeliveries).FirstOrDefault().Manufacturer;
+                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingOrders)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingDeliveries)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.OrderHistory).FirstOrDefault(game => game.Id == gameId).Manufacturer;
             game.Processor = _context.Games
                 .Include(g => g.Processor).ThenInclude(p => p.Role)
-                .Include(g => g.Processor).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Processor).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Processor).ThenInclude(p => p.IncomingDeliveries).FirstOrDefault().Processor;
+                .Include(g => g.Processor).ThenInclude(p => p.IncomingOrders)
+                .Include(g => g.Processor).ThenInclude(p => p.IncomingDeliveries)
+                .Include(g => g.Processor).ThenInclude(p => p.OrderHistory).FirstOrDefault(game => game.Id == gameId).Processor;
             game.Farmer = _context.Games
                 .Include(g => g.Farmer).ThenInclude(p => p.Role)
-                .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Farmer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Farmer).ThenInclude(p => p.IncomingDeliveries).FirstOrDefault().Farmer;
+                .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrders)
+                .Include(g => g.Farmer).ThenInclude(p => p.IncomingDeliveries)
+                .Include(g => g.Farmer).ThenInclude(p => p.OrderHistory).FirstOrDefault(game => game.Id == gameId).Farmer;
+            game.Players = new List<Player>();
             return game;
         }
     }

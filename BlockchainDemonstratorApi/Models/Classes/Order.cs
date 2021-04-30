@@ -12,8 +12,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
     {
         [Key] 
         public string Id { get; set; } = Guid.NewGuid().ToString();
-        public Player RequestForPlayer { get; set; } //Incoming order for
-        public Player DeliveryToPlayer { get; set; } //Incoming delivery for
+        public string RequestForPlayerId { get; set; } //Incoming order for
+        public string DeliveryToPlayerId { get; set; } //Incoming delivery for
+        public string HistoryOfPlayerId { get; set; } //History of 
         public int OrderNumber { get; set; }
         public int OrderDay { get; set; }
         public double ArrivalDay { get; set; }

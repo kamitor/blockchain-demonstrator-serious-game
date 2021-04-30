@@ -36,10 +36,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     if (responseString != null) 
                     {
                         Game game = JsonConvert.DeserializeObject<Game>(responseString);
-                        if (game.Retailer != null) game.Retailer.OrderHistory = GetOrdersFromPlayer(game.Retailer.Id);
+                        /*if (game.Retailer != null) game.Retailer.OrderHistory = GetOrdersFromPlayer(game.Retailer.Id);
                         if (game.Manufacturer != null) game.Manufacturer.OrderHistory = GetOrdersFromPlayer(game.Manufacturer.Id);
                         if (game.Processor != null) game.Processor.OrderHistory = GetOrdersFromPlayer(game.Processor.Id);
-                        if (game.Farmer != null) game.Farmer.OrderHistory = GetOrdersFromPlayer(game.Farmer.Id);
+                        if (game.Farmer != null) game.Farmer.OrderHistory = GetOrdersFromPlayer(game.Farmer.Id);*/
                         return View(game);
                     }
                 }

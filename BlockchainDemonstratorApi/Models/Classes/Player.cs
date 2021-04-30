@@ -19,14 +19,62 @@ namespace BlockchainDemonstratorApi.Models.Classes
         //TODO: backorder is now volume of every order
         public int Backorder
         {
-            get { return IncomingOrders.Sum(o => o.Volume); }
+            get 
+            {
+                if (IncomingOrders.Count == 0) return 0;
+                int max = IncomingOrders.Max(o => o.OrderDay);
+                return IncomingOrders.Where(o => o.OrderDay != max).Sum(o => o.Volume);
+            }
         }
 
-        public List<Order> IncomingOrders { get; set; } //sent from your customer
         public Order CurrentOrder { get; set; }
-        public List<Order> IncomingDeliveries { get; set; } //sent from your supplier
-        public List<Payment> Payments { get; set; }
+        
+        [NotMapped]
+        private List<Order> _incomingOrders;
+        [ForeignKey("RequestForPlayerId")]
+        public List<Order> IncomingOrders //sent from your customer
+        {
+            get
+            {
+                return _incomingOrders;
+            }
+            set
+            {
+                _incomingOrders = value.OrderBy(o => o.OrderDay).ToList();
+            }
+        } 
 
+        [NotMapped]
+        private List<Order> _incomingDeliveries;
+        [ForeignKey("DeliveryToPlayerId")]
+        public List<Order> IncomingDeliveries //sent from your supplier
+        {
+            get
+            {
+                return _incomingDeliveries;
+            }
+            set
+            {
+                _incomingDeliveries = value.OrderBy(o => o.ArrivalDay).ToList();
+            }
+        }
+
+        [NotMapped]
+        private List<Order> _orderHistory;
+        [ForeignKey("HistoryOfPlayerId")]
+        public List<Order> OrderHistory
+        {
+            get
+            {
+                return _orderHistory;
+            }
+            set
+            {
+                _orderHistory = value.OrderBy(o => o.OrderNumber).ToList();
+            }
+        }
+
+        public List<Payment> Payments { get; set; }
         public double Balance { get; set; }
 
         //TODO: ProductPrice does not belong to the user, it is something that should either be placed in the role class or in a new product class. Update database with migrations when changed!
@@ -45,7 +93,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        [NotMapped] public List<Order> OrderHistory { get; set; }
 
         public Player(string name)
         {

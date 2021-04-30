@@ -81,7 +81,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        [NotMapped] public List<Player> Players { get; set; }
+        [NotMapped] public List<Player> Players { get; set; } //TODO: has bug where it is initialized twice, once during getting from database and second when serialized in web controller
 
         public Game()
         {
@@ -96,10 +96,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         public void Progress()
         {
-            SendOrders();
             ProcessDeliveries();
             SendDeliveries();
             SendPayments();
+            SendOrders();
             CurrentDay += 5;
         }
 
@@ -133,6 +133,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Manufacturer.IncomingOrders.Add(Retailer.CurrentOrder);
             Processor.IncomingOrders.Add(Manufacturer.CurrentOrder);
             Farmer.IncomingOrders.Add(Processor.CurrentOrder);
+
+            // Add order to history
+            Retailer.OrderHistory.Add(new Order() { OrderNumber = Retailer.CurrentOrder.OrderNumber, Volume = Retailer.CurrentOrder.Volume});
+            Manufacturer.OrderHistory.Add(new Order() { OrderNumber = Manufacturer.CurrentOrder.OrderNumber, Volume = Manufacturer.CurrentOrder.Volume });
+            Processor.OrderHistory.Add(new Order() { OrderNumber = Processor.CurrentOrder.OrderNumber, Volume = Processor.CurrentOrder.Volume });
+            Farmer.OrderHistory.Add(new Order() { OrderNumber = Farmer.CurrentOrder.OrderNumber, Volume = Farmer.CurrentOrder.Volume });
         }
 
         private void SendPayments()
