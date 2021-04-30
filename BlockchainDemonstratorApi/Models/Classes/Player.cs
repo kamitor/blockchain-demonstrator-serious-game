@@ -196,7 +196,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-
+        //TODO: implement running costs
         public void UpdateBalance(int currentDay)
         {
             for (int i = 0; i < Payments.Count; i++)
