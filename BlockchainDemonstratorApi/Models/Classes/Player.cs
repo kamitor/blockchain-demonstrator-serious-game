@@ -19,7 +19,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         //TODO: backorder is now volume of every order
         public int Backorder
         {
-            get 
+            get
             {
                 if (IncomingOrders.Count == 0) return 0;
                 int max = IncomingOrders.Max(o => o.OrderDay);
@@ -28,58 +28,36 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         public Order CurrentOrder { get; set; }
-        
-        [NotMapped]
-        private List<Order> _incomingOrders;
+        [NotMapped] private List<Order> _incomingOrders;
+
         [ForeignKey("RequestForPlayerId")]
         public List<Order> IncomingOrders //sent from your customer
         {
-            get
-            {
-                return _incomingOrders;
-            }
-            set
-            {
-                _incomingOrders = value.OrderBy(o => o.OrderDay).ToList();
-            }
-        } 
+            get { return _incomingOrders; }
+            set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
+        }
 
-        [NotMapped]
-        private List<Order> _incomingDeliveries;
+        [NotMapped] private List<Order> _incomingDeliveries;
+
         [ForeignKey("DeliveryToPlayerId")]
         public List<Order> IncomingDeliveries //sent from your supplier
         {
-            get
-            {
-                return _incomingDeliveries;
-            }
-            set
-            {
-                _incomingDeliveries = value.OrderBy(o => o.ArrivalDay).ToList();
-            }
+            get { return _incomingDeliveries; }
+            set { _incomingDeliveries = value.OrderBy(o => o.ArrivalDay).ToList(); }
         }
 
-        [NotMapped]
-        private List<Order> _orderHistory;
+        [NotMapped] private List<Order> _orderHistory;
+
         [ForeignKey("HistoryOfPlayerId")]
         public List<Order> OrderHistory
         {
-            get
-            {
-                return _orderHistory;
-            }
-            set
-            {
-                _orderHistory = value.OrderBy(o => o.OrderNumber).ToList();
-            }
+            get { return _orderHistory; }
+            set { _orderHistory = value.OrderBy(o => o.OrderNumber).ToList(); }
         }
 
+        [ForeignKey("PlayerId")]
         public List<Payment> Payments { get; set; }
         public double Balance { get; set; }
-
-        //TODO: ProductPrice does not belong to the user, it is something that should either be placed in the role class or in a new product class. Update database with migrations when changed!
-        public double ProductPrice { get; set; } //Price of product per volume
-        public double holdingFactor = 1;
 
         [NotMapped]
         public double HoldingCosts
@@ -87,9 +65,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
             get
             {
                 //running cost= (volume of inventory* holding cost factor)+ (backorder factor* backorder* holding cost)+ (incoming order* holding cost) 
-                return (Inventory * holdingFactor) +
-                       (holdingFactor * 2 * Backorder) /*+ (IncomingOrder.Volume * holdingFactor)*/
-                    ; //TODO: implement factors 
+                return (Inventory * Factors.HoldingFactor) +
+                       (Factors.HoldingFactor * 2 * Backorder) /*+ (IncomingOrder.Volume * holdingFactor)*/;
             }
         }
 
@@ -138,6 +115,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 }
             }
 
+            SetTransportCosts(outgoingDeliveries, currentDay);
+
             return outgoingDeliveries;
         }
 
@@ -145,50 +124,85 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>
          * <param name="currentDay">integer that specifies the current day</param>
          */
-        //TODO: make currentday -5 parameter in game logic, when round time changes this will break
         //TODO: change name
-        public void IncreaseInventory(int currentday)
+        public void IncreaseInventory(int currentDay)
         {
             for (int i = 0; i < IncomingDeliveries.Count; i++)
             {
-                if ((int) IncomingDeliveries[i].ArrivalDay <= currentday &&
-                    (int) IncomingDeliveries[i].ArrivalDay > currentday - 5)
+                if ((int) IncomingDeliveries[i].ArrivalDay <= currentDay &&
+                    (int) IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement)
                 {
                     Inventory += IncomingDeliveries[i].Volume;
-                    //TODO: send payment to supplier
                     Payments.Add(new Payment()
                     {
                         Amount = IncomingDeliveries[i].Price * -1, DueDay = IncomingDeliveries[i].ArrivalDay + 1,
-                        toPlayer = true
+                        ToPlayer = true
                     });
                 }
             }
         }
 
-        public List<Payment> GetOutgoingPayments(int currentday)
+        public List<Payment> GetOutgoingPayments(int currentDay)
         {
             List<Payment> payments = new List<Payment>();
 
             for (int i = 0; i < Payments.Count; i++)
             {
-                if (Payments[i].toPlayer && (int) Payments[i].DueDay <= currentday &&
-                    (int) Payments[i].DueDay > currentday - 5)
+                if (Payments[i].ToPlayer && (int) Payments[i].DueDay <= currentDay &&
+                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
                 {
                     payments.Add(new Payment()
-                        {Amount = Payments[i].Amount * -1, DueDay = Payments[i].DueDay + 1, toPlayer = true});
+                        {Amount = Payments[i].Amount * -1, DueDay = Payments[i].DueDay + 1, ToPlayer = true});
                 }
             }
 
             return payments;
         }
 
-        //TODO: make currentday -5 parameter in game logic, when round time changes this will break
-        //TODO: add transportation cost
-        public void UpdateBalance(int currentday)
+        public void SetTransportCosts(List<Order> orders, double currentDay)
+        {
+            foreach (Order item in orders)
+            {
+                double transportDays = (item.ArrivalDay - currentDay);
+
+                if (Role.Id == "Farmer")
+                {
+                    Payments.Add(new Payment()
+                    {
+                        Amount = transportDays * Factors.FarmerTransport, DueDay = currentDay, ToPlayer = false
+                    });
+                }
+                else if (Role.Id == "Processor")
+                {
+                    Payments.Add(new Payment()
+                    {
+                        Amount = transportDays * Factors.ProcTransport, DueDay = currentDay, ToPlayer = false
+                    });
+                }
+                else if (Role.Id == "Manufacturer")
+                {
+                    Payments.Add(new Payment()
+                    {
+                        Amount = transportDays * Factors.ManuTransport, DueDay = currentDay, ToPlayer = false
+                    });
+                }
+                else
+                {
+                    Payments.Add(new Payment()
+                    {
+                        Amount = transportDays * Factors.RetailTransport, DueDay = currentDay, ToPlayer = false
+                    });
+                }
+            }
+        }
+
+
+        public void UpdateBalance(int currentDay)
         {
             for (int i = 0; i < Payments.Count; i++)
             {
-                if ((int) Payments[i].DueDay <= currentday && (int) Payments[i].DueDay > currentday - 5)
+                if ((int) Payments[i].DueDay <= currentDay &&
+                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
                 {
                     Balance += Payments[i].Amount;
                 }

@@ -100,7 +100,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             SendDeliveries();
             SendPayments();
             SendOrders();
-            CurrentDay += 5;
+            CurrentDay += Factors.RoundIncrement;
         }
 
         /**
@@ -122,11 +122,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
 
             // Adding Price
-            Retailer.CurrentOrder.Price = Manufacturer.ProductPrice * Retailer.CurrentOrder.Volume;
-            Manufacturer.CurrentOrder.Price = Processor.ProductPrice * Manufacturer.CurrentOrder.Volume;
-            Processor.CurrentOrder.Price = Farmer.ProductPrice * Processor.CurrentOrder.Volume;
+            Retailer.CurrentOrder.Price = Factors.ManuProductPrice * Retailer.CurrentOrder.Volume;
+            Manufacturer.CurrentOrder.Price = Factors.ProcProductPrice * Manufacturer.CurrentOrder.Volume;
+            Processor.CurrentOrder.Price = Factors.FarmerProductPrice * Processor.CurrentOrder.Volume;
             //TODO: implement better way for farmer to place orders
-            Farmer.CurrentOrder.Price = 2080 * Farmer.CurrentOrder.Volume;
+            Farmer.CurrentOrder.Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume;
 
             // Making new order
             Retailer.IncomingOrders.Add(new Order() {OrderDay = CurrentDay, Volume = new Random().Next(5, 15)});
@@ -149,7 +149,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.Payments.AddRange(Processor.GetOutgoingPayments(CurrentDay));
             //TODO: implement later
             Retailer.Payments.Add(new Payment()
-                {Amount = customerOrderVolume * Retailer.ProductPrice, DueDay = CurrentDay + 2, toPlayer = true});
+                {Amount = customerOrderVolume * Factors.RetailProductPrice, DueDay = CurrentDay + 2, ToPlayer = true});
         }
 
         /**

@@ -48,8 +48,9 @@ namespace BeerGameConsoleApp
             //
             //     gm.Progress();
             // }
-
-            Console.WriteLine(-20 * -1);
+            int x = 32;
+            double y = x;
+            Console.WriteLine(y);
         }
     }
 }

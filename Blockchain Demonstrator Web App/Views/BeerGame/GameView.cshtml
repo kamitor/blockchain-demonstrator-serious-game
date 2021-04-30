@@ -14,10 +14,11 @@
         @foreach (var player in Model.Players)
         {
     <section id="section-@player.Role.Id">
-        <h4>Name: @player.Name</h4>
-        <h4>Role: @player.Role.Id</h4>
-        <h4>Inventory: @player.Inventory</h4>
-        <h4>Backorder: @player.Backorder</h4>
+        <h3>Name: @player.Name</h3>
+        <h3>Role: @player.Role.Id</h3>
+        <h3>Balance: @player.Balance</h3>
+        <h3>Inventory: @player.Inventory</h3>
+        <h3>Backorder: @player.Backorder</h3>
 
         <form>
             <h6>Order volume: </h6>
@@ -25,7 +26,7 @@
         </form>
 
         <section>
-            <h4>Order history:</h4>
+            <h3>Order history:</h3>
             <table class="order-history">
                 <thead>
                     <tr>
@@ -45,7 +46,7 @@
             </table>
         </section>
         <section>
-            <h4>Incoming order</h4>
+            <h3>Incoming order</h3>
             <table class="order-history">
                 <thead>
                     <tr>
@@ -70,7 +71,7 @@
             </table>
         </section>
         <section>
-            <h4>Incoming deliveries</h4>
+            <h3>Incoming deliveries</h3>
             <table class="order-history">
                 <thead>
                     <tr>
