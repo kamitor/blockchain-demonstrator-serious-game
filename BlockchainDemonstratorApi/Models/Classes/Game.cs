@@ -85,11 +85,32 @@ namespace BlockchainDemonstratorApi.Models.Classes
         [NotMapped] public List<Player> Players { get; set; }
         public bool GameStarted { get; set; }
 
+
+        public HashSet<int> IdList = new HashSet<int>();
+        private String CreateUniqueId()
+        {
+
+            Random r = new Random();
+            int Id;
+            while (true)
+            {
+                Id = r.Next(100000, 1000000);
+
+                if (!IdList.Contains(Id))
+                {
+                    IdList.Add(Id);
+                    String IdS = Id.ToString();
+                    return IdS;
+                }
+            }
+        }
+
+
+
         public Game()
         {
             Players = new List<Player>();
-            //TODO: Write simple algorithm for unique id's
-            Id = Guid.NewGuid().ToString();
+            Id = CreateUniqueId();
             CurrentPhase = Phase.Phase1;
             CurrentDay = 1;
             GameStarted = false;
