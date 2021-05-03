@@ -55,59 +55,45 @@ const BeerGame = (() => {
         updateIncomingOrder("Processor", gameSerialized);
         updateIncomingOrder("Farmer", gameSerialized);
 
-        $("#section-Retailer > h4").eq(2).text("Inventory: " + gameSerialized.retailer.inventory);
-        $("#section-Manufacturer > h4").eq(2).text("Inventory: " + gameSerialized.manufacturer.inventory);
-        $("#section-Processor > h4").eq(2).text("Inventory: " + gameSerialized.processor.inventory);
-        $("#section-Farmer > h4").eq(2).text("Inventory: " + gameSerialized.farmer.inventory);
+        $("#section-Retailer > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.retailer.balance));
+        $("#section-Manufacturer > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.manufacturer.balance));
+        $("#section-Processor > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.processor.balance));
+        $("#section-Farmer > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.farmer.balance));
 
-        $("#section-Retailer > h4").eq(3).text("Backorder: " + gameSerialized.retailer.backorder);
-        $("#section-Manufacturer > h4").eq(3).text("Backorder: " + gameSerialized.manufacturer.backorder);
-        $("#section-Processor > h4").eq(3).text("Backorder: " + gameSerialized.processor.backorder);
-        $("#section-Farmer > h4").eq(3).text("Backorder: " + gameSerialized.farmer.backorder);
+        $("#section-Retailer > h3[name='inventory']").text("Inventory: " + gameSerialized.retailer.inventory);
+        $("#section-Manufacturer > h3[name='inventory']").text("Inventory: " + gameSerialized.manufacturer.inventory);
+        $("#section-Processor > h3[name='inventory']").text("Inventory: " + gameSerialized.processor.inventory);
+        $("#section-Farmer > h3[name='inventory']").text("Inventory: " + gameSerialized.farmer.inventory);
+
+        $("#section-Retailer > h3[name='backorder']").text("Backorder: " + gameSerialized.retailer.backorder);
+        $("#section-Manufacturer > h3[name='backorder']").text("Backorder: " + gameSerialized.manufacturer.backorder);
+        $("#section-Processor > h3[name='backorder']").text("Backorder: " + gameSerialized.processor.backorder);
+        $("#section-Farmer > h3[name='backorder']").text("Backorder: " + gameSerialized.farmer.backorder);
     }
 
     const updateOrderHistory = (id, orderNumber, orderVolume) => {
-        $(`#section-${id} > section:eq(0) > table > tbody`)
+        $(`#section-${id} > table[name='orderHistory'] > tbody`)
             .append($(`<tr><td class="order-history">${orderNumber}</td><td class="order-history">${orderVolume}</td></tr>`));
     }
 
     const updateIncomingOrder = (id, game) => {
-        $(`#section-${id} > section:eq(1) > table > tbody`).empty();
         game[id.toLowerCase()].incomingOrders.forEach(order => {
-            if (order.orderDay == game.currentDay - 5)
-                $(`#section-${id} > section:eq(1) > table > tbody`)
-                    .append($(`<tr>
-                        <td class="order-history">${order.volume}</td>
-                        </tr>`));
-        })
+            if (order.orderDay == game.currentDay - 7) {
+                $(`#section-${id} > h3[name='incomingOrder']`).text("Incoming order: " + order.volume);
+            }
+        });
     }
 
     const updateIncomingDeliveries = (id, game) => {
-        $(`#section-${id} > section:eq(2) > table > tbody`).empty();
+        $(`#section-${id} > table[name='incomingDeliveries'] > tbody`).empty();
         game[id.toLowerCase()].incomingDeliveries.forEach(order => {
-            if (order.arrivalDay <= game.currentDay && order.arrivalDay > game.currentDay - 5)
-            $(`#section-${id} > section:eq(2) > table > tbody`)
-                .append($(`<tr>
-                        <td class="order-history">${order.orderNumber}</td>
-                        <td class="order-history">${order.orderDay}</td>
-                        <td class="order-history">${order.arrivalDay}</td>
+            if (order.arrivalDay <= game.currentDay && order.arrivalDay > game.currentDay - 7) {
+                $(`#section-${id} > table[name='incomingDeliveries'] > tbody`)
+                    .append($(`<tr>
                         <td class="order-history">${order.volume}</td>
                         </tr>`));
-        })
-       
-            
-    }
-
-    const getOrders = (playerId) => {
-        $.ajax({
-            url: `${configMap.baseUrl}/api/BeerGame/GetOrders`,
-            type: "POST",
-            data: JSON.stringify(playerId),
-            contentType: "application/JSON",
-            dataType: "text"
-        }).then(result => {
-            return JSON.parse(result);
-        })
+            }
+        }); 
     }
     
     const joinGame = (role, name) => {
@@ -120,6 +106,10 @@ const BeerGame = (() => {
                 dataType: "text"
             })
         }
+    }
+
+    const roundOff = (num) => {
+        return + (Math.round(num + "e+2") + "e-2");
     }
     
     return{

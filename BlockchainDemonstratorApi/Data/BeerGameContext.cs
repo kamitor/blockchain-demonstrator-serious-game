@@ -18,6 +18,7 @@ namespace BlockchainDemonstratorApi.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Option> Options { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Factors> Factors { get; set; }
 
         /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -17,9 +17,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
             _beerGameContext = beerGameContext;
             _beerGameContext.Database.Migrate();
             CreateRolesAndOptions();
+            AddFactors();
             _beerGameContext.SaveChanges();
+            
         }
 
+        private static void AddFactors()
+        {
+            if(!_beerGameContext.Factors.Any(r => r.Id == "DefaultFactors"))
+            {
+                _beerGameContext.Factors.Add(new Factors());
+            }
+        }
 
         private static void CreateRolesAndOptions()
         {

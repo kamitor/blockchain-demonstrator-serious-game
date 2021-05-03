@@ -113,7 +113,7 @@ namespace BlockchainDemonstratorApi.Controllers
             {
                 return NotFound();
             }
-
+            game.Players = new List<Player>();
             return game;
         }
 
@@ -242,7 +242,6 @@ namespace BlockchainDemonstratorApi.Controllers
                 .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrders)
                 .Include(g => g.Farmer).ThenInclude(p => p.IncomingDeliveries)
                 .Include(g => g.Farmer).ThenInclude(p => p.OrderHistory).FirstOrDefault(game => game.Id == gameId).Farmer;
-            game.Players = new List<Player>();
             return game;
         }
     }
