@@ -166,20 +166,40 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /**
          * <summary>Sets IncomingOrder for every actor</summary>
          */
-        //TODO: seperate functions (SOLID)
+       
         private void SendOrders()
         {
+
+            AddingCurrentCDay();
+            AddingOrderNumber();
+            AddingPrice();
+            NewOrder();
+            AddOrderToHistory();
+
+        }
+
+
+        public void AddingCurrentCDay() {
+
             // Adding current day
             Retailer.CurrentOrder.OrderDay = CurrentDay;
             Manufacturer.CurrentOrder.OrderDay = CurrentDay;
             Processor.CurrentOrder.OrderDay = CurrentDay;
             Farmer.CurrentOrder.OrderDay = CurrentDay;
 
+        }
+
+        public void AddingOrderNumber() {
+
             // Adding order number
             Retailer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
             Manufacturer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
             Processor.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
             Farmer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
+        }
+
+
+        public void AddingPrice() {
 
             // Adding Price
             Retailer.CurrentOrder.Price = Factors.ManuProductPrice * Retailer.CurrentOrder.Volume;
@@ -187,23 +207,33 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Processor.CurrentOrder.Price = Factors.FarmerProductPrice * Processor.CurrentOrder.Volume;
             //TODO: implement better way for farmer to place orders
             Farmer.CurrentOrder.Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume;
+        }
+
+        public void NewOrder() {
 
             // Making new order
-            Retailer.IncomingOrders.Add(new Order() {OrderDay = CurrentDay, Volume = new Random().Next(5, 15)});
+            Retailer.IncomingOrders.Add(new Order() { OrderDay = CurrentDay, Volume = new Random().Next(5, 15) });
             Manufacturer.IncomingOrders.Add(Retailer.CurrentOrder);
             Processor.IncomingOrders.Add(Manufacturer.CurrentOrder);
             Farmer.IncomingOrders.Add(Processor.CurrentOrder);
 
+        }
+
+        public void AddOrderToHistory() {
+
             // Add order to history
             Retailer.OrderHistory.Add(new Order()
-                {OrderNumber = Retailer.CurrentOrder.OrderNumber, Volume = Retailer.CurrentOrder.Volume});
+            { OrderNumber = Retailer.CurrentOrder.OrderNumber, Volume = Retailer.CurrentOrder.Volume });
             Manufacturer.OrderHistory.Add(new Order()
-                {OrderNumber = Manufacturer.CurrentOrder.OrderNumber, Volume = Manufacturer.CurrentOrder.Volume});
+            { OrderNumber = Manufacturer.CurrentOrder.OrderNumber, Volume = Manufacturer.CurrentOrder.Volume });
             Processor.OrderHistory.Add(new Order()
-                {OrderNumber = Processor.CurrentOrder.OrderNumber, Volume = Processor.CurrentOrder.Volume});
+            { OrderNumber = Processor.CurrentOrder.OrderNumber, Volume = Processor.CurrentOrder.Volume });
             Farmer.OrderHistory.Add(new Order()
-                {OrderNumber = Farmer.CurrentOrder.OrderNumber, Volume = Farmer.CurrentOrder.Volume});
+            { OrderNumber = Farmer.CurrentOrder.OrderNumber, Volume = Farmer.CurrentOrder.Volume });
+
         }
+
+
 
         private void SendPayments()
         {
