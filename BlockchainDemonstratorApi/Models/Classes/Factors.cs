@@ -3,8 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
-    public static class Factors
+    public class Factors
     {
+        [Key]
+        public string Id { get; set; } = "DefaultFactors";
         //TODO: put on database so we can change stuffs
         //Transport factors
         public static int RetailTransport { get; set; } = 1086;
@@ -24,7 +26,20 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int ProcProductPrice { get; set; } = 2500;
         public static int FarmerProductPrice { get; set; } = 2050;
         public static int HarvesterProductPrice { get; set; } = 2000;
-
         public static int SetupCost { get; set; } = 75000;
+        #region DatabaseProperties
+        public int retailTransport { get { return RetailTransport; } set { RetailTransport = value; } }
+        public int manuTransport { get { return ManuTransport; } set { ManuTransport = value; } }
+        public int procTransport { get { return ProcTransport; } set { ProcTransport = value; } }
+        public int farmerTransport { get { return FarmerTransport; } set { FarmerTransport = value; } }
+        public int holdingFactor { get { return HoldingFactor; } set { HoldingFactor = value; } }
+        public int roundIncrement { get { return RoundIncrement; } set { RoundIncrement = value; } }
+        public int retailProductPrice { get { return RetailProductPrice; } set { RetailProductPrice = value; } }
+        public int manuProductPrice { get { return ManuProductPrice; } set { ManuProductPrice = value; } }
+        public int procProductPrice { get { return ProcProductPrice; } set { ProcProductPrice = value; } }
+        public int farmerProductPrice { get { return FarmerProductPrice; } set { FarmerProductPrice = value; } }
+        public int harvesterProductPrice { get { return HarvesterProductPrice; } set { HarvesterProductPrice = value; } }
+        public int setupCost { get { return SetupCost; } set { SetupCost = value; } }
+        #endregion
     }
 }
