@@ -100,21 +100,46 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         public void Progress()
         {
+            if (!GameStarted)
+            {
+                SetSetupPayment();
+                SetSetupOrders();
+                GameStarted = true;
+            }
+
             ProcessDeliveries();
             SendDeliveries();
             
             SendPayments();
             SetHoldingCosts();
-            if (!GameStarted)
-            {
-                SetSetupPayment();
-
-                GameStarted = true;
-            }
             UpdateBalance();
             
             SendOrders();
             CurrentDay += Factors.RoundIncrement;
+        }
+
+        private void SetSetupOrders()
+        {
+            for (int i = 0; i < (int)Math.Ceiling(Retailer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
+            {
+                Retailer.IncomingDeliveries.Add(new Order() { OrderNumber = 0, Volume = 10, ArrivalDay = Factors.RoundIncrement * i + 1 }); //TODO: Ask whether the first order should have a fixed or random volume
+            }
+
+            for (int i = 0; i < (int)Math.Ceiling(Retailer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
+            {
+                Manufacturer.IncomingDeliveries.Add(new Order() { OrderNumber = 0, Volume = 10, ArrivalDay = Factors.RoundIncrement * i + 1 });
+            }
+
+            for (int i = 0; i < (int)Math.Ceiling(Retailer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
+            {
+                Processor.IncomingDeliveries.Add(new Order() { OrderNumber = 0, Volume = 10, ArrivalDay = Factors.RoundIncrement * i + 1 });
+            }
+
+            for (int i = 0; i < (int)Math.Ceiling(Retailer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
+            {
+                Farmer.IncomingDeliveries.Add(new Order() { OrderNumber = 0, Volume = 10, ArrivalDay = Factors.RoundIncrement * i + 1 });
+            }
+
         }
 
         /**
