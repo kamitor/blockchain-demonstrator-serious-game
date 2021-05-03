@@ -15,6 +15,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <summary>Day when payment has to be made</summary>
          */
         public double DueDay { get; set; }
-        public bool ToPlayer { get; set; }
+        public bool FromPlayer { get; set; }
     }
 }

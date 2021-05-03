@@ -55,8 +55,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set { _orderHistory = value.OrderBy(o => o.OrderNumber).ToList(); }
         }
 
-        [ForeignKey("PlayerId")]
-        public List<Payment> Payments { get; set; }
+        [ForeignKey("PlayerId")] public List<Payment> Payments { get; set; }
         public double Balance { get; set; }
 
         [NotMapped]
@@ -136,23 +135,26 @@ namespace BlockchainDemonstratorApi.Models.Classes
                     Payments.Add(new Payment()
                     {
                         Amount = IncomingDeliveries[i].Price * -1, DueDay = IncomingDeliveries[i].ArrivalDay + 1,
-                        ToPlayer = true
+                        FromPlayer = true
                     });
                 }
             }
         }
 
-        public List<Payment> GetOutgoingPayments(int currentDay)
+        public List<Payment> GetOutgoingPayments(int currentDay, string playerId)
         {
             List<Payment> payments = new List<Payment>();
 
             for (int i = 0; i < Payments.Count; i++)
             {
-                if (Payments[i].ToPlayer && (int) Payments[i].DueDay <= currentDay &&
+                if (Payments[i].FromPlayer && (int) Payments[i].DueDay <= currentDay &&
                     (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
                 {
                     payments.Add(new Payment()
-                        {Amount = Payments[i].Amount * -1, DueDay = Payments[i].DueDay + 1, ToPlayer = true});
+                    {
+                        Amount = Payments[i].Amount * -1, DueDay = Payments[i].DueDay + 1, FromPlayer = true,
+                        PlayerId = playerId, Id = Guid.NewGuid().ToString()
+                    });
                 }
             }
 
@@ -169,34 +171,45 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 {
                     Payments.Add(new Payment()
                     {
-                        Amount = transportDays * Factors.FarmerTransport, DueDay = currentDay, ToPlayer = false
+                        Amount = transportDays * Factors.FarmerTransport, DueDay = currentDay, FromPlayer = false,
+                        PlayerId = this.Id, Id = Guid.NewGuid().ToString()
                     });
                 }
                 else if (Role.Id == "Processor")
                 {
                     Payments.Add(new Payment()
                     {
-                        Amount = transportDays * Factors.ProcTransport, DueDay = currentDay, ToPlayer = false
+                        Amount = transportDays * Factors.ProcTransport, DueDay = currentDay, FromPlayer = false,
+                        PlayerId = this.Id, Id = Guid.NewGuid().ToString()
                     });
                 }
                 else if (Role.Id == "Manufacturer")
                 {
                     Payments.Add(new Payment()
                     {
-                        Amount = transportDays * Factors.ManuTransport, DueDay = currentDay, ToPlayer = false
+                        Amount = transportDays * Factors.ManuTransport, DueDay = currentDay, FromPlayer = false,
+                        PlayerId = this.Id, Id = Guid.NewGuid().ToString()
                     });
                 }
                 else
                 {
                     Payments.Add(new Payment()
                     {
-                        Amount = transportDays * Factors.RetailTransport, DueDay = currentDay, ToPlayer = false
+                        Amount = transportDays * Factors.RetailTransport, DueDay = currentDay, FromPlayer = false,
+                        PlayerId = this.Id, Id = Guid.NewGuid().ToString()
                     });
                 }
             }
         }
 
-        //TODO: implement running costs
+        public void SetHoldingCost(int currentDay)
+        {
+            Payments.Add(new Payment()
+            {
+                Amount = HoldingCosts, DueDay = currentDay, FromPlayer = false, PlayerId = this.Id, Id = Guid.NewGuid().ToString()
+            });
+        }
+        
         public void UpdateBalance(int currentDay)
         {
             for (int i = 0; i < Payments.Count; i++)

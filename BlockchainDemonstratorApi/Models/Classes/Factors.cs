@@ -24,5 +24,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int ProcProductPrice { get; set; } = 2500;
         public static int FarmerProductPrice { get; set; } = 2050;
         public static int HarvesterProductPrice { get; set; } = 2000;
+
+        public static int SetupCost { get; set; } = 75000;
     }
 }

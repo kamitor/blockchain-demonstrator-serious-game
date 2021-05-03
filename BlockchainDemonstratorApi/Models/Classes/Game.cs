@@ -81,14 +81,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        [NotMapped] public List<Player> Players { get; set; } //TODO: has bug where it is initialized twice, once during getting from database and second when serialized in web controller
+        //TODO: has bug where it is initialized twice, once during getting from database and second when serialized in web controller
+        [NotMapped] public List<Player> Players { get; set; }
+        public bool GameStarted { get; set; }
 
         public Game()
         {
             Players = new List<Player>();
-            Id = Guid.NewGuid().ToString(); //TODO: Write simple algorithm for unique id's
+            //TODO: Write simple algorithm for unique id's
+            Id = Guid.NewGuid().ToString();
             CurrentPhase = Phase.Phase1;
             CurrentDay = 1;
+            GameStarted = false;
         }
 
         /**
@@ -98,7 +102,17 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             ProcessDeliveries();
             SendDeliveries();
+            
             SendPayments();
+            SetHoldingCosts();
+            if (!GameStarted)
+            {
+                SetSetupPayment();
+
+                GameStarted = true;
+            }
+            UpdateBalance();
+            
             SendOrders();
             CurrentDay += Factors.RoundIncrement;
         }
@@ -135,21 +149,28 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.IncomingOrders.Add(Processor.CurrentOrder);
 
             // Add order to history
-            Retailer.OrderHistory.Add(new Order() { OrderNumber = Retailer.CurrentOrder.OrderNumber, Volume = Retailer.CurrentOrder.Volume});
-            Manufacturer.OrderHistory.Add(new Order() { OrderNumber = Manufacturer.CurrentOrder.OrderNumber, Volume = Manufacturer.CurrentOrder.Volume });
-            Processor.OrderHistory.Add(new Order() { OrderNumber = Processor.CurrentOrder.OrderNumber, Volume = Processor.CurrentOrder.Volume });
-            Farmer.OrderHistory.Add(new Order() { OrderNumber = Farmer.CurrentOrder.OrderNumber, Volume = Farmer.CurrentOrder.Volume });
+            Retailer.OrderHistory.Add(new Order()
+                {OrderNumber = Retailer.CurrentOrder.OrderNumber, Volume = Retailer.CurrentOrder.Volume});
+            Manufacturer.OrderHistory.Add(new Order()
+                {OrderNumber = Manufacturer.CurrentOrder.OrderNumber, Volume = Manufacturer.CurrentOrder.Volume});
+            Processor.OrderHistory.Add(new Order()
+                {OrderNumber = Processor.CurrentOrder.OrderNumber, Volume = Processor.CurrentOrder.Volume});
+            Farmer.OrderHistory.Add(new Order()
+                {OrderNumber = Farmer.CurrentOrder.OrderNumber, Volume = Farmer.CurrentOrder.Volume});
         }
 
         private void SendPayments()
         {
             int customerOrderVolume = new Random().Next(5, 15);
-            Manufacturer.Payments.AddRange(Retailer.GetOutgoingPayments(CurrentDay));
-            Processor.Payments.AddRange(Manufacturer.GetOutgoingPayments(CurrentDay));
-            Farmer.Payments.AddRange(Processor.GetOutgoingPayments(CurrentDay));
+            Manufacturer.Payments.AddRange(Retailer.GetOutgoingPayments(CurrentDay, Manufacturer.Id));
+            Processor.Payments.AddRange(Manufacturer.GetOutgoingPayments(CurrentDay, Processor.Id));
+            Farmer.Payments.AddRange(Processor.GetOutgoingPayments(CurrentDay, Farmer.Id));
             //TODO: implement later
             Retailer.Payments.Add(new Payment()
-                {Amount = customerOrderVolume * Factors.RetailProductPrice, DueDay = CurrentDay + 2, ToPlayer = true});
+            {
+                Amount = customerOrderVolume * Factors.RetailProductPrice, DueDay = CurrentDay + 2, FromPlayer = true,
+                PlayerId = Retailer.Id, Id = Guid.NewGuid().ToString()
+            });
         }
 
         /**
@@ -166,7 +187,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 OrderDay = CurrentDay, ArrivalDay = CurrentDay + new Random().Next(3, 6),
                 Volume = Farmer.CurrentOrder.Volume
-            }); 
+            });
         }
 
         /**
@@ -174,10 +195,54 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         private void ProcessDeliveries()
         {
-            Retailer.IncreaseInventory(CurrentDay);
+            /*Retailer.IncreaseInventory(CurrentDay);
             Manufacturer.IncreaseInventory(CurrentDay);
             Processor.IncreaseInventory(CurrentDay);
-            Farmer.IncreaseInventory(CurrentDay);
+            Farmer.IncreaseInventory(CurrentDay);*/
+
+            foreach (Player player in Players)
+            {
+                player.IncreaseInventory(CurrentDay);
+            }
+        }
+
+        /**
+         * <summary>Adds a standard payment for the setup costs to each actors payment list</summary>
+         * <remarks>Only needs to be called once, at the start of the game</remarks>
+         */
+        private void SetSetupPayment()
+        {
+            /*Retailer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Retailer.Id, Id = Guid.NewGuid().ToString()});
+            Manufacturer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Manufacturer.Id, Id = Guid.NewGuid().ToString()});
+            Processor.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Processor.Id, Id = Guid.NewGuid().ToString()});
+            Farmer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Farmer.Id, Id = Guid.NewGuid().ToString()});*/
+            foreach (Player player in Players)
+            {
+                player.Payments.Add(new Payment()
+                {
+                    Amount = Factors.SetupCost, DueDay = 1, FromPlayer = false, PlayerId = player.Id,
+                    Id = Guid.NewGuid().ToString()
+                });
+            }
+        }
+
+        /**
+         * <summary>Calls the UpdateBalance method for each player</summary>
+         */
+        private void UpdateBalance()
+        {
+            foreach (Player player in Players)
+            {
+                player.UpdateBalance(CurrentDay);
+            }
+        }
+
+        private void SetHoldingCosts()
+        {
+            foreach (Player player in Players)
+            {
+                player.SetHoldingCost(CurrentDay);
+            }
         }
     }
 }
