@@ -77,8 +77,6 @@ const BeerGame = (() => {
             if (order.orderDay == game.currentDay - 5)
                 $(`#section-${id} > section:eq(1) > table > tbody`)
                     .append($(`<tr>
-                        <td class="order-history">${order.orderNumber}</td>
-                        <td class="order-history">${order.orderDay}</td>
                         <td class="order-history">${order.volume}</td>
                         </tr>`));
         })

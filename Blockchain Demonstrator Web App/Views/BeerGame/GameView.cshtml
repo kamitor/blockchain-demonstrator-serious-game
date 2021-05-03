@@ -50,8 +50,6 @@
             <table class="order-history">
                 <thead>
                     <tr>
-                        <th>Order number</th>
-                        <th>Order date</th>
                         <th>Volume</th>
                     </tr>
                 </thead>
@@ -61,9 +59,7 @@
                         @if(order.OrderDay == Model.CurrentDay - 5)
                         {
                     <tr>
-                        <td>@order.OrderNumber</td>
-                        <td>@order.OrderDay</td>
-                        <td>@order.Volume</td>
+                        <td class="order-history">@order.Volume</td>
                     </tr>
                         }
                     }
@@ -87,10 +83,10 @@
                         @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - 5)
                         {
                     <tr>
-                        <td>@order.OrderNumber</td>
-                        <td>@order.OrderDay</td>
-                        <td>@order.ArrivalDay</td>
-                        <td>@order.Volume</td>
+                        <td class="order-history">@order.OrderNumber</td>
+                        <td class="order-history">@order.OrderDay</td>
+                        <td class="order-history">@order.ArrivalDay</td>
+                        <td class="order-history">@order.Volume</td>
                     </tr>
                         }
                     }
