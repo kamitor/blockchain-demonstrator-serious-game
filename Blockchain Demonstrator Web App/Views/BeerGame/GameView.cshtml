@@ -1,4 +1,5 @@
 ﻿@using Microsoft.CodeAnalysis
+@using BlockchainDemonstratorApi.Models.Classes
 @model BlockchainDemonstratorApi.Models.Classes.Game
 
 
@@ -37,9 +38,10 @@
             <tbody>
                 @foreach (var order in player.IncomingDeliveries)
                 {
-                    @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - 7)
+                    @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
                     {
                         <tr>
+                            <td class="order-history">@order.OrderNumber</td>
                             <td class="order-history">@order.Volume</td>
                         </tr>
                     }
@@ -82,6 +84,6 @@
 {
     <script src="~/js/BeerGame.js"></script>
     <script>
-    BeerGame.init('@Model.Id')
+        BeerGame.init('@Model.Id')
     </script>
 }

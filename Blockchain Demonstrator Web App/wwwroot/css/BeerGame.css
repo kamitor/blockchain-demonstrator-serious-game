@@ -25,3 +25,16 @@
     margin: 5px;
     padding: 0px;
 }
+
+.game-ui {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.ui-item {
+    border-collapse: collapse;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin: 5px;
+}

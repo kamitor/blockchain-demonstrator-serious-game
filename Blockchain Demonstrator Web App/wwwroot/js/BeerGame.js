@@ -96,12 +96,12 @@ const BeerGame = (() => {
         }); 
     }
     
-    const joinGame = (role, name) => {
+    const joinGame = (gameId, role, name, playerId) => {
         if (configMap.gameId !== null){
-            $.ajax({
+             return $.ajax({
                 url: `${configMap.baseUrl}/api/BeerGame/JoinGame`,
                 type: "POST",
-                data: JSON.stringify({gameId: configMap.gameId, role: role, name: name}),
+                data: JSON.stringify({gameId: gameId, role: role, name: name, playerId: playerId}),
                 contentType: "application/JSON",
                 dataType: "text"
             })

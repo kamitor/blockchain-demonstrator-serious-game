@@ -48,6 +48,35 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return BadRequest();
         }
 
+        public IActionResult BeerGame(string gameId, string playerId)
+        {
+            SetCookie("JoinedGame", gameId, 480);
+            SetCookie("PlayerId", playerId, 480);
+            
+            using (var client = new HttpClient())
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(gameId), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/GetGame",stringContent).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null) 
+                    {
+                        //TODO: fix crash 
+                        Game game = JsonConvert.DeserializeObject<Game>(responseString);
+
+                        Player player = game.Players.Find(x => x.Id.Equals(playerId));
+                        ViewData["CurrentDay"] = game.CurrentDay;
+
+                        return View(player);
+                    }
+                }
+            }
+            return View();
+        }
+
         public IActionResult CreateGame()
         {
             using (var client = new HttpClient())

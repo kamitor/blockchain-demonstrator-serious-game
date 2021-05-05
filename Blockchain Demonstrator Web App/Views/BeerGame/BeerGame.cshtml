@@ -1,0 +1,112 @@
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@model BlockchainDemonstratorApi.Models.Classes.Player
+
+@{
+    ViewData["Title"] = "BeerGame";
+    ViewData["CurrentDay"] = 1;
+}
+
+    <section id="section-@Model.Role.Id" class="game-ui">
+    <section class="game-ui--left">
+        <article class="name-article ui-item">
+            <div>@Model.Name</div>
+            <div>@Model.Role.Id</div>
+            <div>day: @ViewData["CurrentDay"]</div>
+            <div name="balance">
+                <b>Balance:</b> @Math.Round(Model.Balance, 2)
+            </div>
+        </article>
+
+        <article class="inventory-article ui-item">
+            <div>
+                <b>incoming delivery</b>
+            </div>
+            <table name="incomingDeliveries" class="order-history">
+                <thead>
+                <tr>
+                    <th>Volume</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var order in Model.IncomingDeliveries)
+                {
+                    @if (order.ArrivalDay <= (int) ViewData["CurrentDay"] && order.ArrivalDay > (int) ViewData["CurrentDay"] - Factors.RoundIncrement)
+                    {
+                        <tr>
+                            <td class="order-history">@order.OrderNumber</td>
+                            <td class="order-history">@order.Volume</td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+            <div>
+                <b>inventory:</b> @Model.Inventory
+            </div>
+        </article>
+
+        <article class="backorder-article ui-item">
+            @foreach (var order in Model.IncomingOrders)
+            {
+                @if (order.OrderDay == (int) ViewData["CurrentDay"] - Factors.RoundIncrement)
+                {
+                    <div name="incomingOrder">
+                        <b>Incoming order:</b> @order.Volume
+                    </div>
+                }
+            }
+            <div>
+                <b>backorder:</b> @Model.Backorder
+            </div>
+        </article>
+    </section>
+
+    <section class="game-ui--right">
+        <article class="input-article ui-item">
+            <form>
+                <input type="text" placeholder="Order volume">
+                <button type="submit">Place order</button>
+            </form>
+        </article>
+
+        <article class="order-history-article ui-item">
+            <div>
+                <b>Order History</b>
+            </div>
+            <table name="orderHistory" class="order-history">
+                <thead>
+                <tr>
+                    <th>Order number</th>
+                    <th>Volume</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OrderHistory)
+                {
+                    <tr>
+                        <td class="order-history">@order.OrderNumber</td>
+                        <td class="order-history">@order.Volume</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </article>
+    </section>
+</section>
+
+
+
+@section Scripts
+{
+    <script src="~/js/BeerGame.js"></script>
+    <script>
+        function getCookie(name) {
+               const value = `; ${document.cookie}`;
+               const parts = value.split(`; ${name}=`);
+               if (parts.length === 2) return parts.pop().split(';').shift();
+               }  
+    
+    
+        BeerGame.init(getCookie('JoinedGame'))
+    </script>
+}

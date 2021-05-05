@@ -39,6 +39,7 @@ namespace BlockchainDemonstratorApi.Controllers
             string gameId = (string) data.gameId;
             RoleType role = (RoleType) data.role;
             string name = (string) data.name;
+            string playerId = (string) data.playerId;
             
             Game game = _context.Games.Find(gameId);
             if (game == null) return NotFound();
@@ -48,28 +49,28 @@ namespace BlockchainDemonstratorApi.Controllers
             {
                 if (role == RoleType.Retailer)
                 {
-                    Player player = new Player(name);
+                    Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Retailer");
                     game.Retailer = player;
                     joined = true;
                 }
                 else if (role == RoleType.Manufacturer)
                 {
-                    Player player = new Player(name);
+                    Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Manufacturer");
                     game.Manufacturer = player;
                     joined = true;
                 }
                 else if (role == RoleType.Processor)
                 {
-                    Player player = new Player(name);
+                    Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Processor");
                     game.Processor = player;
                     joined = true;
                 }
                 else if (role == RoleType.Farmer)
                 {
-                    Player player = new Player(name);
+                    Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Farmer");
                     game.Farmer = player;
                     joined = true;

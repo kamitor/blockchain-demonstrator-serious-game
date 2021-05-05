@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
@@ -73,6 +74,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public Player(string name)
         {
             Id = Guid.NewGuid().ToString();
+            Name = name;
+            IncomingOrders = new List<Order>();
+            IncomingDeliveries = new List<Order>();
+            Payments = new List<Payment>();
+        }
+        
+        [JsonConstructor]
+        public Player(string name, string playerId)
+        {
+            Id = playerId;
             Name = name;
             IncomingOrders = new List<Order>();
             IncomingDeliveries = new List<Order>();
@@ -206,7 +217,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             Payments.Add(new Payment()
             {
-                Amount = HoldingCosts, DueDay = currentDay, FromPlayer = false, PlayerId = this.Id, Id = Guid.NewGuid().ToString()
+                Amount = HoldingCosts * -1, DueDay = currentDay, FromPlayer = false, PlayerId = this.Id, Id = Guid.NewGuid().ToString()
             });
         }
         

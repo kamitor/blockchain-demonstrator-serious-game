@@ -312,6 +312,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Manufacturer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Manufacturer.Id, Id = Guid.NewGuid().ToString()});
             Processor.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Processor.Id, Id = Guid.NewGuid().ToString()});
             Farmer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Farmer.Id, Id = Guid.NewGuid().ToString()});*/
+            
             foreach (Player player in Players)
             {
                 player.Payments.Add(new Payment()
