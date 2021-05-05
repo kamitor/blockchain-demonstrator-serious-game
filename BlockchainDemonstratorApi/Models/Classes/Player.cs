@@ -139,13 +139,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             for (int i = 0; i < IncomingDeliveries.Count; i++)
             {
-                if ((int) IncomingDeliveries[i].ArrivalDay <= currentDay &&
-                    (int) IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement)
+                if ((int)IncomingDeliveries[i].ArrivalDay <= currentDay &&
+                    (int)IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement)
                 {
                     Inventory += IncomingDeliveries[i].Volume;
                     Payments.Add(new Payment()
                     {
-                        Amount = IncomingDeliveries[i].Price * -1, DueDay = IncomingDeliveries[i].ArrivalDay + 1,
+                        Amount = IncomingDeliveries[i].Price * -1,
+                        DueDay = IncomingDeliveries[i].ArrivalDay + Factors.RoundIncrement,
                         FromPlayer = true
                     });
                 }
@@ -158,13 +159,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
             for (int i = 0; i < Payments.Count; i++)
             {
-                if (Payments[i].FromPlayer && (int) Payments[i].DueDay <= currentDay &&
-                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
+                if (Payments[i].FromPlayer && (int)Payments[i].DueDay <= currentDay &&
+                    (int)Payments[i].DueDay > currentDay - Factors.RoundIncrement)
                 {
                     payments.Add(new Payment()
                     {
-                        Amount = Payments[i].Amount * -1, DueDay = Payments[i].DueDay + 1, FromPlayer = true,
-                        PlayerId = playerId, Id = Guid.NewGuid().ToString()
+                        Amount = Payments[i].Amount * -1,
+                        DueDay = Payments[i].DueDay + Factors.RoundIncrement,
+                        FromPlayer = true,
+                        PlayerId = playerId,
+                        Id = Guid.NewGuid().ToString()
                     });
                 }
             }
