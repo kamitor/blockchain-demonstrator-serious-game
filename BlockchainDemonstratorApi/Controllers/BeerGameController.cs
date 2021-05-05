@@ -132,10 +132,10 @@ namespace BlockchainDemonstratorApi.Controllers
             string gameId = data.gameId;
             var game = GetGameFromContext(gameId);
 
-            game.Retailer.CurrentOrder = new Order() {Volume = (data.retailerOrder.HasValues) ? Int32.Parse((string)data.retailerOrder) : 0 };
-            game.Manufacturer.CurrentOrder = new Order() {Volume = (data.manufacturerOrder.HasValues) ? Int32.Parse((string)data.manufacturerOrder) : 0 };
-            game.Processor.CurrentOrder = new Order() {Volume = (data.processorOrder.HasValues) ? Int32.Parse((string)data.processorOrder) : 0 };
-            game.Farmer.CurrentOrder = new Order() {Volume = (data.farmerOrder.HasValues) ? Int32.Parse((string)data.farmerOrder) : 0 };
+            game.Retailer.CurrentOrder = new Order() {Volume = (data.retailerOrder.Value != "") ? Int32.Parse((string)data.retailerOrder) : 0 };
+            game.Manufacturer.CurrentOrder = new Order() {Volume = (data.manufacturerOrder.Value != "") ? Int32.Parse((string)data.manufacturerOrder) : 0 };
+            game.Processor.CurrentOrder = new Order() {Volume = (data.processorOrder.Value != "") ? Int32.Parse((string)data.processorOrder) : 0 };
+            game.Farmer.CurrentOrder = new Order() {Volume = (data.farmerOrder.Value != "") ? Int32.Parse((string)data.farmerOrder) : 0 };
 
             game.Progress();
             _context.Games.Update(game);
