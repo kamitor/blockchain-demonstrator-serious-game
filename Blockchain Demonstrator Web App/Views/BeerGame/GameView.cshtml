@@ -37,7 +37,7 @@
             <tbody>
                 @foreach (var order in player.IncomingDeliveries)
                 {
-                    @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - 7)
+                    @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - BlockchainDemonstratorApi.Models.Classes.Factors.RoundIncrement)
                     {
                         <tr>
                             <td class="order-history">@order.Volume</td>
