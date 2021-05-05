@@ -145,32 +145,32 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         private void SetSetupOrders()
         {
-            Retailer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 10, OrderNumber = 0, Price = Factors.ManuProductPrice * 10 });
-            Manufacturer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 10, OrderNumber = 0, Price = Factors.ProcProductPrice * 10 });
-            Processor.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 10, OrderNumber = 0, Price = Factors.FarmerProductPrice * 10 });
-            Farmer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 10, OrderNumber = 0, Price = Factors.HarvesterProductPrice * 10 });
+            Retailer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.ManuProductPrice * 10 });
+            Manufacturer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.ProcProductPrice * 10 });
+            Processor.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.FarmerProductPrice * 10 });
+            Farmer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.HarvesterProductPrice * 10 });
         }
 
         private void SetSetupDeliveries() //TODO: check math ceiling stuff
         {
-            for (int i = 0; i < (int)Math.Ceiling(Retailer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
-            {
-                Retailer.IncomingDeliveries.Add(new Order() { OrderNumber = 0, Volume = 10, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ManuProductPrice * 10 }); //TODO: Ask whether the first order should have a fixed or random volume
-            }
-
             for (int i = 0; i < (int)Math.Ceiling(Manufacturer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
             {
-                Manufacturer.IncomingDeliveries.Add(new Order() { OrderNumber = 0, Volume = 10, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ProcProductPrice * 10 });
+                Retailer.IncomingDeliveries.Add(new Order() { Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ManuProductPrice * 10 }); //TODO: Ask whether the first order should have a fixed or random volume
             }
 
             for (int i = 0; i < (int)Math.Ceiling(Processor.Role.LeadTime / (double)Factors.RoundIncrement); i++)
             {
-                Processor.IncomingDeliveries.Add(new Order() { OrderNumber = 0, Volume = 10, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.FarmerProductPrice * 10 });
+                Manufacturer.IncomingDeliveries.Add(new Order() { Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ProcProductPrice * 10 });
             }
 
             for (int i = 0; i < (int)Math.Ceiling(Farmer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
             {
-                Farmer.IncomingDeliveries.Add(new Order() { OrderNumber = 0, Volume = 10, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.HarvesterProductPrice * 10 });
+                Processor.IncomingDeliveries.Add(new Order() { Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.FarmerProductPrice * 10 });
+            }
+
+            for (int i = 0; i < (int)Math.Ceiling(1 / (double)Factors.RoundIncrement); i++)
+            {
+                Farmer.IncomingDeliveries.Add(new Order() { Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.HarvesterProductPrice * 10 });
             }
 
         }
