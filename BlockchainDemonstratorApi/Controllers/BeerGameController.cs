@@ -91,6 +91,12 @@ namespace BlockchainDemonstratorApi.Controllers
             return BadRequest();
         }
 
+        [HttpPost("LeaveGame")]
+        public void LeaveGame()
+        {
+            //TODO: add leave game method
+        }
+
         // GET: api/BeerGame
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Game>>> GetGame()

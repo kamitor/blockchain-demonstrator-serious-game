@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Channels;
+using System.Xml.Serialization;
 using Blockchain_Demonstrator_Web_App.Models;
 using BlockchainDemonstratorApi.Models.Classes;
 using BlockchainDemonstratorApi.Models.Enums;
@@ -48,9 +49,32 @@ namespace BeerGameConsoleApp
             //
             //     gm.Progress();
             // }
-            int x = 32;
-            double y = x;
-            Console.WriteLine(y);
+
+            Player retail = new Player("retail") {Role = new Role("Retailer", 1.7083333, Product.Packs)};
+            Player manu = new Player("manufacturer") {Role = new Role("Manufacturer", 1.375, Product.Packs)};
+            Player processor = new Player("processor") {Role = new Role("Processor", 17.166667, Product.Packs)};
+            Player farmer = new Player("farmer") {Role = new Role("Farmer", 22.333333, Product.Packs)};
+
+            Game gm = new Game()
+            {
+                Retailer = retail,
+                Manufacturer = manu,
+                Processor = processor,
+                Farmer = farmer
+            };
+
+            var x = 0;
+            for (int i = 0; i < 11; i++)
+            {
+                gm.Progress();
+                foreach (Player gmPlayer in gm.Players)
+                {
+                    Console.WriteLine(gmPlayer.Name + " " + gmPlayer.Balance);
+                    Console.WriteLine("Profit: " + gmPlayer.Profit);
+                    gmPlayer.CurrentOrder = new Order() {Volume = i};
+                }
+                Console.WriteLine("------------------------");
+            }
         }
     }
 }

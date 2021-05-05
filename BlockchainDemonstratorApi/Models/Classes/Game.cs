@@ -131,6 +131,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 SetSetupDeliveries();
                 SetSetupOrders();
                 GameStarted = true;
+                UpdateBalance();
             }
             else
             {
@@ -194,7 +195,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         /**
-         * <summary>Sets adds 250000 to each players balance</summary>
+         * <summary>Adds 250000 to each players balance</summary>
          * <remarks>Only needed at the start of each game</remarks>
          */
         private void SetInitialCapital()
@@ -214,7 +215,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             AddingOrderNumber();
             AddingPrice();
             AddOrder();
-            AddOrderToHistory();
+            //AddOrderToHistory();
         }
 
         /**
@@ -349,7 +350,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 player.Payments.Add(new Payment()
                 {
-                    Amount = Factors.SetupCost, DueDay = 1, FromPlayer = false, PlayerId = player.Id,
+                    Amount = Factors.SetupCost * -1, DueDay = 1, FromPlayer = false, PlayerId = player.Id,
                     Id = Guid.NewGuid().ToString()
                 });
             }

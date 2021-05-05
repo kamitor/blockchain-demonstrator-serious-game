@@ -14,7 +14,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         [Key] public string Id { get; set; }
         [Required] public string Name { get; set; }
         public Role Role { get; set; }
-        public double profit { get { return Balance - (double)(Factors.InitialCapital - Factors.SetupCost); }}
+        public double Profit { get { return Balance - (double)(Factors.InitialCapital - Factors.SetupCost); }}
 
 
         public int Inventory { get; set; } = 20;
@@ -140,7 +140,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             for (int i = 0; i < IncomingDeliveries.Count; i++)
             {
                 if ((int) IncomingDeliveries[i].ArrivalDay <= currentDay &&
-                    (int) IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement)
+                    (int) IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement + 1)
                 {
                     Inventory += IncomingDeliveries[i].Volume;
                     Payments.Add(new Payment()
@@ -166,7 +166,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             for (int i = 0; i < Payments.Count; i++)
             {
                 if (Payments[i].FromPlayer && (int) Payments[i].DueDay <= currentDay &&
-                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
+                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement + 1)
                 {
                     payments.Add(new Payment()
                     {
@@ -250,8 +250,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             for (int i = 0; i < Payments.Count; i++)
             {
+                //TODO: Some payments aren't collected and some are twice
                 if ((int) Payments[i].DueDay <= currentDay &&
-                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
+                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement + 1)
                 {
                     Balance += Payments[i].Amount;
                 }
