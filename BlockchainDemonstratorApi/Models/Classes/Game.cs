@@ -260,6 +260,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public void AddOrder()
         {
             // Making new order
+            //TODO: Volume might not equal to volume in payment amount
             Retailer.IncomingOrders.Add(new Order() {OrderDay = CurrentDay, Volume = new Random().Next(5, 15)});
             Manufacturer.IncomingOrders.Add(Retailer.CurrentOrder);
             Processor.IncomingOrders.Add(Manufacturer.CurrentOrder);
@@ -291,7 +292,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Manufacturer.Payments.AddRange(Retailer.GetOutgoingPayments(CurrentDay, Manufacturer.Id));
             Processor.Payments.AddRange(Manufacturer.GetOutgoingPayments(CurrentDay, Processor.Id));
             Farmer.Payments.AddRange(Processor.GetOutgoingPayments(CurrentDay, Farmer.Id));
-            //TODO: implement later
+            //TODO: Change this, now the retailer will get paid every round even though he might not have fulfilled an order
+            //TODO: The amount might be different to the actual ordered amount, this needs to change
             Retailer.Payments.Add(new Payment()
             {
                 Amount = customerOrderVolume * Factors.RetailProductPrice, DueDay = CurrentDay + 2, FromPlayer = true,

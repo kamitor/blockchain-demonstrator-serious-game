@@ -196,7 +196,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 {
                     Payments.Add(new Payment()
                     {
-                        Amount = transportDays * Factors.FarmerTransport, DueDay = currentDay, FromPlayer = false,
+                        Amount = transportDays * Factors.FarmerTransport * -1, DueDay = currentDay, FromPlayer = false,
                         PlayerId = this.Id, Id = Guid.NewGuid().ToString()
                     });
                 }
@@ -204,7 +204,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 {
                     Payments.Add(new Payment()
                     {
-                        Amount = transportDays * Factors.ProcTransport, DueDay = currentDay, FromPlayer = false,
+                        Amount = transportDays * Factors.ProcTransport * -1, DueDay = currentDay, FromPlayer = false,
                         PlayerId = this.Id, Id = Guid.NewGuid().ToString()
                     });
                 }
@@ -212,7 +212,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 {
                     Payments.Add(new Payment()
                     {
-                        Amount = transportDays * Factors.ManuTransport, DueDay = currentDay, FromPlayer = false,
+                        Amount = transportDays * Factors.ManuTransport * -1, DueDay = currentDay, FromPlayer = false,
                         PlayerId = this.Id, Id = Guid.NewGuid().ToString()
                     });
                 }
@@ -220,7 +220,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 {
                     Payments.Add(new Payment()
                     {
-                        Amount = transportDays * Factors.RetailTransport, DueDay = currentDay, FromPlayer = false,
+                        Amount = transportDays * Factors.RetailTransport * -1, DueDay = currentDay, FromPlayer = false,
                         PlayerId = this.Id, Id = Guid.NewGuid().ToString()
                     });
                 }
