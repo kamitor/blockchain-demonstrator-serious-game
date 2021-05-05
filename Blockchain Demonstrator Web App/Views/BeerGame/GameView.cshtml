@@ -18,16 +18,15 @@
         <h3 name="name">Name: @player.Name</h3>
         <h3 name="role">Role: @player.Role.Id</h3>
         <h3 name="balance">Balance: @Math.Round(player.Balance, 2)</h3>
+        <h3 name="profit">Profit: @player.profit</h3>
         <h3 name="inventory">Inventory: @player.Inventory</h3>
         <h3 name="backorder">Backorder: @player.Backorder</h3>
 
         @foreach (var order in player.IncomingOrders)
         {
-            @if (order.OrderDay == Model.CurrentDay - BlockchainDemonstratorApi.Models.Classes.Factors.RoundIncrement)
-            {
-                <h3 name="incomingOrder">Incoming order: @order.Volume</h3>
-            }
-        }
+    @if (order.OrderDay == Model.CurrentDay - BlockchainDemonstratorApi.Models.Classes.Factors.RoundIncrement)
+    {
+    <h3 name="incomingOrder">Incoming order: @order.Volume</h3>}}
         <h3>Incoming deliveries</h3>
         <table name="incomingDeliveries" class="order-history">
             <thead>
@@ -38,14 +37,12 @@
             <tbody>
                 @foreach (var order in player.IncomingDeliveries)
                 {
-                    @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
-                    {
-                        <tr>
-                            <td class="order-history">@order.OrderNumber</td>
-                            <td class="order-history">@order.Volume</td>
-                        </tr>
-                    }
-                }
+    @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
+    {
+    <tr>
+        <td class="order-history">@order.OrderNumber</td>
+        <td class="order-history">@order.Volume</td>
+    </tr>}}
             </tbody>
         </table>
 
@@ -65,11 +62,10 @@
             <tbody>
                 @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory)
                 {
-                    <tr>
-                        <td class="order-history">@order.OrderNumber</td>
-                        <td class="order-history">@order.Volume</td>
-                    </tr>
-                }
+    <tr>
+        <td class="order-history">@order.OrderNumber</td>
+        <td class="order-history">@order.Volume</td>
+    </tr>}
             </tbody>
         </table>
     </section>

@@ -14,6 +14,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         [Key] public string Id { get; set; }
         [Required] public string Name { get; set; }
         public Role Role { get; set; }
+        public double profit { get { return Balance - (double)(Factors.InitialCapital - Factors.SetupCost); }}
+
 
         public int Inventory { get; set; } = 20;
 
@@ -255,5 +257,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 }
             }
         }
+
     }
 }
