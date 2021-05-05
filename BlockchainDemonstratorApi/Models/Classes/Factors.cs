@@ -7,11 +7,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
     {
         [Key]
         public string Id { get; set; } = "DefaultFactors";
+        //InitialCapital factors
+        public static int InitialCapital { get; set; } = 250000;
         //Transport factors
         public static int RetailTransport { get; set; } = 1086;
         public static int ManuTransport { get; set; } = 516;
         public static int ProcTransport { get; set; } = 73;
         public static int FarmerTransport { get; set; } = 177;
+        
         
         //Holding cost factor
         public static int HoldingFactor { get; set; } = 1;
@@ -39,6 +42,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public int farmerProductPrice { get { return FarmerProductPrice; } set { FarmerProductPrice = value; } }
         public int harvesterProductPrice { get { return HarvesterProductPrice; } set { HarvesterProductPrice = value; } }
         public int setupCost { get { return SetupCost; } set { SetupCost = value; } }
+        public int initialCapital { get { return InitialCapital; } set { InitialCapital = value; } }
         #endregion
     }
 }

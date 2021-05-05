@@ -201,7 +201,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             foreach (Player player in Players)
             {
-                player.Balance = 250000;
+                player.Balance = Factors.InitialCapital;
             }
         }
 
