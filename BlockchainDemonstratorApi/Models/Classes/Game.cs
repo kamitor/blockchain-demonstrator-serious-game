@@ -104,9 +104,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 }
             }
         }
-
-
-
+        
         public Game()
         {
             Players = new List<Player>();
@@ -143,6 +141,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
+        /**
+         * <summary>Adds default order to each actor</summary>
+         * <remarks>Only needs to be used at the start of each game</remarks>
+         */
         private void SetSetupOrders()
         {
             Retailer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.ManuProductPrice * 10 });
@@ -151,6 +153,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.HarvesterProductPrice * 10 });
         }
 
+        /**
+         * <summary>Adds default deliveries to each actor</summary>
+         * <remarks>Only needs to be used at the start of each game</remarks>
+         */
         private void SetSetupDeliveries() //TODO: check math ceiling stuff
         {
             for (int i = 0; i < (int)Math.Ceiling(Manufacturer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
@@ -175,6 +181,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         }
 
+        /**
+         * <summary>Sets adds 250000 to each players balance</summary>
+         * <remarks>Only needed at the start of each game</remarks>
+         */
         private void SetInitialCapital()
         {
             foreach(Player player in Players)
@@ -186,19 +196,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /**
          * <summary>Sets IncomingOrder for every actor</summary>
          */
-       
         private void SendOrders()
         {
-
             AddingCurrentCDay();
             AddingOrderNumber();
             AddingPrice();
-            NewOrder();
+            AddOrder();
             AddOrderToHistory();
-
         }
 
-
+        /**
+         * <summary>Adds current day to each actors current order</summary>
+         */
         public void AddingCurrentCDay() {
 
             // Adding current day
@@ -209,6 +218,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         }
 
+        /**
+         * <summary>Adds order number to each actors current order</summary>
+         */
         public void AddingOrderNumber() {
 
             // Adding order number
@@ -218,7 +230,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
         }
 
-
+        /**
+         * <summary>Adds the price of the order to each actors current order</summary>
+         */
         public void AddingPrice() {
 
             // Adding Price
@@ -229,7 +243,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.CurrentOrder.Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume;
         }
 
-        public void NewOrder() {
+        /**
+         * <summary>Adds current order to each actors supplier</summary>
+         */
+        public void AddOrder() {
 
             // Making new order
             Retailer.IncomingOrders.Add(new Order() { OrderDay = CurrentDay, Volume = new Random().Next(5, 15) });
@@ -239,6 +256,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         }
 
+        /**
+         * <summary>Adds order history to each actors</summary>
+         */
         public void AddOrderToHistory() {
 
             // Add order to history
@@ -253,8 +273,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         }
 
-
-
+        /**
+         * <summary>Adds Payment(s) to each supplier Payments list, so they get paid for their delivered goods</summary>
+         */
         private void SendPayments()
         {
             int customerOrderVolume = new Random().Next(5, 15);
@@ -334,6 +355,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
+        /**
+         * <summary>Adds holding cost to each players Payments list</summary>
+         */
         private void SetHoldingCosts()
         {
             foreach (Player player in Players)
