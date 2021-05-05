@@ -64,7 +64,6 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     string responseString = responseContent.ReadAsStringAsync().Result;
                     if (responseString != null) 
                     {
-                        //TODO: fix crash 
                         Game game = JsonConvert.DeserializeObject<Game>(responseString);
 
                         Player player = game.Players.Find(x => x.Id.Equals(playerId));

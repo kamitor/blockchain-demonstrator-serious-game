@@ -9,7 +9,6 @@
 <article class="game-pin">
     <form id="joingame-form" asp-action="BeerGame">
         <input id="game-pin-text" class="game-pin--item" type="text" placeholder="Game PIN" name="gameId">
-        @*TODO: replace this hack*@
         <input class="game-pin-id-input" style="display: none" name="playerId">
         <input id="select-role-text" type="text">
         <select id="select-role-dropdown">
@@ -21,19 +20,6 @@
         <input id="game-pin-button" class="game-pin--item" type="button" value="Join Game">
     </form>
 </article>
-
-@*<article class="select-role" style="display: none">
-    <form asp-action="GameView" asp-route-gameId="@ViewData["gameId"]">
-        <input id="select-role-text" type="text">
-        <select id="select-role-dropdown">
-            <option value="Farmer">Farmer</option>
-            <option value="Processor">Processor</option>
-            <option value="Manufacturer">Manufacturer</option>
-            <option value="Retailer">Retailer</option>
-        </select>
-        <input id="select-role-button" type="submit" value="Join Game">
-    </form>
-</article>*@
 
 @section Scripts
 {
@@ -53,19 +39,7 @@
                 $(".game-pin-id-input").val(playerId);
                 $("#joingame-form").submit();
             } );
-         
-            
-            
-/*            $(".game-pin").css('display', 'none')
-            $(".select-role").css('display', 'block')*/
         });
         
-/*        $("#select-role-button").one("click", () => {
-            let role = $("#select-role-dropdown").val();
-            let name = $("#select-role-text").val();
-            
-            BeerGame.joinGame(role, name)
-        })*/
-
     </script>
 }

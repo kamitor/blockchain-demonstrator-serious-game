@@ -17,7 +17,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         public int Inventory { get; set; } = 20;
 
-        //TODO: backorder is now volume of every order
         public int Backorder
         {
             get
@@ -69,7 +68,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                        (Factors.HoldingFactor * 2 * Backorder) /*+ (IncomingOrder.Volume * holdingFactor)*/;
             }
         }
-        
+
         public Player(string name)
         {
             Id = Guid.NewGuid().ToString();
@@ -78,7 +77,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             IncomingDeliveries = new List<Order>();
             Payments = new List<Payment>();
         }
-        
+
         [JsonConstructor]
         public Player(string name, string playerId)
         {
@@ -134,13 +133,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <remarks>Also adds a payment object to the Payments list for each received delivery</remarks>
          * <param name="currentDay">integer that specifies the current day</param>
          */
-        //TODO: change name
-        public void IncreaseInventory(int currentDay)
+        public void ProcessDeliveries(int currentDay)
         {
             for (int i = 0; i < IncomingDeliveries.Count; i++)
             {
-                if ((int)IncomingDeliveries[i].ArrivalDay <= currentDay &&
-                    (int)IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement)
+                if ((int) IncomingDeliveries[i].ArrivalDay <= currentDay &&
+                    (int) IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement)
                 {
                     Inventory += IncomingDeliveries[i].Volume;
                     Payments.Add(new Payment()
@@ -165,8 +163,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
             for (int i = 0; i < Payments.Count; i++)
             {
-                if (Payments[i].FromPlayer && (int)Payments[i].DueDay <= currentDay &&
-                    (int)Payments[i].DueDay > currentDay - Factors.RoundIncrement)
+                if (Payments[i].FromPlayer && (int) Payments[i].DueDay <= currentDay &&
+                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
                 {
                     payments.Add(new Payment()
                     {
@@ -188,7 +186,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <param name="currentDay">double that specifies the current day</param>
          * <param name="orders">List of fulfilled orders</param>
          */
-        public void SetTransportCosts(double currentDay, List<Order> orders )
+        public void SetTransportCosts(double currentDay, List<Order> orders)
         {
             foreach (Order item in orders)
             {
@@ -237,10 +235,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             Payments.Add(new Payment()
             {
-                Amount = HoldingCosts * -1, DueDay = currentDay, FromPlayer = false, PlayerId = this.Id, Id = Guid.NewGuid().ToString()
+                Amount = HoldingCosts * -1, DueDay = currentDay, FromPlayer = false, PlayerId = this.Id,
+                Id = Guid.NewGuid().ToString()
             });
         }
-        
+
         /**
          * <summary>Updates player balance</summary>
          * <param name="currentDay">integer that specifies the current day</param>

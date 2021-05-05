@@ -87,9 +87,23 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 
         public HashSet<int> IdList = new HashSet<int>();
+
+        public Game()
+        {
+            Players = new List<Player>();
+            Id = CreateUniqueId();
+            CurrentPhase = Phase.Phase1;
+            CurrentDay = 1;
+            GameStarted = false;
+        }
+
+        /**
+         * <summary>Creates a unique id using six numbers</summary>
+         * <returns>Unique id as string</returns>
+         * <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>
+         */
         private String CreateUniqueId()
         {
-
             Random r = new Random();
             int Id;
             while (true)
@@ -103,15 +117,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
                     return IdS;
                 }
             }
-        }
-        
-        public Game()
-        {
-            Players = new List<Player>();
-            Id = CreateUniqueId();
-            CurrentPhase = Phase.Phase1;
-            CurrentDay = 1;
-            GameStarted = false;
         }
 
         /**
@@ -147,10 +152,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         private void SetSetupOrders()
         {
-            Retailer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.ManuProductPrice * 10 });
-            Manufacturer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.ProcProductPrice * 10 });
-            Processor.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.FarmerProductPrice * 10 });
-            Farmer.IncomingOrders.Add(new Order { OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.HarvesterProductPrice * 10 });
+            Retailer.IncomingOrders.Add(new Order
+                {OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.ManuProductPrice * 10});
+            Manufacturer.IncomingOrders.Add(new Order
+                {OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.ProcProductPrice * 10});
+            Processor.IncomingOrders.Add(new Order
+                {OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.FarmerProductPrice * 10});
+            Farmer.IncomingOrders.Add(new Order
+                {OrderDay = 1 - Factors.RoundIncrement, Volume = 5, Price = Factors.HarvesterProductPrice * 10});
         }
 
         /**
@@ -159,26 +168,29 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         private void SetSetupDeliveries() //TODO: check math ceiling stuff
         {
-            for (int i = 0; i < (int)Math.Ceiling(Manufacturer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
+            for (int i = 0; i < (int) Math.Ceiling(Manufacturer.Role.LeadTime / (double) Factors.RoundIncrement); i++)
             {
-                Retailer.IncomingDeliveries.Add(new Order() { Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ManuProductPrice * 10 }); //TODO: Ask whether the first order should have a fixed or random volume
+                Retailer.IncomingDeliveries.Add(new Order()
+                    {Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ManuProductPrice * 5});
             }
 
-            for (int i = 0; i < (int)Math.Ceiling(Processor.Role.LeadTime / (double)Factors.RoundIncrement); i++)
+            for (int i = 0; i < (int) Math.Ceiling(Processor.Role.LeadTime / (double) Factors.RoundIncrement); i++)
             {
-                Manufacturer.IncomingDeliveries.Add(new Order() { Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ProcProductPrice * 10 });
+                Manufacturer.IncomingDeliveries.Add(new Order()
+                    {Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ProcProductPrice * 5});
             }
 
-            for (int i = 0; i < (int)Math.Ceiling(Farmer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
+            for (int i = 0; i < (int) Math.Ceiling(Farmer.Role.LeadTime / (double) Factors.RoundIncrement); i++)
             {
-                Processor.IncomingDeliveries.Add(new Order() { Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.FarmerProductPrice * 10 });
+                Processor.IncomingDeliveries.Add(new Order()
+                    {Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.FarmerProductPrice * 5});
             }
 
-            for (int i = 0; i < (int)Math.Ceiling(1 / (double)Factors.RoundIncrement); i++)
+            for (int i = 0; i < (int) Math.Ceiling(1 / (double) Factors.RoundIncrement); i++)
             {
-                Farmer.IncomingDeliveries.Add(new Order() { Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.HarvesterProductPrice * 10 });
+                Farmer.IncomingDeliveries.Add(new Order()
+                    {Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.HarvesterProductPrice * 5});
             }
-
         }
 
         /**
@@ -187,7 +199,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         private void SetInitialCapital()
         {
-            foreach(Player player in Players)
+            foreach (Player player in Players)
             {
                 player.Balance = 250000;
             }
@@ -208,21 +220,20 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /**
          * <summary>Adds current day to each actors current order</summary>
          */
-        public void AddingCurrentCDay() {
-
+        public void AddingCurrentCDay()
+        {
             // Adding current day
             Retailer.CurrentOrder.OrderDay = CurrentDay;
             Manufacturer.CurrentOrder.OrderDay = CurrentDay;
             Processor.CurrentOrder.OrderDay = CurrentDay;
             Farmer.CurrentOrder.OrderDay = CurrentDay;
-
         }
 
         /**
          * <summary>Adds order number to each actors current order</summary>
          */
-        public void AddingOrderNumber() {
-
+        public void AddingOrderNumber()
+        {
             // Adding order number
             Retailer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
             Manufacturer.CurrentOrder.OrderNumber = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(CurrentDay) / 5));
@@ -233,8 +244,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /**
          * <summary>Adds the price of the order to each actors current order</summary>
          */
-        public void AddingPrice() {
-
+        public void AddingPrice()
+        {
             // Adding Price
             Retailer.CurrentOrder.Price = Factors.ManuProductPrice * Retailer.CurrentOrder.Volume;
             Manufacturer.CurrentOrder.Price = Factors.ProcProductPrice * Manufacturer.CurrentOrder.Volume;
@@ -246,31 +257,29 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /**
          * <summary>Adds current order to each actors supplier</summary>
          */
-        public void AddOrder() {
-
+        public void AddOrder()
+        {
             // Making new order
-            Retailer.IncomingOrders.Add(new Order() { OrderDay = CurrentDay, Volume = new Random().Next(5, 15) });
+            Retailer.IncomingOrders.Add(new Order() {OrderDay = CurrentDay, Volume = new Random().Next(5, 15)});
             Manufacturer.IncomingOrders.Add(Retailer.CurrentOrder);
             Processor.IncomingOrders.Add(Manufacturer.CurrentOrder);
             Farmer.IncomingOrders.Add(Processor.CurrentOrder);
-
         }
 
         /**
          * <summary>Adds order history to each actors</summary>
          */
-        public void AddOrderToHistory() {
-
+        public void AddOrderToHistory()
+        {
             // Add order to history
             Retailer.OrderHistory.Add(new Order()
-            { OrderNumber = Retailer.CurrentOrder.OrderNumber, Volume = Retailer.CurrentOrder.Volume });
+                {OrderNumber = Retailer.CurrentOrder.OrderNumber, Volume = Retailer.CurrentOrder.Volume});
             Manufacturer.OrderHistory.Add(new Order()
-            { OrderNumber = Manufacturer.CurrentOrder.OrderNumber, Volume = Manufacturer.CurrentOrder.Volume });
+                {OrderNumber = Manufacturer.CurrentOrder.OrderNumber, Volume = Manufacturer.CurrentOrder.Volume});
             Processor.OrderHistory.Add(new Order()
-            { OrderNumber = Processor.CurrentOrder.OrderNumber, Volume = Processor.CurrentOrder.Volume });
+                {OrderNumber = Processor.CurrentOrder.OrderNumber, Volume = Processor.CurrentOrder.Volume});
             Farmer.OrderHistory.Add(new Order()
-            { OrderNumber = Farmer.CurrentOrder.OrderNumber, Volume = Farmer.CurrentOrder.Volume });
-
+                {OrderNumber = Farmer.CurrentOrder.OrderNumber, Volume = Farmer.CurrentOrder.Volume});
         }
 
         /**
@@ -308,7 +317,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         /**
-         * <summary>Causes each actor to increase their inventory</summary>
+         * <summary>Causes each actor to process their deliveries</summary>
          */
         private void ProcessDeliveries()
         {
@@ -319,7 +328,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
             foreach (Player player in Players)
             {
-                player.IncreaseInventory(CurrentDay);
+                player.ProcessDeliveries(CurrentDay);
             }
         }
 
@@ -333,7 +342,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Manufacturer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Manufacturer.Id, Id = Guid.NewGuid().ToString()});
             Processor.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Processor.Id, Id = Guid.NewGuid().ToString()});
             Farmer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Farmer.Id, Id = Guid.NewGuid().ToString()});*/
-            
+
             foreach (Player player in Players)
             {
                 player.Payments.Add(new Payment()

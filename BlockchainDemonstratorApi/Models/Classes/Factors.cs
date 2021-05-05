@@ -7,7 +7,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
     {
         [Key]
         public string Id { get; set; } = "DefaultFactors";
-        //TODO: put on database so we can change stuffs
         //Transport factors
         public static int RetailTransport { get; set; } = 1086;
         public static int ManuTransport { get; set; } = 516;

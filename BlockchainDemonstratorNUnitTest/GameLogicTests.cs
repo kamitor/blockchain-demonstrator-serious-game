@@ -185,7 +185,7 @@ namespace BlockchainDemonstratorNUnitTest
         public void OrderPriceSubtractedFromBalance_expectTrue()
         {
             _game.Manufacturer.IncomingDeliveries.Add(new Order() {Volume = 20, Price = 2000, ArrivalDay = 1});
-            _game.Manufacturer.IncreaseInventory(1);
+            _game.Manufacturer.ProcessDeliveries(1);
             _game.Manufacturer.UpdateBalance(2);
             
             Assert.AreEqual(-2000, _game.Manufacturer.Balance);

@@ -14,7 +14,7 @@ namespace BlockchainDemonstratorApi.Data
         {
         }
 
-        public DbSet<Game> Games { get; set; } //TODO: check if every usage of this dbset is now Games instead of Game
+        public DbSet<Game> Games { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Option> Options { get; set; }
         public DbSet<Order> Orders { get; set; }
