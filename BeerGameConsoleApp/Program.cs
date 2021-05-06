@@ -71,7 +71,7 @@ namespace BeerGameConsoleApp
                 {
                     Console.WriteLine(gmPlayer.Name + " " + gmPlayer.Balance);
                     Console.WriteLine("Profit: " + gmPlayer.Profit);
-                    gmPlayer.CurrentOrder = new Order() {Volume = i};
+                    gmPlayer.CurrentOrder = new Order() {Volume = 10 + i};
                 }
                 Console.WriteLine("------------------------");
             }
