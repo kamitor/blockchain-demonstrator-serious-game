@@ -19,7 +19,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         
         public Role Role { get; set; }
         
-        public double Profit { get { return Balance - (double)(Factors.InitialCapital - Factors.SetupCost); }}
+        public double Profit { get { return Balance - (Factors.InitialCapital + Factors.SetupCost); }}
         
         public int Inventory { get; set; } = 20;
         
@@ -48,6 +48,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         private List<Order> _incomingOrders;
+        
         /// <summary>
         /// Order sent from your customer
         /// </summary>
@@ -131,13 +132,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
                     {
                         Volume = pendingVolume,
                         SendDeliveryDay = currentDay,
-                        ArrivalDay = currentDay + Role.LeadTime,
+                        ArrivalDay = currentDay + Role.LeadTime + new Random().Next(0, 4),
                         Price = price
                     };
                     IncomingOrders[i].Deliveries.Add(delivery);
                     outgoingDeliveries.Add(delivery);
+
                     IncomingOrders.RemoveAt(i);
                     i--;
+                    
+                    
                 }
                 else if(Inventory > 0)
                 {
@@ -184,6 +188,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         //TODO: test for payment bugs
         public void ProcessDeliveries(int currentDay) //Reworked to new order system
+
         {
             foreach (Order order in OutgoingOrders)
             {
@@ -209,11 +214,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /**
          * <summary>Gets all outgoing payments for received deliveries</summary>
          * <returns>List with payment objects that is used to pay suppliers</returns>
+         * <remarks>
+         * Because of the ProcessDeliveries method Payment objects will be added to the Payments list. For all these
+         * items the FromPlayer bool is set to true. And the payment amount is a negative double. In this method we
+         * search for these Payment Items, then flip their amount from negative to positive. And lastly return a list
+         * of Payment objects
+         * </remarks>
          * <param name="currentDay">integer that specifies the current day</param>
          * <param name="playerId">string that specifies the player id</param>
          */
         //TODO: test if you get double payments in db
-        //TODO: test if payments work correctly
         public List<Payment> GetOutgoingPayments(int currentDay, string playerId)
         {
             List<Payment> payments = new List<Payment>();
@@ -306,8 +316,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Console.WriteLine("balance before updating" + Balance);
             for (int i = 0; i < Payments.Count; i++)
             {
-                
-                //TODO: Some payments aren't collected and some are twice
                 if ((int) Payments[i].DueDay <= currentDay &&
                     (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
                 {

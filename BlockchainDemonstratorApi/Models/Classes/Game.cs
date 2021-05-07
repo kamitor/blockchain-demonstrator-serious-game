@@ -138,7 +138,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 ProcessDeliveries();
                 SendDeliveries();
 
-                SendPayments();
+                //SendPayments();
                 SetHoldingCosts();
                 UpdateBalance();
 
