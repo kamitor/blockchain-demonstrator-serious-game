@@ -19,6 +19,7 @@
         <h3 name="role">Role: @player.Role.Id</h3>
         <h3 name="balance">Balance: @Math.Round(player.Balance, 2)</h3>
         <h3 name="profit">Profit: @player.Profit</h3>
+        <h3 name="margin">Margin: @player.Margin</h3>
         <h3 name="inventory">Inventory: @player.Inventory</h3>
         <h3 name="backorder">Backorder: @player.Backorder</h3>
 
@@ -42,7 +43,8 @@
     <tr>
         <td class="order-history">@order.OrderNumber</td>
         <td class="order-history">@order.Volume</td>
-    </tr>}}
+    </tr>
+}}
             </tbody>
         </table>
 
@@ -65,7 +67,8 @@
     <tr>
         <td class="order-history">@order.OrderNumber</td>
         <td class="order-history">@order.Volume</td>
-    </tr>}
+    </tr>
+}
             </tbody>
         </table>
     </section>

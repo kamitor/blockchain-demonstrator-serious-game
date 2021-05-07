@@ -22,7 +22,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public double Profit { get { return Balance - (double)(Factors.InitialCapital - Factors.SetupCost); }}
         
         public int Inventory { get; set; } = 20;
-        
+
+        public double Margin { get; set; }
+
+        public double Margincalculator(int currentDay)
+        { return Margin = Payments.Where(p => p.FromPlayer && p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement).Sum(p => p.Amount);
+        }
+
         public int Backorder
         {
             get
@@ -282,5 +288,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
             Console.WriteLine("balance after updating" + Balance);
         }
+
+
+      
+
     }
 }

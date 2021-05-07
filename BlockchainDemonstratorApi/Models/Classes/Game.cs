@@ -255,6 +255,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.CurrentOrder.Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume;
         }
 
+        
         /**
          * <summary>Adds current order to each actors supplier</summary>
          */
