@@ -95,6 +95,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <returns>List of Order objects with available stock</returns>
          * <param name="currentDay">integer that specifies the current day</param>
          */
+        //TODO: check if you can get paid here instead of in GetOutGoingPayments()
         public List<Order> GetOutgoingDeliveries(int currentDay)
         {
             List<Order> outgoingDeliveries = new List<Order>();
@@ -104,7 +105,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 if (IncomingOrders[i].Volume <= Inventory)
                 {
                     Inventory -= IncomingOrders[i].Volume;
-                    IncomingOrders[i].ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0, 4);
+                    IncomingOrders[i].ArrivalDay = Role.LeadTime + currentDay /*+ new Random().Next(0, 4)*/;
                     outgoingDeliveries.Add(IncomingOrders[i]);
                     IncomingOrders.RemoveAt(i);
                     i--;
@@ -114,7 +115,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                     outgoingDeliveries.Add(new Order()
                     {
                         OrderDay = IncomingOrders[i].OrderDay,
-                        ArrivalDay = Role.LeadTime + currentDay + new Random().Next(0, 4),
+                        ArrivalDay = Role.LeadTime + currentDay /*+ new Random().Next(0, 4)*/,
                         Volume = Inventory
                     });
 
@@ -135,12 +136,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <remarks>Also adds a payment object to the Payments list for each received delivery</remarks>
          * <param name="currentDay">integer that specifies the current day</param>
          */
+        //TODO: test for payment bugs
         public void ProcessDeliveries(int currentDay)
         {
             for (int i = 0; i < IncomingDeliveries.Count; i++)
             {
                 if ((int) IncomingDeliveries[i].ArrivalDay <= currentDay &&
-                    (int) IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement + 1)
+                    (int) IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement)
                 {
                     Inventory += IncomingDeliveries[i].Volume;
                     Payments.Add(new Payment()
@@ -159,6 +161,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <param name="currentDay">integer that specifies the current day</param>
          * <param name="playerId">string that specifies the player id</param>
          */
+        //TODO: test if you get double payments in db
+        //TODO: test if payments work correctly
         public List<Payment> GetOutgoingPayments(int currentDay, string playerId)
         {
             List<Payment> payments = new List<Payment>();
@@ -166,7 +170,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             for (int i = 0; i < Payments.Count; i++)
             {
                 if (Payments[i].FromPlayer && (int) Payments[i].DueDay <= currentDay &&
-                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement + 1)
+                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
                 {
                     payments.Add(new Payment()
                     {
@@ -248,16 +252,21 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         public void UpdateBalance(int currentDay)
         {
+            Console.WriteLine("balance before updating" + Balance);
             for (int i = 0; i < Payments.Count; i++)
             {
+                
                 //TODO: Some payments aren't collected and some are twice
                 if ((int) Payments[i].DueDay <= currentDay &&
-                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement + 1)
+                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
                 {
+                    Console.WriteLine("Current day: " + currentDay);
+                    Console.WriteLine("Due day: " + Payments[i].DueDay);
+                    Console.WriteLine("Payment id: " + Payments[i].Id);
                     Balance += Payments[i].Amount;
                 }
             }
+            Console.WriteLine("balance after updating" + Balance);
         }
-
     }
 }
