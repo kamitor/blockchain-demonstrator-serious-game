@@ -138,7 +138,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 ProcessDeliveries();
                 SendDeliveries();
 
-                SendPayments();
+                //SendPayments();
                 SetHoldingCosts();
                 UpdateBalance();
 
@@ -215,7 +215,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             AddingOrderNumber();
             AddingPrice();
             AddOrder();
-            //AddOrderToHistory();
+            AddOrderToHistory();
         }
 
         /**
