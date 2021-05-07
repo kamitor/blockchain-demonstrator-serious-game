@@ -11,14 +11,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Player
     {
-        [Key] public string Id { get; set; }
-        [Required] public string Name { get; set; }
+        [Key] 
+        public string Id { get; set; }
+        
+        [Required] 
+        public string Name { get; set; }
+        
         public Role Role { get; set; }
+        
         public double Profit { get { return Balance - (double)(Factors.InitialCapital - Factors.SetupCost); }}
-
-
+        
         public int Inventory { get; set; } = 20;
-
+        
         public int Backorder
         {
             get
@@ -28,28 +32,38 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 return IncomingOrders.Where(o => o.OrderDay != max).Sum(o => o.Volume);
             }
         }
-
+        
         public Order CurrentOrder { get; set; }
-        [NotMapped] private List<Order> _incomingOrders;
-
+        
+        [NotMapped] 
+        private List<Order> _incomingOrders;
+        /// <summary>
+        /// Order sent from your customer
+        /// </summary>
+        
         [ForeignKey("RequestForPlayerId")]
-        public List<Order> IncomingOrders //sent from your customer
+        public List<Order> IncomingOrders 
         {
             get { return _incomingOrders; }
             set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
         }
-
-        [NotMapped] private List<Order> _incomingDeliveries;
-
+        
+        [NotMapped] 
+        private List<Order> _incomingDeliveries;
+        
+        /// <summary>
+        /// Orders sent from your supplier
+        /// </summary>
         [ForeignKey("DeliveryToPlayerId")]
-        public List<Order> IncomingDeliveries //sent from your supplier
+        public List<Order> IncomingDeliveries
         {
             get { return _incomingDeliveries; }
             set { _incomingDeliveries = value.OrderBy(o => o.ArrivalDay).ToList(); }
         }
-
-        [NotMapped] private List<Order> _orderHistory;
-
+        
+        [NotMapped] 
+        private List<Order> _orderHistory;
+        
         [ForeignKey("HistoryOfPlayerId")]
         public List<Order> OrderHistory
         {
