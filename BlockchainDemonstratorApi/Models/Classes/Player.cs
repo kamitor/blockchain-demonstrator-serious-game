@@ -35,40 +35,33 @@ namespace BlockchainDemonstratorApi.Models.Classes
         
         public Order CurrentOrder { get; set; }
         
-        [NotMapped] 
+        private List<Order> _outgoingOrders;
+        
+        /// <summary>
+        /// Orders sent from your supplier
+        /// </summary>
+        [ForeignKey("OutgoingOrderForPlayerId")]
+        public List<Order> OutgoingOrders
+        {
+            get { return _outgoingOrders; }
+            set { _outgoingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
+        }
+
         private List<Order> _incomingOrders;
         /// <summary>
         /// Order sent from your customer
         /// </summary>
-        
-        [ForeignKey("RequestForPlayerId")]
+        [ForeignKey("IncomingOrderForPlayerId")]
         public List<Order> IncomingOrders 
         {
             get { return _incomingOrders; }
             set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
         }
-        
-        [NotMapped] 
-        private List<Order> _incomingDeliveries;
-        
-        /// <summary>
-        /// Orders sent from your supplier
-        /// </summary>
-        [ForeignKey("DeliveryToPlayerId")]
-        public List<Order> IncomingDeliveries
+
+        public List<Order> OrderHistory //TODO: Remove later
         {
-            get { return _incomingDeliveries; }
-            set { _incomingDeliveries = value.OrderBy(o => o.ArrivalDay).ToList(); }
-        }
-        
-        [NotMapped] 
-        private List<Order> _orderHistory;
-        
-        [ForeignKey("HistoryOfPlayerId")]
-        public List<Order> OrderHistory
-        {
-            get { return _orderHistory; }
-            set { _orderHistory = value.OrderBy(o => o.OrderNumber).ToList(); }
+            get { return new List<Order>(); }
+            set { }
         }
 
         [ForeignKey("PlayerId")] public List<Payment> Payments { get; set; }
@@ -90,7 +83,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Id = Guid.NewGuid().ToString();
             Name = name;
             IncomingOrders = new List<Order>();
-            IncomingDeliveries = new List<Order>();
+            OutgoingOrders = new List<Order>();
             Payments = new List<Payment>();
         }
 
@@ -100,7 +93,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Id = playerId;
             Name = name;
             IncomingOrders = new List<Order>();
-            IncomingDeliveries = new List<Order>();
+            OutgoingOrders = new List<Order>();
             Payments = new List<Payment>();
         }
 
@@ -153,16 +146,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
         //TODO: test for payment bugs
         public void ProcessDeliveries(int currentDay)
         {
-            for (int i = 0; i < IncomingDeliveries.Count; i++)
+            for (int i = 0; i < OutgoingOrders.Count; i++)
             {
-                if ((int) IncomingDeliveries[i].ArrivalDay <= currentDay &&
-                    (int) IncomingDeliveries[i].ArrivalDay > currentDay - Factors.RoundIncrement)
+                if ((int) OutgoingOrders[i].ArrivalDay <= currentDay &&
+                    (int) OutgoingOrders[i].ArrivalDay > currentDay - Factors.RoundIncrement)
                 {
-                    Inventory += IncomingDeliveries[i].Volume;
+                    Inventory += OutgoingOrders[i].Volume;
                     Payments.Add(new Payment()
                     {
-                        Amount = IncomingDeliveries[i].Price * -1,
-                        DueDay = IncomingDeliveries[i].ArrivalDay + Factors.RoundIncrement,
+                        Amount = OutgoingOrders[i].Price * -1,
+                        DueDay = OutgoingOrders[i].ArrivalDay + Factors.RoundIncrement,
                         FromPlayer = true
                     });
                 }

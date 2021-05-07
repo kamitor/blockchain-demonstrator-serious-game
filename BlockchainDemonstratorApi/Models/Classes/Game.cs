@@ -171,25 +171,25 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             for (int i = 0; i < (int) Math.Ceiling(Manufacturer.Role.LeadTime / (double) Factors.RoundIncrement); i++)
             {
-                Retailer.IncomingDeliveries.Add(new Order()
+                Retailer.OutgoingOrders.Add(new Order()
                     {Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ManuProductPrice * 5});
             }
 
             for (int i = 0; i < (int) Math.Ceiling(Processor.Role.LeadTime / (double) Factors.RoundIncrement); i++)
             {
-                Manufacturer.IncomingDeliveries.Add(new Order()
+                Manufacturer.OutgoingOrders.Add(new Order()
                     {Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.ProcProductPrice * 5});
             }
 
             for (int i = 0; i < (int) Math.Ceiling(Farmer.Role.LeadTime / (double) Factors.RoundIncrement); i++)
             {
-                Processor.IncomingDeliveries.Add(new Order()
+                Processor.OutgoingOrders.Add(new Order()
                     {Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.FarmerProductPrice * 5});
             }
 
             for (int i = 0; i < (int) Math.Ceiling(1 / (double) Factors.RoundIncrement); i++)
             {
-                Farmer.IncomingDeliveries.Add(new Order()
+                Farmer.OutgoingOrders.Add(new Order()
                     {Volume = 5, ArrivalDay = Factors.RoundIncrement * i + 1, Price = Factors.HarvesterProductPrice * 5});
             }
         }
@@ -308,11 +308,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
         private void SendDeliveries()
         {
             Retailer.GetOutgoingDeliveries(CurrentDay);
-            Retailer.IncomingDeliveries.AddRange(Manufacturer.GetOutgoingDeliveries(CurrentDay));
-            Manufacturer.IncomingDeliveries.AddRange(Processor.GetOutgoingDeliveries(CurrentDay));
-            Processor.IncomingDeliveries.AddRange(Farmer.GetOutgoingDeliveries(CurrentDay));
+            Retailer.OutgoingOrders.AddRange(Manufacturer.GetOutgoingDeliveries(CurrentDay));
+            Manufacturer.OutgoingOrders.AddRange(Processor.GetOutgoingDeliveries(CurrentDay));
+            Processor.OutgoingOrders.AddRange(Farmer.GetOutgoingDeliveries(CurrentDay));
             //TODO: Implement later
-            Farmer.IncomingDeliveries.Add(new Order()
+            Farmer.OutgoingOrders.Add(new Order()
             {
                 OrderDay = CurrentDay, ArrivalDay = CurrentDay + new Random().Next(3, 6),
                 Volume = Farmer.CurrentOrder.Volume

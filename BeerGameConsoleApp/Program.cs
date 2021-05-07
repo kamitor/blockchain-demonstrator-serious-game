@@ -17,7 +17,7 @@ namespace BeerGameConsoleApp
             pl.Inventory = 1000;
             pl.Balance = 10000;
             
-            pl.IncomingDeliveries.Add(new Order(){ArrivalDay = 1, Volume = 10, Price = 1000});
+            pl.OutgoingOrders.Add(new Order(){ArrivalDay = 1, Volume = 10, Price = 1000});
             
             pl.ProcessDeliveries(1);
             

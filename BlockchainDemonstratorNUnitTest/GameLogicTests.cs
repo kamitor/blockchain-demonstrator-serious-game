@@ -77,10 +77,10 @@ namespace BlockchainDemonstratorNUnitTest
         {
             _game.Progress();
 
-            if (_game.Retailer.IncomingDeliveries.Find(o => o.OrderDay == 1 && o.Volume == 10) != null &&
-                _game.Manufacturer.IncomingDeliveries.Find(o => o.OrderDay == 1 && o.Volume == 11) != null &&
-                _game.Processor.IncomingDeliveries.Find(o => o.OrderDay == 1 && o.Volume == 12) != null &&
-                _game.Farmer.IncomingDeliveries.Find(o => o.OrderDay == 1 && o.Volume == 13) != null)
+            if (_game.Retailer.OutgoingOrders.Find(o => o.OrderDay == 1 && o.Volume == 10) != null &&
+                _game.Manufacturer.OutgoingOrders.Find(o => o.OrderDay == 1 && o.Volume == 11) != null &&
+                _game.Processor.OutgoingOrders.Find(o => o.OrderDay == 1 && o.Volume == 12) != null &&
+                _game.Farmer.OutgoingOrders.Find(o => o.OrderDay == 1 && o.Volume == 13) != null)
             {
                 Assert.Pass();
             }
@@ -184,7 +184,7 @@ namespace BlockchainDemonstratorNUnitTest
         [Test]
         public void OrderPriceSubtractedFromBalance_expectTrue()
         {
-            _game.Manufacturer.IncomingDeliveries.Add(new Order() {Volume = 20, Price = 2000, ArrivalDay = 1});
+            _game.Manufacturer.OutgoingOrders.Add(new Order() {Volume = 20, Price = 2000, ArrivalDay = 1});
             _game.Manufacturer.ProcessDeliveries(1);
             _game.Manufacturer.UpdateBalance(2);
             
@@ -194,7 +194,7 @@ namespace BlockchainDemonstratorNUnitTest
         [Test]
         public void OrderPriceAddedToBalance_expectTrue()
         {
-            _game.Manufacturer.IncomingDeliveries.Add(new Order() {Volume = 20, Price = 2000, ArrivalDay = 1});
+            _game.Manufacturer.OutgoingOrders.Add(new Order() {Volume = 20, Price = 2000, ArrivalDay = 1});
 
             _game.CurrentDay = 3;
             _game.Progress();

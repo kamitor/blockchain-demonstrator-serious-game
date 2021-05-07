@@ -35,7 +35,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var order in player.IncomingDeliveries)
+                @foreach (var order in player.OutgoingOrders)
                 {
     @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
     {
