@@ -28,7 +28,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var order in Model.IncomingDeliveries)
+                @*@foreach (var order in Model.IncomingDeliveries) No longer works because this list got changed, update later
                 {
                     @if (order.ArrivalDay <= (int) ViewData["CurrentDay"] && order.ArrivalDay > (int) ViewData["CurrentDay"] - Factors.RoundIncrement)
                     {
@@ -37,7 +37,7 @@
                             <td class="order-history">@order.Volume</td>
                         </tr>
                     }
-                }
+                }*@
                 </tbody>
             </table>
             <div>
@@ -80,14 +80,14 @@
                     <th>Volume</th>
                 </tr>
                 </thead>
-                <tbody>
+                @*<tbody> Order history no longer exists
                 @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OrderHistory)
                 {
                     <tr>
                         <td class="order-history">@order.OrderNumber</td>
                         <td class="order-history">@order.Volume</td>
                     </tr>
-                }
+                }*@
                 </tbody>
             </table>
         </article>

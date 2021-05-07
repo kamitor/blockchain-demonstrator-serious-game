@@ -34,8 +34,8 @@
                     <th>Volume</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var order in player.IncomingDeliveries)
+            @*<tbody> No longer works because order does not have a arrivalday
+                @foreach (var order in player.OutgoingOrders)
                 {
     @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
     {
@@ -43,7 +43,7 @@
         <td class="order-history">@order.OrderNumber</td>
         <td class="order-history">@order.Volume</td>
     </tr>}}
-            </tbody>
+            </tbody>*@
         </table>
 
         <form>
@@ -60,12 +60,12 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory)
+               @* @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory) Order history no longer exists
                 {
     <tr>
         <td class="order-history">@order.OrderNumber</td>
         <td class="order-history">@order.Volume</td>
-    </tr>}
+    </tr>}*@
             </tbody>
         </table>
     </section>

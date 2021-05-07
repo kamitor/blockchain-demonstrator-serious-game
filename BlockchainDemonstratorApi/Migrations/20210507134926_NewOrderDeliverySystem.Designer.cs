@@ -3,14 +3,16 @@ using BlockchainDemonstratorApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlockchainDemonstratorApi.Migrations
 {
     [DbContext(typeof(BeerGameContext))]
-    partial class BeerGameContextModelSnapshot : ModelSnapshot
+    [Migration("20210507134926_NewOrderDeliverySystem")]
+    partial class NewOrderDeliverySystem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +48,7 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Deliveries");
+                    b.ToTable("Delivery");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Factors", b =>
@@ -188,6 +190,9 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<string>("OutgoingOrderForPlayerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("PlayerId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Volume")
                         .HasColumnType("int");
 
@@ -196,6 +201,8 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.HasIndex("IncomingOrderForPlayerId");
 
                     b.HasIndex("OutgoingOrderForPlayerId");
+
+                    b.HasIndex("PlayerId");
 
                     b.ToTable("Orders");
                 });
@@ -314,6 +321,10 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", null)
                         .WithMany("OutgoingOrders")
                         .HasForeignKey("OutgoingOrderForPlayerId");
+
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", null)
+                        .WithMany("OrderHistory")
+                        .HasForeignKey("PlayerId");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Payment", b =>

@@ -16,21 +16,20 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <summary>
         /// Incoming order for player with the following id
         /// </summary>
-        public string RequestForPlayerId { get; set; }
+        public string OutgoingOrderForPlayerId { get; set; }
 
         /// <summary>
         /// Incoming delivery for player with the following id
         /// </summary>
-        public string DeliveryToPlayerId { get; set; }
+        public string IncomingOrderForPlayerId { get; set; }
 
         /// <summary>
         /// Order history of player with the following id
         /// </summary>
-        public string HistoryOfPlayerId { get; set; } 
         public int OrderNumber { get; set; }
+        
         public int OrderDay { get; set; }
-        public double ArrivalDay { get; set; }
-        [NotMapped] 
+        
         private int _volume;
 
         [Range(0, double.MaxValue)]
@@ -50,6 +49,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        public double Price { get; set; }
+        [ForeignKey("OrderId")]
+        public List<Delivery> Deliveries { get; set; }
     }
 }
