@@ -1,0 +1,91 @@
+﻿@model BlockchainDemonstratorApi.Models.Classes.Factors
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Factors</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="retailTransport" class="control-label"></label>
+                <input asp-for="retailTransport" class="form-control" />
+                <span asp-validation-for="retailTransport" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="manuTransport" class="control-label"></label>
+                <input asp-for="manuTransport" class="form-control" />
+                <span asp-validation-for="manuTransport" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="procTransport" class="control-label"></label>
+                <input asp-for="procTransport" class="form-control" />
+                <span asp-validation-for="procTransport" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="farmerTransport" class="control-label"></label>
+                <input asp-for="farmerTransport" class="form-control" />
+                <span asp-validation-for="farmerTransport" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="holdingFactor" class="control-label"></label>
+                <input asp-for="holdingFactor" class="form-control" />
+                <span asp-validation-for="holdingFactor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="roundIncrement" class="control-label"></label>
+                <input asp-for="roundIncrement" class="form-control" />
+                <span asp-validation-for="roundIncrement" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="retailProductPrice" class="control-label"></label>
+                <input asp-for="retailProductPrice" class="form-control" />
+                <span asp-validation-for="retailProductPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="manuProductPrice" class="control-label"></label>
+                <input asp-for="manuProductPrice" class="form-control" />
+                <span asp-validation-for="manuProductPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="procProductPrice" class="control-label"></label>
+                <input asp-for="procProductPrice" class="form-control" />
+                <span asp-validation-for="procProductPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="farmerProductPrice" class="control-label"></label>
+                <input asp-for="farmerProductPrice" class="form-control" />
+                <span asp-validation-for="farmerProductPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="harvesterProductPrice" class="control-label"></label>
+                <input asp-for="harvesterProductPrice" class="form-control" />
+                <span asp-validation-for="harvesterProductPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="setupCost" class="control-label"></label>
+                <input asp-for="setupCost" class="form-control" />
+                <span asp-validation-for="setupCost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="initialCapital" class="control-label"></label>
+                <input asp-for="initialCapital" class="form-control" />
+                <span asp-validation-for="initialCapital" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
