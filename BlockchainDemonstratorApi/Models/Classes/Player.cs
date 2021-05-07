@@ -38,7 +38,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         private List<Order> _outgoingOrders;
         
         /// <summary>
-        /// Orders sent from your supplier
+        /// The orders from the player itself
         /// </summary>
         [ForeignKey("OutgoingOrderForPlayerId")]
         public List<Order> OutgoingOrders
@@ -58,13 +58,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
         }
 
-        public List<Order> OrderHistory //TODO: Remove later
-        {
-            get { return new List<Order>(); }
-            set { }
-        }
-
-        [ForeignKey("PlayerId")] public List<Payment> Payments { get; set; }
+        [ForeignKey("PlayerId")] 
+        public List<Payment> Payments { get; set; }
         public double Balance { get; set; }
 
         [NotMapped]
@@ -103,39 +98,83 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <param name="currentDay">integer that specifies the current day</param>
          */
         //TODO: check if you can get paid here instead of in GetOutGoingPayments()
-        public List<Order> GetOutgoingDeliveries(int currentDay)
+        public void GetOutgoingDeliveries(int currentDay) //Reworked to new order system
         {
-            List<Order> outgoingDeliveries = new List<Order>();
-
+            List<Delivery> outgoingDeliveries = new List<Delivery>();
             for (int i = 0; i < IncomingOrders.Count; i++)
             {
-                if (IncomingOrders[i].Volume <= Inventory)
+                int pendingVolume = IncomingOrders[i].Volume - IncomingOrders[i].Deliveries.Sum(d => d.Volume);
+                if (pendingVolume <= Inventory)
                 {
-                    Inventory -= IncomingOrders[i].Volume;
-                    IncomingOrders[i].ArrivalDay = Role.LeadTime + currentDay /*+ new Random().Next(0, 4)*/;
-                    outgoingDeliveries.Add(IncomingOrders[i]);
+                    Inventory -= pendingVolume;
+                    int price;
+                    switch (Role.Id)  //TODO: rework partial payment
+                    {
+                        case "Retailer":
+                            price = pendingVolume * Factors.RetailProductPrice;
+                            break;
+                        case "Manufacturer":
+                            price = pendingVolume * Factors.ManuProductPrice;
+                            break;
+                        case "Processor":
+                            price = pendingVolume * Factors.ProcProductPrice;
+                            break;
+                        case "Farmer":
+                            price = pendingVolume * Factors.FarmerProductPrice;
+                            break;
+                        default:
+                            price = 0;
+                            break;
+                    }
+
+                    Delivery delivery = new Delivery()
+                    {
+                        Volume = pendingVolume,
+                        SendDeliveryDay = currentDay,
+                        ArrivalDay = currentDay + Role.LeadTime,
+                        Price = price
+                    };
+                    IncomingOrders[i].Deliveries.Add(delivery);
+                    outgoingDeliveries.Add(delivery);
                     IncomingOrders.RemoveAt(i);
                     i--;
                 }
-                else if (Inventory > 0)
+                else if(Inventory > 0)
                 {
-                    outgoingDeliveries.Add(new Order()
+                    int price;
+                    switch (Role.Id)  //TODO: rework partial payment
                     {
-                        OrderDay = IncomingOrders[i].OrderDay,
-                        ArrivalDay = Role.LeadTime + currentDay /*+ new Random().Next(0, 4)*/,
-                        Volume = Inventory
-                    });
+                        case "Retailer":
+                            price = Inventory * Factors.RetailProductPrice;
+                            break;
+                        case "Manufacturer":
+                            price = Inventory * Factors.ManuProductPrice;
+                            break;
+                        case "Processor":
+                            price = Inventory * Factors.ProcProductPrice;
+                            break;
+                        case "Farmer":
+                            price = Inventory * Factors.FarmerProductPrice;
+                            break;
+                        default:
+                            price = 0;
+                            break;
+                    }
+                    Delivery delivery = new Delivery()
+                    {
+                        Volume = Inventory,
+                        SendDeliveryDay = currentDay,
+                        ArrivalDay = currentDay + Role.LeadTime,
+                        Price = price
+                    };
+                    IncomingOrders[i].Deliveries.Add(delivery);
+                    outgoingDeliveries.Add(delivery);
 
-                    IncomingOrders[i].Volume -= Inventory;
                     Inventory = 0;
-
-                    break;
                 }
             }
 
             SetTransportCosts(currentDay, outgoingDeliveries);
-
-            return outgoingDeliveries;
         }
 
         /**
@@ -144,20 +183,25 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <param name="currentDay">integer that specifies the current day</param>
          */
         //TODO: test for payment bugs
-        public void ProcessDeliveries(int currentDay)
+        public void ProcessDeliveries(int currentDay) //Reworked to new order system
         {
-            for (int i = 0; i < OutgoingOrders.Count; i++)
+            foreach (Order order in OutgoingOrders)
             {
-                if ((int) OutgoingOrders[i].ArrivalDay <= currentDay &&
-                    (int) OutgoingOrders[i].ArrivalDay > currentDay - Factors.RoundIncrement)
+                foreach (Delivery delivery in order.Deliveries)
                 {
-                    Inventory += OutgoingOrders[i].Volume;
-                    Payments.Add(new Payment()
+                    if(Math.Floor(delivery.ArrivalDay) <= currentDay && 
+                        Math.Floor(delivery.ArrivalDay) > currentDay - Factors.RoundIncrement &&
+                        delivery.Processed == false)
                     {
-                        Amount = OutgoingOrders[i].Price * -1,
-                        DueDay = OutgoingOrders[i].ArrivalDay + Factors.RoundIncrement,
-                        FromPlayer = true
-                    });
+                        Inventory += delivery.Volume;
+                        delivery.Processed = true;
+                        Payments.Add(new Payment()
+                        {
+                            Amount = delivery.Price * -1,
+                            DueDay = delivery.ArrivalDay + Factors.RoundIncrement,
+                            FromPlayer = true
+                        });
+                    }
                 }
             }
         }
@@ -197,13 +241,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
          * <summary>Adds payment objects to the Payments list which are classified as transportation costs</summary>
          * <remarks>List orders must be a list of fulfilled orders</remarks>
          * <param name="currentDay">double that specifies the current day</param>
-         * <param name="orders">List of fulfilled orders</param>
+         * <param name="deliveries">List of fulfilled orders</param>
          */
-        public void SetTransportCosts(double currentDay, List<Order> orders)
+        public void SetTransportCosts(double currentDay, List<Delivery> deliveries)
         {
-            foreach (Order item in orders)
+            foreach (Delivery delivery in deliveries)
             {
-                double transportDays = (item.ArrivalDay - currentDay);
+                double transportDays = (delivery.ArrivalDay - currentDay);
 
                 if (Role.Id == "Farmer")
                 {

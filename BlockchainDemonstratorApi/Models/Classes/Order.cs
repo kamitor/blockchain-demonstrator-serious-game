@@ -30,8 +30,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
         
         public int OrderDay { get; set; }
         
-        //public double ArrivalDay { get; set; }
-        
         private int _volume;
 
         [Range(0, double.MaxValue)]
@@ -51,17 +49,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        public double Price { get; set; }
-
         [ForeignKey("OrderId")]
         public List<Delivery> Deliveries { get; set; }
-
-        public void GetDeliveries() //TODO: cycle through all deliveries to process to inventory
-        {
-            foreach (Delivery delivery in Deliveries)
-            {
-
-            }
-        }
     }
 }

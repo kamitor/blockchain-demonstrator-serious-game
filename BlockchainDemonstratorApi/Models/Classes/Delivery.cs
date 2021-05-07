@@ -25,5 +25,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         [Required]
         public bool Processed { get; set; } = false;
+        
+        [Required]
+        public double Price { get; set; }
     }
 }

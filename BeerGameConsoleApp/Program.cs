@@ -17,7 +17,7 @@ namespace BeerGameConsoleApp
             pl.Inventory = 1000;
             pl.Balance = 10000;
             
-            pl.OutgoingOrders.Add(new Order(){ArrivalDay = 1, Volume = 10, Price = 1000});
+            //pl.OutgoingOrders.Add(new Order(){ArrivalDay = 1, Volume = 10, Price = 1000}); No longer works because order does not have price
             
             pl.ProcessDeliveries(1);
             
