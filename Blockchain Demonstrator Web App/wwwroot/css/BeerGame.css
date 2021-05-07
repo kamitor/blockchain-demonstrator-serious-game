@@ -8,3 +8,33 @@
     display: flex;
     
 }
+
+.game-pin {
+    display: flex;
+    flex-direction: row;
+    margin: 3px auto;
+    border: 2px solid;
+    border-radius: 5px;
+    width: 40%;
+    padding: 0px;
+}
+
+.game-pin--item {
+    align-self: center;
+    width: 90%;
+    margin: 5px;
+    padding: 0px;
+}
+
+.game-ui {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.ui-item {
+    border-collapse: collapse;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin: 5px;
+}

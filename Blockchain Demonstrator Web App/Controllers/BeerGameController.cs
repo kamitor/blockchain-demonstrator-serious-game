@@ -3,40 +3,149 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blockchain_Demonstrator_Web_App.Models.Classes;
-using Blockchain_Demonstrator_Web_App.Models.Enums;
+using BlockchainDemonstratorApi.Models.Classes;
+using BlockchainDemonstratorApi.Models.Enums;
 using Newtonsoft.Json;
+using System.Net.Http;
+using Microsoft.Extensions.Configuration;
+using Blockchain_Demonstrator_Web_App.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
 {
     public class BeerGameController : Controller
     {
-        public Game gm = new Game();
-        public void Init()
-        {
-            gm.Players.Add(Role.Farmer, new Player("Farmer", new Farmer()));
-            gm.Players.Add(Role.Retailer, new Player("Retailer", new Retailer()));
-            gm.Players.Add(Role.Manufacturer, new Player("Manufacturer", new Manufacturer()));
-            gm.Players.Add(Role.Processor, new Player("Processor", new Processor()));
-        }
-
         public IActionResult Index()
         {
             return View();
         }
-
         
-        public IActionResult GameView()
+        public IActionResult GameView(string gameId)
         {
-            Init();
-            return View(gm);
+            SetCookie("JoinedGame", gameId, 480);
+            
+            using (var client = new HttpClient())
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(gameId), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/GetGame",stringContent).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null) 
+                    {
+                        Game game = JsonConvert.DeserializeObject<Game>(responseString);
+                        /*if (game.Retailer != null) game.Retailer.OrderHistory = GetOrdersFromPlayer(game.Retailer.Id);
+                        if (game.Manufacturer != null) game.Manufacturer.OrderHistory = GetOrdersFromPlayer(game.Manufacturer.Id);
+                        if (game.Processor != null) game.Processor.OrderHistory = GetOrdersFromPlayer(game.Processor.Id);
+                        if (game.Farmer != null) game.Farmer.OrderHistory = GetOrdersFromPlayer(game.Farmer.Id);*/
+                        return View(game);
+                    }
+                }
+            }
+
+            return BadRequest();
         }
 
-        public string GetGame()
+        public IActionResult BeerGame(string gameId, string playerId)
         {
-            Init();
-            string blabla = JsonConvert.SerializeObject(gm);
-            return blabla;
+            SetCookie("JoinedGame", gameId, 480);
+            SetCookie("PlayerId", playerId, 480);
+            
+            using (var client = new HttpClient())
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(gameId), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/GetGame",stringContent).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null) 
+                    {
+                        Game game = JsonConvert.DeserializeObject<Game>(responseString);
+
+                        Player player = game.Players.Find(x => x.Id.Equals(playerId));
+                        ViewData["CurrentDay"] = game.CurrentDay;
+
+                        return View(player);
+                    }
+                }
+            }
+            return View();
         }
+
+        public IActionResult CreateGame()
+        {
+            using (var client = new HttpClient())
+            {
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/CreateGame", null).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok();
+                }
+            }
+            return BadRequest();
+        }
+
+        public IActionResult JoinGame(string gameId, RoleType role, string name)
+        {
+            using (var client = new HttpClient())
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(new { gameId, role, name }), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/JoinGame", stringContent).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("GameView", "BeerGame", new { gameid = gameId });
+                }
+            }
+            return BadRequest();
+        }
+
+        public IActionResult GamePinView()
+        {
+            return View();
+        }
+
+        public void SetCookie(string key, string value, int? expireTime)
+        {
+            CookieOptions option = new CookieOptions();
+
+            if (expireTime.HasValue)
+            {
+                option.Expires = DateTimeOffset.Now.AddMinutes(expireTime.Value);
+            }
+            else
+            {
+                option.Expires = DateTimeOffset.Now.AddMilliseconds(10);
+            }
+            
+            Response.Cookies.Append(key, value, option);
+        }
+
+        public void RemoveCookie(string key)
+        {
+            Response.Cookies.Delete(key);
+        }
+
+        public List<Order> GetOrdersFromPlayer(string playerId)
+        {
+            using (var client = new HttpClient())
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(playerId), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/GetOrders", stringContent).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null) return JsonConvert.DeserializeObject<List<Order>>(responseString);
+                }
+            }
+            return null;
+        } 
     }
 }

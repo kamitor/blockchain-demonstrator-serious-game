@@ -1,5 +1,7 @@
 ﻿@using Microsoft.CodeAnalysis
-@model Blockchain_Demonstrator_Web_App.Models.Classes.Game
+@using BlockchainDemonstratorApi.Models.Classes
+@model BlockchainDemonstratorApi.Models.Classes.Game
+
 
 
 <head>
@@ -10,51 +12,74 @@
 <section class="actor-display">
     @if (Model != null)
     {
-        @foreach (var item in Model.Players)
+        @foreach (var player in Model.Players)
         {
-            <section id="section-@item.Key">
-                <h4>Name: @item.Value.Name</h4>
-                <h4>Role: @item.Key</h4>
-                <h4>Inventory: @item.Value.Inventory</h4>
-                <h4>Backorder: @item.Value.Backorder</h4>
-    
-                <form>
-                    <h6>Order volume: </h6>
-                    <input type="number" name="order">
-                    <input type="submit" value="Place order">
-                </form>
-                
-                <section>
-                    <h4>Order history:</h4>
-                    <table class="order-history">
-                        <thead>
-                        <tr>
-                            <th>Day</th>
-                            <th>Order</th>
-                        </tr>
-                        </thead>
-    
-                        @for (int i = 0 + 1; i < 15 + 1; i++)
-                        {
-                            <tr>
-                                <td class="order-history">@i</td>
-                                <td class="order-history"></td>
-                            </tr>
-                        }
-                    </table>
-                </section>
-                
-            </section>
+    <section id="section-@player.Role.Id">
+        <h3 name="name">Name: @player.Name</h3>
+        <h3 name="role">Role: @player.Role.Id</h3>
+        <h3 name="balance">Balance: @Math.Round(player.Balance, 2)</h3>
+        <h3 name="profit">Profit: @player.Profit</h3>
+        <h3 name="inventory">Inventory: @player.Inventory</h3>
+        <h3 name="backorder">Backorder: @player.Backorder</h3>
+
+        @foreach (var order in player.IncomingOrders)
+        {
+    @if (order.OrderDay == Model.CurrentDay - BlockchainDemonstratorApi.Models.Classes.Factors.RoundIncrement)
+    {
+    <h3 name="incomingOrder">Incoming order: @order.Volume</h3>}}
+        <h3>Incoming deliveries</h3>
+        <table name="incomingDeliveries" class="order-history">
+            <thead>
+                <tr>
+                    <th>Volume</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in player.IncomingDeliveries)
+                {
+    @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
+    {
+    <tr>
+        <td class="order-history">@order.OrderNumber</td>
+        <td class="order-history">@order.Volume</td>
+    </tr>}}
+            </tbody>
+        </table>
+
+        <form>
+            <h6>Order volume: </h6>
+            <input type="number" name="order">
+        </form>
+
+        <h3>Order history:</h3>
+        <table name="orderHistory" class="order-history">
+            <thead>
+                <tr>
+                    <th>Order number</th>
+                    <th>Volume</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory)
+                {
+    <tr>
+        <td class="order-history">@order.OrderNumber</td>
+        <td class="order-history">@order.Volume</td>
+    </tr>}
+            </tbody>
+        </table>
+    </section>
         }
+
     }
 </section>
-
+<button onclick="BeerGame.sendOrders('@Model.Id')">Send orders</button>
 </body>
 
 @section Scripts
 {
     <script src="~/js/BeerGame.js"></script>
     <script>
-        console.log(BeerGame.getGame());
+        BeerGame.init('@Model.Id')
     </script>
 }

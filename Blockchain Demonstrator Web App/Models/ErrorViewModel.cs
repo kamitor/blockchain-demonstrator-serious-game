@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Blockchain_Demonstrator_Web_App.Models
 {

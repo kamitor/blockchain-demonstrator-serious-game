@@ -1,0 +1,45 @@
+﻿@model object
+
+@{
+    ViewData["Title"] = "Join a BeerGame";
+
+}
+
+<h2>@ViewData["Title"]</h2>
+<article class="game-pin">
+    <form id="joingame-form" asp-action="BeerGame">
+        <input id="game-pin-text" class="game-pin--item" type="text" placeholder="Game PIN" name="gameId">
+        <input class="game-pin-id-input" style="display: none" name="playerId">
+        <input id="select-role-text" type="text">
+        <select id="select-role-dropdown">
+                    <option value="Farmer">Farmer</option>
+                    <option value="Processor">Processor</option>
+                    <option value="Manufacturer">Manufacturer</option>
+                    <option value="Retailer">Retailer</option>
+                </select>
+        <input id="game-pin-button" class="game-pin--item" type="button" value="Join Game">
+    </form>
+</article>
+
+@section Scripts
+{
+    <script src="~/js/BeerGame.js"></script>
+    <script>
+        
+        $("#game-pin-button").on("click", () => {
+            @*TODO: check if game exists*@
+
+            
+            let role = $("#select-role-dropdown").val();
+            let name = $("#select-role-text").val();
+            let playerId = "@Guid.NewGuid().ToString()"
+            let gameId = $("#game-pin-text").val();
+            console.log('gameId:' + gameId);
+            BeerGame.joinGame(gameId, role, name, playerId).then( ()=>{
+                $(".game-pin-id-input").val(playerId);
+                $("#joingame-form").submit();
+            } );
+        });
+        
+    </script>
+}
