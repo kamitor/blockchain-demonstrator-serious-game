@@ -30,7 +30,7 @@ namespace BeerGameConsoleApp
 
             for (int i = 0; i < 3; i++)
             {
-                pl.IncomingOrders.Add(new Order(){ArrivalDay = 1, Volume = 10, Price = 1000}); 
+                //pl.IncomingOrders.Add(new Order(){ArrivalDay = 1, Volume = 10, Price = 1000}); 
             }
 
             pl.GetOutgoingDeliveries(1);

@@ -137,8 +137,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 ProcessDeliveries();
                 SendDeliveries();
-
-                //SendPayments();
+                
                 SetHoldingCosts();
                 UpdateBalance();
 
@@ -146,6 +145,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 CurrentDay += Factors.RoundIncrement;
             }
         }
+
+        #region SetupFor1stRound
 
         /**
          * <summary>Adds default order to each actor</summary>
@@ -238,6 +239,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
+        #endregion
+        
         /**
          * <summary>Sets IncomingOrder for every actor</summary>
          */
@@ -245,7 +248,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             AddingCurrentDay();
             AddingOrderNumber();
-            //AddingPrice(); Prices get added to deliveries
             AddOrder();
         }
 
@@ -274,19 +276,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         /**
-         * <summary>Adds the price of the order to each actors current order</summary>
-         */
-        /*public void AddingPrice() Prices get added to deliveries
-        {
-            // Adding Price
-            Retailer.CurrentOrder.Price = Factors.ManuProductPrice * Retailer.CurrentOrder.Volume;
-            Manufacturer.CurrentOrder.Price = Factors.ProcProductPrice * Manufacturer.CurrentOrder.Volume;
-            Processor.CurrentOrder.Price = Factors.FarmerProductPrice * Processor.CurrentOrder.Volume;
-            //TODO: implement better way for farmer to place orders
-            Farmer.CurrentOrder.Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume;
-        }*/
-
-        /**
          * <summary>Adds current order to each actors supplier</summary>
          */
         public void AddOrder()
@@ -309,24 +298,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.IncomingOrders.Add(Processor.CurrentOrder);
 
             Farmer.OutgoingOrders.Add(Farmer.CurrentOrder);
-        }
-
-        /**
-         * <summary>Adds Payment(s) to each supplier Payments list, so they get paid for their delivered goods</summary>
-         */
-        private void SendPayments()
-        {
-            int customerOrderVolume = new Random().Next(5, 15);
-            Manufacturer.Payments.AddRange(Retailer.GetOutgoingPayments(CurrentDay, Manufacturer.Id));
-            Processor.Payments.AddRange(Manufacturer.GetOutgoingPayments(CurrentDay, Processor.Id));
-            Farmer.Payments.AddRange(Processor.GetOutgoingPayments(CurrentDay, Farmer.Id));
-            //TODO: Change this, now the retailer will get paid every round even though he might not have fulfilled an order
-            //TODO: The amount might be different to the actual ordered amount, this needs to change
-            Retailer.Payments.Add(new Payment()
-            {
-                Amount = customerOrderVolume * Factors.RetailProductPrice, DueDay = CurrentDay + 2, FromPlayer = true,
-                PlayerId = Retailer.Id, Id = Guid.NewGuid().ToString()
-            });
         }
 
         ///
