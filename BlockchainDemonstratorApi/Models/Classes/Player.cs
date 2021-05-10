@@ -11,10 +11,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Player
     {
-        [Key] public string Id { get; set; }
-
-        [Required] public string Name { get; set; }
-
+        [Key] 
+        public string Id { get; set; }
+        
+        [Required] 
+        public string Name { get; set; }
+        
         public Role Role { get; set; }
 
         public double Profit
@@ -26,6 +28,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         public double Margin { get; set; }
 
+    //    public Option ChosenOption { get; set; }
+    
         public double MarginCalculator(int currentDay)
         {
             return Margin = Payments
@@ -69,7 +73,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
         }
 
-        [ForeignKey("PlayerId")] public List<Payment> Payments { get; set; }
+        [ForeignKey("PlayerId")] 
+        public List<Payment> Payments { get; set; }
         public double Balance { get; set; }
 
         [NotMapped]
