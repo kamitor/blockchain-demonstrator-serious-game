@@ -9,16 +9,17 @@
 </head>
 
 <body>
-<section class="actor-display">
-    @if (Model != null)
-    {
-        @foreach (var player in Model.Players)
+    <section class="actor-display">
+        @if (Model != null)
         {
+    @foreach (var player in Model.Players)
+    {
     <section id="section-@player.Role.Id">
         <h3 name="name">Name: @player.Name</h3>
         <h3 name="role">Role: @player.Role.Id</h3>
         <h3 name="balance">Balance: @Math.Round(player.Balance, 2)</h3>
         <h3 name="profit">Profit: @player.Profit</h3>
+        <h3 name="margin">Margin: @player.Margin</h3>
         <h3 name="inventory">Inventory: @player.Inventory</h3>
         <h3 name="backorder">Backorder: @player.Backorder</h3>
 
@@ -34,16 +35,22 @@
                     <th>Volume</th>
                 </tr>
             </thead>
+
             @*<tbody> No longer works because order does not have a arrivalday
-                @foreach (var order in player.OutgoingOrders)
-                {
-    @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
-    {
-    <tr>
-        <td class="order-history">@order.OrderNumber</td>
-        <td class="order-history">@order.Volume</td>
+                        @foreach (var order in player.OutgoingOrders)
+                        {
+            @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
+            {
+            <tr>
+                <td class="order-history">@order.OrderNumber</td>
+                <td class="order-history">@order.Volume</td>
+                    </tbody>
+          
+
     </tr>}}
-            </tbody>*@
+
+
+     </tbody>*@
         </table>
 
         <form>
@@ -60,19 +67,19 @@
                 </tr>
             </thead>
             <tbody>
-               @* @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory) Order history no longer exists
-                {
-    <tr>
-        <td class="order-history">@order.OrderNumber</td>
-        <td class="order-history">@order.Volume</td>
-    </tr>}*@
+                @* @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory) Order history no longer exists
+                            {
+                <tr>
+                    <td class="order-history">@order.OrderNumber</td>
+                    <td class="order-history">@order.Volume</td>
+                </tr>}*@
             </tbody>
         </table>
     </section>
-        }
+    }
 
     }
-</section>
+    </section>
 <button onclick="BeerGame.sendOrders('@Model.Id')">Send orders</button>
 </body>
 

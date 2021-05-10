@@ -1,4 +1,4 @@
-﻿using BlockchainDemonstratorApi.Models.Interfaces;
+using BlockchainDemonstratorApi.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,18 +11,23 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Player
     {
-        [Key] public string Id { get; set; }
-
-        [Required] public string Name { get; set; }
-
+        [Key] 
+        public string Id { get; set; }
+        
+        [Required] 
+        public string Name { get; set; }
+        
         public Role Role { get; set; }
-
-        public double Profit
-        {
-            get { return Balance - (Factors.InitialCapital + Factors.SetupCost); }
-        }
-
+        
+        public double Profit { get { return Balance - (Factors.InitialCapital + Factors.SetupCost); }}
+        
         public int Inventory { get; set; } = 20;
+
+        public double Margin { get; set; }
+
+        public double Margincalculator(int currentDay)
+        { return Margin = Payments.Where(p => p.FromPlayer && p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement).Sum(p => p.Amount);
+        }
 
         public int Backorder
         {
@@ -60,7 +65,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
         }
 
-        [ForeignKey("PlayerId")] public List<Payment> Payments { get; set; }
+        [ForeignKey("PlayerId")] 
+        public List<Payment> Payments { get; set; }
         public double Balance { get; set; }
 
         [NotMapped]
@@ -318,20 +324,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         public void UpdateBalance(int currentDay)
         {
-            Console.WriteLine("balance before updating" + Balance);
             for (int i = 0; i < Payments.Count; i++)
             {
                 if ((int) Payments[i].DueDay <= currentDay &&
                     (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
                 {
-                    Console.WriteLine("Current day: " + currentDay);
-                    Console.WriteLine("Due day: " + Payments[i].DueDay);
-                    Console.WriteLine("Payment id: " + Payments[i].Id);
                     Balance += Payments[i].Amount;
                 }
             }
-
-            Console.WriteLine("balance after updating" + Balance);
         }
     }
 }

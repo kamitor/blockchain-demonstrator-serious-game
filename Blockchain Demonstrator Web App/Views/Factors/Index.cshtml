@@ -1,0 +1,105 @@
+﻿@model IEnumerable<BlockchainDemonstratorApi.Models.Classes.Factors>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.retailTransport)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.manuTransport)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.procTransport)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.farmerTransport)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.holdingFactor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.roundIncrement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.retailProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.manuProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.procProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.farmerProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.harvesterProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.setupCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.initialCapital)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.retailTransport)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.manuTransport)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.procTransport)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.farmerTransport)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.holdingFactor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.roundIncrement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.retailProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.manuProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.procProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.farmerProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.harvesterProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.setupCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.initialCapital)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
