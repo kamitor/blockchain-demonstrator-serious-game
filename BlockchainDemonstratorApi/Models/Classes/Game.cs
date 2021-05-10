@@ -91,7 +91,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public Game()
         {
             Players = new List<Player>();
-            Id = CreateUniqueId();
+            Id = CreateUniqueId(); //TODO: replace into database
             CurrentPhase = Phase.Phase1;
             CurrentDay = 1;
             GameStarted = false;
