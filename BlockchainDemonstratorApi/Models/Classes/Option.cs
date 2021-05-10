@@ -18,21 +18,25 @@ namespace BlockchainDemonstratorApi.Models.Classes
         [Required]
         public double CostOfMaintenance { get; set; }
         [Required]
+        public double TransportationCosts { get; set; }
+        [Required]
         public double LeadTime { get; set; }
         [Required]
         public double Flexibility { get; set; }
         [Required]
-        public double GuaranteedCapacity { get; set; }
+        public double GuaranteedCapacityPenalty { get; set; }
+        public static int MinimumGuaranteedCapacity { get; set; } = 8; //TODO: Ask about guaranteed capacity columns then ask whether minimum is always the same everywhere
 
-        public Option(string name, double costOfStartUp, double costOfMaintenance, double leadTime, double flexibility, double guaranteedCapacity)
+        public Option(string name, double costOfStartUp, double costOfMaintenance, double transportationCosts, double leadTime, double flexibility, double guaranteedCapacityPenalty)
         {
             Id = Guid.NewGuid().ToString();
             Name = name;
             CostOfStartUp = costOfStartUp;
             CostOfMaintenance = costOfMaintenance;
+            TransportationCosts = transportationCosts;
             LeadTime = leadTime;
             Flexibility = flexibility;
-            GuaranteedCapacity = guaranteedCapacity;
+            GuaranteedCapacityPenalty = guaranteedCapacityPenalty;
         }
     }
 }

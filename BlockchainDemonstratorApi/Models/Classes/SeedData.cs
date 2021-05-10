@@ -66,10 +66,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <returns>Retailer role with all options</returns>
         private static Role CreateRetailer() 
         {
-            Option youProvide = new Option("YouProvide", 0, 0, 0, 0, 0);
-            Option youProvideWithHelp = new Option("YouProvideWithHelp", 0, 0, 0, 0, 0);
-            Option trustedParty = new Option("TrustedParty", 0, 0, 0, 0, 0);
-            Option dlt = new Option("DLT", 0, 0, 0, 0, 0);
+            Option youProvide = new Option("YouProvide", 10000, 1050, 54537, 2.5625, 100, 300);
+            Option youProvideWithHelp = new Option("YouProvideWithHelp", 60000, 2100, 48972, 1.708, 350, 450);
+            Option trustedParty = new Option("TrustedParty", 80000, 350, 51198, 2.05, 450, 675);
+            Option dlt = new Option("DLT", 30000, 350, 44520, 1.025, 200, 600);
             Role retailer = new Role("Retailer", 1.7083333, Product.Beer);
 
             retailer.Options.Add(youProvide);
@@ -86,10 +86,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <returns>Manufacturer role with all options</returns>
         private static Role CreateManufacturer()
         {
-            Option youProvide = new Option("YouProvide", 0, 0, 0, 0, 0);
-            Option youProvideWithHelp = new Option("YouProvideWithHelp", 0, 0, 0, 0, 0);
-            Option trustedParty = new Option("TrustedParty", 0, 0, 0, 0, 0);
-            Option dlt = new Option("DLT", 0, 0, 0, 0, 0);
+            Option youProvide = new Option("YouProvide", 80000, 3500, 20874, 2, 150, 300);
+            Option youProvideWithHelp = new Option("YouProvideWithHelp", 10000, 700, 18744, 1.375, 400, 375);
+            Option trustedParty = new Option("TrustedParty", 60000, 350, 19596, 1.56, 250, 525);
+            Option dlt = new Option("DLT", 30000, 1750, 17040, 0.825, 500, 750);
             Role manufacturer = new Role("Manufacturer", 1.375, Product.Packs);
 
             manufacturer.Options.Add(youProvide);
@@ -106,10 +106,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <returns>Processor role with all options</returns>
         private static Role CreateProcessor()
         {
-            Option youProvide = new Option("YouProvide", 0, 0, 0, 0, 0);
-            Option youProvideWithHelp = new Option("YouProvideWithHelp", 0, 0, 0, 0, 0);
-            Option trustedParty = new Option("TrustedParty", 0, 0, 0, 0, 0);
-            Option dlt = new Option("DLT", 0, 0, 0, 0, 0);
+            Option youProvide = new Option("YouProvide", 70000, 2450, 1250, 25.75, 150, 225);
+            Option youProvideWithHelp = new Option("YouProvideWithHelp", 40000, 700, 33000, 17.17, 500, 750);
+            Option trustedParty = new Option("TrustedParty", 20000, 350, 34500, 20.60, 300, 375);
+            Option dlt = new Option("DLT", 100000, 3500, 30000, 10.09, 250, 525);
             Role processor = new Role("Processor", 17.166667, Product.Barley);
 
             processor.Options.Add(youProvide);
@@ -126,10 +126,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <returns>Farmer role with all options</returns>
         private static Role CreateFarmer()
         {
-            Option youProvide = new Option("YouProvide", 0, 0, 0, 0, 0);
-            Option youProvideWithHelp = new Option("YouProvideWithHelp", 0, 0, 0, 0, 0);
-            Option trustedParty = new Option("TrustedParty", 0, 0, 0, 0, 0);
-            Option dlt = new Option("DLT", 0, 0, 0, 0, 0);
+            Option youProvide = new Option("YouProvide", 100000, 2450, 116130, 12.666667, 100, 300);
+            Option youProvideWithHelp = new Option("YouProvideWithHelp", 30000, 700, 104280, 22.333333, 350, 450);
+            Option trustedParty = new Option("TrustedParty", 10000, 350, 109020, 26.8, 450, 675);
+            Option dlt = new Option("DLT", 80000, 3500, 94800, 13.4, 200, 600);
             Role farmer = new Role("Farmer", 22.333333, Product.Seeds);
 
             farmer.Options.Add(youProvide);
