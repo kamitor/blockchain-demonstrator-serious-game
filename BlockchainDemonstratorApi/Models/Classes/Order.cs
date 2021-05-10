@@ -50,6 +50,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         [ForeignKey("OrderId")]
-        public List<Delivery> Deliveries { get; set; }
+        public List<Delivery> Deliveries { get; set; } = new List<Delivery>();
     }
 }

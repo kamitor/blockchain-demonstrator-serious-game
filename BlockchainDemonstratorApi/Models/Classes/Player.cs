@@ -25,6 +25,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         public double Margin { get; set; }
 
+    //    public Option ChosenOption { get; set; }
+
+
         public double Margincalculator(int currentDay)
         { return Margin = Payments.Where(p => p.FromPlayer && p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement).Sum(p => p.Amount);
         }
@@ -333,5 +336,41 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 }
             }
         }
+
+
+        //   public void PlayerScSetup(String setup)
+        //   {
+        //
+        //
+        //        ChosenOption.Name = setup;
+        //        ChosenOption.Id = Id;
+        //
+        //
+        //      // OR
+        //
+        //
+        //       //YouProvide, YouProvideWithHelp,TrustedParty, DLT
+        //       if (setup.Equals("YouProvide"))
+        //       {
+        //           ChosenOption.Name = "YouProvide";
+        //       }
+        //       else
+        //             if (setup.Equals("YouProvideWithHelp"))
+        //       {
+        //           ChosenOption.Name = "YouProvideWithHelp";
+        //       }
+        //       else
+        //             if (setup.Equals("TrustedParty"))
+        //       {
+        //           ChosenOption.Name = "TrustedParty";
+        //       }
+        //       else
+        //             if (setup.Equals("DLT"))
+        //       {
+        //           ChosenOption.Name = "DLT";
+        //       }
+        //
+        //   }
+
     }
 }
