@@ -96,12 +96,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
             CurrentDay = 1;
             GameStarted = false;
         }
-
-        /**
-         * <summary>Creates a unique id using six numbers</summary>
-         * <returns>Unique id as string</returns>
-         * <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>
-         */
+        
+        /// <summary>Creates a unique id using six numbers</summary>
+        /// <returns>Unique id as string</returns>
+        /// <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>
         private String CreateUniqueId()
         {
             Random r = new Random();
@@ -118,10 +116,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 }
             }
         }
-
-        /**
-         * <summary>Makes game Progress to next round</summary>
-         */
+        
+        /// <summary>
+        /// Makes game Progress to next round
+        /// </summary>
         public void Progress()
         {
             if (!GameStarted)
@@ -138,6 +136,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 ProcessDeliveries();
                 SendDeliveries();
                 
+                CapacityPenalty();
                 SetHoldingCosts();
                 UpdateBalance();
 
@@ -147,11 +146,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         #region SetupFor1stRound
-
-        /**
-         * <summary>Adds default order to each actor</summary>
-         * <remarks>Only needs to be used at the start of each game</remarks>
-         */
+        
+        /// <summary>
+        /// Adds default order to each actor
+        /// </summary>
+        /// <remarks>Only needs to be used at the start of each game</remarks>
         private void SetSetupOrders() //Reworked to new order system
         {
             Order orderC = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = 5 };
@@ -241,19 +240,15 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         #endregion
         
-        /**
-         * <summary>Sets IncomingOrder for every actor</summary>
-         */
+        /// <summary>Sets IncomingOrder for every actor</summary>
         private void SendOrders()
         {
             AddingCurrentDay();
             AddingOrderNumber();
             AddOrder();
         }
-
-        /**
-         * <summary>Adds current day to each actors current order</summary>
-         */
+        
+        /// <summary>Adds current day to each actors current order</summary>
         public void AddingCurrentDay()
         {
             // Adding current day
@@ -262,10 +257,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Processor.CurrentOrder.OrderDay = CurrentDay;
             Farmer.CurrentOrder.OrderDay = CurrentDay;
         }
-
-        /**
-         * <summary>Adds order number to each actors current order</summary>
-         */
+        
+        /// <summary>
+        /// Adds order number to each actors current order
+        /// </summary>
         public void AddingOrderNumber()
         {
             // Adding order number
@@ -275,13 +270,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.CurrentOrder.OrderNumber = Farmer.OutgoingOrders.Max(o => o.OrderNumber) + 1;
         }
 
-        /**
-         * <summary>Adds current order to each actors supplier</summary>
-         */
+        /// <summary>
+        /// Adds current order to each actors supplier
+        /// </summary>
         public void AddOrder()
         {
             // Making new order
-            //TODO: Volume might not equal to volume in payment amount
             Retailer.IncomingOrders.Add(new Order() {
                 OrderNumber = Convert.ToInt32(Math.Ceiling((double)(CurrentDay / Factors.RoundIncrement))),
                 OrderDay = CurrentDay, 
@@ -300,9 +294,36 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Farmer.OutgoingOrders.Add(Farmer.CurrentOrder);
         }
 
-        ///
-        ///<summary>Processes and sends through incomingOrders</summary>
-        ///
+        /// <summary>
+        /// Adds a penalty for each actor if it's needed
+        /// </summary>
+        private void CapacityPenalty()
+        {
+            //TODO: change to actual variables
+            if (Retailer.CurrentOrder.Volume <= Manufacturer.Role.Options[1].GuaranteedCapacity)
+            {
+                Retailer.AddPenalty(800, CurrentDay);
+            }
+            
+            if (Manufacturer.CurrentOrder.Volume <= Processor.Role.Options[1].GuaranteedCapacity)
+            {
+                Retailer.AddPenalty(800, CurrentDay);
+            }
+            
+            if (Processor.CurrentOrder.Volume <= Farmer.Role.Options[1].GuaranteedCapacity)
+            {
+                Retailer.AddPenalty(800, CurrentDay);
+            }
+            
+            if (Farmer.CurrentOrder.Volume <= Processor.Role.Options[1].GuaranteedCapacity)
+            {
+                Retailer.AddPenalty(800, CurrentDay);
+            }
+        }
+
+        ///<summary>
+        ///Processes and sends through incomingOrders
+        ///</summary>
         private void SendDeliveries() //Reworked to new order system
         {
             Retailer.GetOutgoingDeliveries(CurrentDay);
@@ -325,9 +346,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
             });
         }
 
-        /**
-         * <summary>Causes each actor to process their deliveries</summary>
-         */
+        ///<summary>
+        ///Causes each actor to process their deliveries
+        ///</summary>
         private void ProcessDeliveries()
         {
             /*Retailer.IncreaseInventory(CurrentDay);
@@ -341,10 +362,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        /**
-         * <summary>Adds a standard payment for the setup costs to each actors payment list</summary>
-         * <remarks>Only needs to be called once, at the start of the game</remarks>
-         */
+        /// <summary>
+        /// Adds a standard payment for the setup costs to each actors payment list
+        /// </summary>
+        /// <remarks>Only needs to be called once, at the start of the game</remarks>
         private void SetSetupPayment()
         {
             /*Retailer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Retailer.Id, Id = Guid.NewGuid().ToString()});
@@ -362,9 +383,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        /**
-         * <summary>Calls the UpdateBalance method for each player</summary>
-         */
+        /// <summary>
+        /// Calls the UpdateBalance method for each player
+        /// </summary>
         private void UpdateBalance()
         {
             foreach (Player player in Players)
@@ -373,9 +394,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        /**
-         * <summary>Adds holding cost to each players Payments list</summary>
-         */
+        /// <summary>
+        /// Adds holding cost to each players Payments list
+        /// </summary>
         private void SetHoldingCosts()
         {
             foreach (Player player in Players)

@@ -11,22 +11,26 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Player
     {
-        [Key] 
-        public string Id { get; set; }
-        
-        [Required] 
-        public string Name { get; set; }
-        
+        [Key] public string Id { get; set; }
+
+        [Required] public string Name { get; set; }
+
         public Role Role { get; set; }
-        
-        public double Profit { get { return Balance - (Factors.InitialCapital + Factors.SetupCost); }}
-        
+
+        public double Profit
+        {
+            get { return Balance - (Factors.InitialCapital + Factors.SetupCost); }
+        }
+
         public int Inventory { get; set; } = 20;
 
         public double Margin { get; set; }
 
-        public double Margincalculator(int currentDay)
-        { return Margin = Payments.Where(p => p.FromPlayer && p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement).Sum(p => p.Amount);
+        public double MarginCalculator(int currentDay)
+        {
+            return Margin = Payments
+                .Where(p => p.FromPlayer && p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement)
+                .Sum(p => p.Amount);
         }
 
         public int Backorder
@@ -65,8 +69,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
         }
 
-        [ForeignKey("PlayerId")] 
-        public List<Payment> Payments { get; set; }
+        [ForeignKey("PlayerId")] public List<Payment> Payments { get; set; }
         public double Balance { get; set; }
 
         [NotMapped]
@@ -99,12 +102,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Payments = new List<Payment>();
         }
 
-        /**
-         * <summary>Gets list of outgoing deliveries</summary>
-         * <returns>List of Order objects with available stock</returns>
-         * <param name="currentDay">integer that specifies the current day</param>
-         */
-        public void GetOutgoingDeliveries(int currentDay) //Reworked to new order system
+        /// <summary>Gets list of outgoing deliveries</summary>
+        /// <returns>List of Order objects with available stock</returns>
+        /// <param name="currentDay">integer that specifies the current day</param>
+        public void GetOutgoingDeliveries(int currentDay)
         {
             for (int i = 0; i < IncomingOrders.Count; i++)
             {
@@ -114,7 +115,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                     Inventory -= pendingVolume;
                     int price;
                     //TODO: implement a better version
-                    switch (Role.Id) 
+                    switch (Role.Id)
                     {
                         case "Retailer":
                             price = pendingVolume * Factors.RetailProductPrice;
@@ -188,13 +189,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        /**
-         * <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>
-         * <remarks>Also adds a payment object to the Payments list for each received delivery</remarks>
-         * <param name="currentDay">integer that specifies the current day</param>
-         */
+        /// <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>
+        /// <remarks>Also adds a payment object to the Payments list for each received delivery</remarks>
+        /// <param name="currentDay">integer that specifies the current day</param>
         public void ProcessDeliveries(int currentDay) //Reworked to new order system
-
         {
             foreach (Order order in OutgoingOrders)
             {
@@ -216,19 +214,17 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 }
             }
         }
-
-        /**
-         * <summary>Gets all outgoing payments for received deliveries</summary>
-         * <returns>List with payment objects that is used to pay suppliers</returns>
-         * <remarks>
-         * Because of the ProcessDeliveries method Payment objects will be added to the Payments list. For all these
-         * items the FromPlayer bool is set to true. And the payment amount is a negative double. In this method we
-         * search for these Payment Items, then flip their amount from negative to positive. And lastly return a list
-         * of Payment objects
-         * </remarks>
-         * <param name="currentDay">integer that specifies the current day</param>
-         * <param name="playerId">string that specifies the player id</param>
-         */
+        
+        /// <summary>Gets all outgoing payments for received deliveries</summary>
+        /// <returns>List with payment objects that is used to pay suppliers</returns>
+        /// <remarks>
+        /// Because of the ProcessDeliveries method Payment objects will be added to the Payments list. For all these
+        /// items the FromPlayer bool is set to true. And the payment amount is a negative double. In this method we
+        /// search for these Payment Items, then flip their amount from negative to positive. And lastly return a list
+        /// of Payment objects
+        /// </remarks>
+        /// <param name="currentDay">integer that specifies the current day</param>
+        /// <param name="playerId">string that specifies the player id</param>
         //TODO: test if you get double payments in db
         public List<Payment> GetOutgoingPayments(int currentDay, string playerId)
         {
@@ -253,6 +249,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
             return payments;
         }
 
+        /// <summary>
+        /// Adds payment object to Payments for a completed delivery
+        /// </summary>
+        /// <param name="delivery"></param>
         public void GetPaidForDelivery(Delivery delivery)
         {
             Payments.Add(new Payment()
@@ -262,11 +262,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
             });
         }
 
-        /**
-         * <summary>Adds payment objects to the Payments list which are classified as transportation costs</summary>
-         * <param name="currentDay">double that specifies the current day</param>
-         * <param name="delivery">Delivery object that has been sent to the customer</param>
-         */
+        /// <summary>Adds payment objects to the Payments list which are classified as transportation costs</summary>
+        /// <param name="currentDay">double that specifies the current day</param>
+        /// <param name="delivery">Delivery object that has been sent to the customer</param>
         public void AddTransportCost(double currentDay, Delivery delivery)
         {
             double transportDays = (delivery.ArrivalDay - currentDay);
@@ -305,10 +303,20 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        /**
-         * <summary>Adds a holding cost payment to the Payments list </summary>
-         * <param name="currentDay">integer that specifies the current day</param>
-         */
+        public void AddPenalty(double amount, int currentDay)
+        {
+            Payments.Add(new Payment()
+            {
+                Amount = amount,
+                DueDay = currentDay,
+                FromPlayer = false, 
+                PlayerId = this.Id,
+                Id = Guid.NewGuid().ToString()
+            });
+        }
+  
+        /// <summary>Adds a holding cost payment to the Payments list </summary>
+        /// <param name="currentDay">integer that specifies the current day</param>
         public void SetHoldingCost(int currentDay)
         {
             Payments.Add(new Payment()
@@ -317,11 +325,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 Id = Guid.NewGuid().ToString()
             });
         }
-
-        /**
-         * <summary>Updates player balance</summary>
-         * <param name="currentDay">integer that specifies the current day</param>
-         */
+        
+        /// <summary>Updates player balance</summary>
+        /// <param name="currentDay">integer that specifies the current day</param>
         public void UpdateBalance(int currentDay)
         {
             for (int i = 0; i < Payments.Count; i++)
