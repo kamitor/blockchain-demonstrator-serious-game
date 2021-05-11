@@ -60,6 +60,16 @@ const BeerGame = (() => {
         $("#section-Processor > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.processor.balance));
         $("#section-Farmer > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.farmer.balance));
 
+        $("#section-Retailer > h3[name='profit']").text("Profit: " + roundOff(gameSerialized.retailer.profit));
+        $("#section-Manufacturer > h3[name='profit']").text("Profit: " + roundOff(gameSerialized.manufacturer.profit));
+        $("#section-Processor > h3[name='profit']").text("Profit: " + roundOff(gameSerialized.processor.profit));
+        $("#section-Farmer > h3[name='profit']").text("Profit: " + roundOff(gameSerialized.farmer.profit));
+
+        $("#section-Retailer > h3[name='margin']").text("Margin: " + roundOff(gameSerialized.retailer.margin));
+        $("#section-Manufacturer > h3[name='margin']").text("Margin: " + roundOff(gameSerialized.manufacturer.margin));
+        $("#section-Processor > h3[name='margin']").text("Margin: " + roundOff(gameSerialized.processor.margin));
+        $("#section-Farmer > h3[name='margin']").text("Margin: " + roundOff(gameSerialized.farmer.margin));
+
         $("#section-Retailer > h3[name='inventory']").text("Inventory: " + gameSerialized.retailer.inventory);
         $("#section-Manufacturer > h3[name='inventory']").text("Inventory: " + gameSerialized.manufacturer.inventory);
         $("#section-Processor > h3[name='inventory']").text("Inventory: " + gameSerialized.processor.inventory);
@@ -86,13 +96,15 @@ const BeerGame = (() => {
 
     const updateIncomingDeliveries = (id, game) => {
         $(`#section-${id} > table[name='incomingDeliveries'] > tbody`).empty();
-        game[id.toLowerCase()].incomingDeliveries.forEach(order => {
-            if (order.arrivalDay <= game.currentDay && order.arrivalDay > game.currentDay - 7) {
-                $(`#section-${id} > table[name='incomingDeliveries'] > tbody`)
-                    .append($(`<tr>
-                        <td class="order-history">${order.volume}</td>
+        game[id.toLowerCase()].outgoingOrders.forEach(order => {
+            order.deliveries.forEach(delivery => {
+                if (delivery.arrivalDay <= game.currentDay && delivery.arrivalDay > game.currentDay - 7) {
+                    $(`#section-${id} > table[name='incomingDeliveries'] > tbody`)
+                        .append($(`<tr>
+                        <td class="order-history">${delivery.volume}</td>
                         </tr>`));
-            }
+                }
+            });
         }); 
     }
     
