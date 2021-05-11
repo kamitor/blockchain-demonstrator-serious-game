@@ -131,20 +131,31 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
             else
             {
+
                 ProcessDeliveries();
                 SendDeliveries();
                 
                 CapacityPenalty();
                 SetHoldingCosts();
+                SetMargins();
                 UpdateBalance();
-
+                
                 SendOrders();
+
                 CurrentDay += Factors.RoundIncrement;
             }
         }
 
+        private void SetMargins()
+        {
+            foreach (Player player in Players)
+            {
+                player.SetMargin(CurrentDay);
+            }
+        }
+
         #region SetupFor1stRound
-        
+
         /// <summary>
         /// Adds default order to each actor
         /// </summary>
@@ -264,6 +275,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             AddingCurrentDay();
             AddingOrderNumber();
             AddOrder();
+            
         }
         
         /// <summary>Adds current day to each actors current order</summary>
@@ -317,26 +329,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// </summary>
         private void CapacityPenalty()
         {
-            if (Retailer.CurrentOrder.Volume < Option.MinimumGuaranteedCapacity)
+
+            foreach (var player in Players)
             {
-                Retailer.AddPenalty(Retailer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
+               
+                if (player.CurrentOrder.Volume < Option.MinimumGuaranteedCapacity) {
+                    player.AddPenalty(player.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
+                    
+                } 
             }
-            
-            if (Manufacturer.CurrentOrder.Volume < Option.MinimumGuaranteedCapacity)
-            {
-                Manufacturer.AddPenalty(Manufacturer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
-            }
-            
-            if (Processor.CurrentOrder.Volume < Option.MinimumGuaranteedCapacity)
-            {
-                Processor.AddPenalty(Processor.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
-            }
-            
-            if (Farmer.CurrentOrder.Volume < Option.MinimumGuaranteedCapacity)
-            {
-                Farmer.AddPenalty(Farmer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
-            }
-        }
+        }          
 
         ///<summary>
         ///Processes and sends through incomingOrders

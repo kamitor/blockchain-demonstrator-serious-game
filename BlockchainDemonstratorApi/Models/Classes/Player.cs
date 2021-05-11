@@ -47,9 +47,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
             } 
         }
     
-        public double MarginCalculator(int currentDay)
+        public void SetMargin(int currentDay)
         {
-            return Margin = Payments
+             Margin = Payments
                 .Where(p => p.FromPlayer && p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement)
                 .Sum(p => p.Amount);
         }
@@ -112,6 +112,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             IncomingOrders = new List<Order>();
             OutgoingOrders = new List<Order>();
             Payments = new List<Payment>();
+           
         }
 
         [JsonConstructor]
@@ -129,6 +130,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <param name="currentDay">integer that specifies the current day</param>
         public void GetOutgoingDeliveries(int currentDay)
         {
+            
             for (int i = 0; i < IncomingOrders.Count; i++)
             {
                 int pendingVolume = IncomingOrders[i].Volume - IncomingOrders[i].Deliveries.Sum(d => d.Volume);
