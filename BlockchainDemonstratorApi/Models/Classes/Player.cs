@@ -29,7 +29,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public double Margin { get; set; }
 
         private Option _chosenOption;
-        //TODO: add migration
         public Option ChosenOption {
             get
             {
@@ -237,40 +236,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 }
             }
         }
-        
-        /// <summary>Gets all outgoing payments for received deliveries</summary>
-        /// <returns>List with payment objects that is used to pay suppliers</returns>
-        /// <remarks>
-        /// Because of the ProcessDeliveries method Payment objects will be added to the Payments list. For all these
-        /// items the FromPlayer bool is set to true. And the payment amount is a negative double. In this method we
-        /// search for these Payment Items, then flip their amount from negative to positive. And lastly return a list
-        /// of Payment objects
-        /// </remarks>
-        /// <param name="currentDay">integer that specifies the current day</param>
-        /// <param name="playerId">string that specifies the player id</param>
-        //TODO: test if you get double payments in db
-        public List<Payment> GetOutgoingPayments(int currentDay, string playerId)
-        {
-            List<Payment> payments = new List<Payment>();
-
-            for (int i = 0; i < Payments.Count; i++)
-            {
-                if (Payments[i].FromPlayer && (int) Payments[i].DueDay <= currentDay &&
-                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
-                {
-                    payments.Add(new Payment()
-                    {
-                        Amount = Payments[i].Amount * -1,
-                        DueDay = Payments[i].DueDay + Factors.RoundIncrement,
-                        FromPlayer = true,
-                        PlayerId = playerId,
-                        Id = Guid.NewGuid().ToString()
-                    });
-                }
-            }
-
-            return payments;
-        }
 
         /// <summary>
         /// Adds payment object to Payments for a completed delivery
@@ -288,6 +253,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <summary>Adds payment objects to the Payments list which are classified as transportation costs</summary>
         /// <param name="currentDay">double that specifies the current day</param>
         /// <param name="delivery">Delivery object that has been sent to the customer</param>
+        //TODO: add the one trip cost of transport cost
         public void AddTransportCost(double currentDay, Delivery delivery)
         {
             double transportDays = (delivery.ArrivalDay - currentDay);
