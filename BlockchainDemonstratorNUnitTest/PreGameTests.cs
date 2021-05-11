@@ -20,7 +20,7 @@ namespace BlockchainDemonstratorNUnitTest
         public void JoinGameTest()
         {
             Player player = new Player("FarmerTest");
-            player.Role = new Role("Farmer", 10, Product.Seeds);
+            player.Role = new Role("Farmer", 10, Product.Seeds, Factors.FarmerProductPrice);
             _game.Farmer = player;
             Assert.AreEqual(player, _game.Farmer);
         }
@@ -29,7 +29,7 @@ namespace BlockchainDemonstratorNUnitTest
         public void JoinNullGameTest()
         {
             Player player = new Player("FarmerTest");
-            player.Role = new Role("Farmer", 10, Product.Seeds);
+            player.Role = new Role("Farmer", 10, Product.Seeds, Factors.FarmerProductPrice);
             _game.Farmer = player;
             _game.Farmer = null;
             Assert.AreEqual(player, _game.Farmer);
@@ -39,7 +39,7 @@ namespace BlockchainDemonstratorNUnitTest
         public void JoinWrongRoleTest()
         {
             Player player = new Player("FarmerTest");
-            player.Role = new Role("Retailer", 10, Product.Seeds);
+            player.Role = new Role("Retailer", 10, Product.Seeds, Factors.RetailProductPrice);
             Assert.Throws<ArgumentException>(() => { _game.Farmer = player; });
         }
 
@@ -47,11 +47,11 @@ namespace BlockchainDemonstratorNUnitTest
         public void PlayersListTest()
         {
             Player farmer = new Player("FarmerTest");
-            farmer.Role = new Role("Farmer", 10, Product.Seeds);
+            farmer.Role = new Role("Farmer", 10, Product.Seeds, Factors.FarmerProductPrice);
             _game.Farmer = farmer;
 
             Player retailer = new Player("RetailerTest");
-            retailer.Role = new Role("Retailer", 10, Product.Seeds);
+            retailer.Role = new Role("Retailer", 10, Product.Seeds, Factors.RetailProductPrice);
             _game.Retailer = retailer;
 
             Assert.AreEqual(2, _game.Players.Count);

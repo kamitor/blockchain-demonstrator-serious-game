@@ -11,12 +11,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Player
     {
-        [Key] 
-        public string Id { get; set; }
-        
-        [Required] 
-        public string Name { get; set; }
-        
+        [Key] public string Id { get; set; }
+
+        [Required] public string Name { get; set; }
+
         public Role Role { get; set; }
 
         public double Profit
@@ -29,24 +27,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public double Margin { get; set; }
 
         private Option _chosenOption;
-        public Option ChosenOption {
-            get
-            {
-                if (_chosenOption != null)
-                {
-                    return _chosenOption;
-                }
-                else
-                {
-                    return new Option("Basic", 0, 0, 0, 0, 0, 0);
-                }
-            }
-            set
-            {
-                _chosenOption = value;
-            } 
+
+        public Option ChosenOption
+        {
+            get { return _chosenOption; }
+            set { _chosenOption = value; }
         }
-    
+
         public double MarginCalculator(int currentDay)
         {
             return Margin = Payments
@@ -90,8 +77,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
         }
 
-        [ForeignKey("PlayerId")] 
-        public List<Payment> Payments { get; set; }
+        [ForeignKey("PlayerId")] public List<Payment> Payments { get; set; }
         public double Balance { get; set; }
 
         [NotMapped]
@@ -131,80 +117,39 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             for (int i = 0; i < IncomingOrders.Count; i++)
             {
+                int leadTimeRand = new Random().Next(0, 4);
+
                 int pendingVolume = IncomingOrders[i].Volume - IncomingOrders[i].Deliveries.Sum(d => d.Volume);
                 if (pendingVolume <= Inventory)
                 {
-                    Inventory -= pendingVolume;
-                    int price;
-                    //TODO: implement a better version
-                    switch (Role.Id)
-                    {
-                        case "Retailer":
-                            price = pendingVolume * Factors.RetailProductPrice;
-                            break;
-                        case "Manufacturer":
-                            price = pendingVolume * Factors.ManuProductPrice;
-                            break;
-                        case "Processor":
-                            price = pendingVolume * Factors.ProcProductPrice;
-                            break;
-                        case "Farmer":
-                            price = pendingVolume * Factors.FarmerProductPrice;
-                            break;
-                        default:
-                            price = 0;
-                            break;
-                    }
-
                     Delivery delivery = new Delivery()
                     {
                         Volume = pendingVolume,
                         SendDeliveryDay = currentDay,
-                        ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + new Random().Next(0, 4),
-                        Price = price
+                        ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + leadTimeRand,
+                        Price = pendingVolume * Role.ProductPrice
                     };
                     IncomingOrders[i].Deliveries.Add(delivery);
 
                     GetPaidForDelivery(delivery);
-                    AddTransportCost(currentDay, delivery);
+                    AddTransportCost(currentDay, leadTimeRand);
 
                     IncomingOrders.RemoveAt(i);
                     i--;
                 }
                 else if (Inventory > 0)
                 {
-                    int price;
-                    //TODO: implement a better version
-                    switch (Role.Id)
-                    {
-                        case "Retailer":
-                            price = Inventory * Factors.RetailProductPrice;
-                            break;
-                        case "Manufacturer":
-                            price = Inventory * Factors.ManuProductPrice;
-                            break;
-                        case "Processor":
-                            price = Inventory * Factors.ProcProductPrice;
-                            break;
-                        case "Farmer":
-                            price = Inventory * Factors.FarmerProductPrice;
-                            break;
-                        default:
-                            price = 0;
-                            break;
-                    }
-
                     Delivery delivery = new Delivery()
                     {
                         Volume = Inventory,
                         SendDeliveryDay = currentDay,
-                        ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + new Random().Next(0, 4),
-                        Price = price
+                        ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + leadTimeRand,
+                        Price = Inventory * Role.ProductPrice
                     };
                     IncomingOrders[i].Deliveries.Add(delivery);
 
                     GetPaidForDelivery(delivery);
-                    AddTransportCost(currentDay, delivery);
+                    AddTransportCost(currentDay, leadTimeRand);
 
                     Inventory = 0;
                 }
@@ -252,58 +197,35 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         /// <summary>Adds payment objects to the Payments list which are classified as transportation costs</summary>
         /// <param name="currentDay">double that specifies the current day</param>
-        /// <param name="delivery">Delivery object that has been sent to the customer</param>
-        //TODO: add the one trip cost of transport cost
-        public void AddTransportCost(double currentDay, Delivery delivery)
-        {
-            double transportDays = (delivery.ArrivalDay - currentDay);
-
-            if (Role.Id == "Farmer")
-            {
-                Payments.Add(new Payment()
-                {
-                    Amount = transportDays * Factors.FarmerTransport * -1, DueDay = currentDay, FromPlayer = false,
-                    PlayerId = this.Id, Id = Guid.NewGuid().ToString()
-                });
-            }
-            else if (Role.Id == "Processor")
-            {
-                Payments.Add(new Payment()
-                {
-                    Amount = transportDays * Factors.ProcTransport * -1, DueDay = currentDay, FromPlayer = false,
-                    PlayerId = this.Id, Id = Guid.NewGuid().ToString()
-                });
-            }
-            else if (Role.Id == "Manufacturer")
-            {
-                Payments.Add(new Payment()
-                {
-                    Amount = transportDays * Factors.ManuTransport * -1, DueDay = currentDay, FromPlayer = false,
-                    PlayerId = this.Id, Id = Guid.NewGuid().ToString()
-                });
-            }
-            else
-            {
-                Payments.Add(new Payment()
-                {
-                    Amount = transportDays * Factors.RetailTransport * -1, DueDay = currentDay, FromPlayer = false,
-                    PlayerId = this.Id, Id = Guid.NewGuid().ToString()
-                });
-            }
-        }
-
-        public void AddPenalty(double amount, int currentDay)
+        /// <param name="leadTimeChange">Specifies the amount the lead time has changed</param>
+        public void AddTransportCost(double currentDay, double leadTimeChange)
         {
             Payments.Add(new Payment()
             {
-                Amount = amount,
-                DueDay = currentDay,
-                FromPlayer = false, 
+                Amount = (ChosenOption.TransportCostOneTrip + (ChosenOption.TransportCostPerDay * leadTimeChange)) * -1,
+                DueDay = currentDay, FromPlayer = false,
                 PlayerId = this.Id,
                 Id = Guid.NewGuid().ToString()
             });
         }
-  
+        
+        /// <summary>
+        /// Adds a payment to the Payments list 
+        /// </summary>
+        /// <param name="amount">The amount that needs to be paid, has to be a positive number</param>
+        /// <param name="currentDay">The current day</param>
+        public void AddPenalty(double amount, int currentDay)
+        {
+            Payments.Add(new Payment()
+            {
+                Amount = amount * -1,
+                DueDay = currentDay,
+                FromPlayer = false,
+                PlayerId = this.Id,
+                Id = Guid.NewGuid().ToString()
+            });
+        }
+
         /// <summary>Adds a holding cost payment to the Payments list </summary>
         /// <param name="currentDay">integer that specifies the current day</param>
         public void SetHoldingCost(int currentDay)
@@ -314,7 +236,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 Id = Guid.NewGuid().ToString()
             });
         }
-        
+
         /// <summary>Updates player balance</summary>
         /// <param name="currentDay">integer that specifies the current day</param>
         public void UpdateBalance(int currentDay)

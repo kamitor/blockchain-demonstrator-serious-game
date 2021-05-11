@@ -15,7 +15,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int ProcTransport { get; set; } = 73;
         public static int FarmerTransport { get; set; } = 177;
         
-        
         //Holding cost factor
         public static int HoldingFactor { get; set; } = 1;
 

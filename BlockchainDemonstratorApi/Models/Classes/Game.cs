@@ -239,7 +239,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <summary>
         /// Adds a standard payment for the setup costs to each actors payment list
         /// </summary>
-        /// <remarks>Only needs to be called once, at the start of the game</remarks>
+        /// <remarks>Only needs to be called once, at the start of each phase</remarks>
+        //TODO: make sure this method is called when new phase starts
         private void SetSetupPayment()
         {
             /*Retailer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Retailer.Id, Id = Guid.NewGuid().ToString()});
@@ -251,7 +252,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 player.Payments.Add(new Payment()
                 {
-                    Amount = Factors.SetupCost * -1, DueDay = 1, FromPlayer = false, PlayerId = player.Id,
+                    Amount = player.ChosenOption.CostOfStartUp * -1, DueDay = 1, FromPlayer = false, PlayerId = player.Id,
                     Id = Guid.NewGuid().ToString()
                 });
             }
