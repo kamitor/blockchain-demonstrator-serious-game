@@ -35,7 +35,7 @@ namespace BlockchainDemonstratorApi.Controllers
         [HttpPost("JoinGame")]
         public ActionResult JoinGame([FromBody] dynamic data)
         {
-            if (data.gameId == null || data.role == null || data.name == null) return BadRequest();
+            if (data.gameId.Value == "" || data.role.Value == "" || data.name.Value == "") return BadRequest();
             string gameId = (string) data.gameId;
             RoleType role = (RoleType) data.role;
             string name = (string) data.name;
@@ -92,8 +92,10 @@ namespace BlockchainDemonstratorApi.Controllers
         }
 
         [HttpPost("ChooseOption")]
-        public void ChooseOption([FromBody] dynamic data)
+        public ActionResult ChooseOption([FromBody] dynamic data)
         {
+            if (data.option.Value == "" || data.playerId.Value == "") return BadRequest();
+
             string option = (string) data.option;
             string playerId = (string) data.playerId;
 
@@ -102,6 +104,7 @@ namespace BlockchainDemonstratorApi.Controllers
 
             _context.Players.Update(player);
             _context.SaveChanges();
+            return Ok();
         }
 
         [HttpPost("LeaveGame")]
@@ -126,7 +129,8 @@ namespace BlockchainDemonstratorApi.Controllers
         [HttpPost("GetGame")]
         public ActionResult<Game> GetGame([FromBody] string gameId)
         {
-            //string gameId = (string) data.gameId;
+            if (gameId == "") return BadRequest();
+
             var game = GetGameFromContext(gameId);
 
             if (game == null)
@@ -141,7 +145,8 @@ namespace BlockchainDemonstratorApi.Controllers
         [HttpPost("SendOrders")]
         public ActionResult<Game> SendOrders([FromBody] dynamic data) //TODO: make singular later
         {
-            if (data.gameId == null) return NotFound();
+            if (data.gameId.Value == "") return BadRequest();
+
             string gameId = data.gameId;
             var game = GetGameFromContext(gameId);
 

@@ -2,7 +2,8 @@ const BeerGame = (() => {
     
     const configMap = {
         baseUrl: "https://localhost:44393",
-        gameId: ""
+        gameId: "",
+        playerId: ""
     }
     
     const init = (gameId) => {
@@ -23,14 +24,14 @@ const BeerGame = (() => {
         orderData =
         {
             gameId: gameId,
-            retailerOrder: $("#section-Retailer > form > input").val(), //TODO: fix later
+            retailerOrder: $("#section-Retailer > form > input").val(),
             manufacturerOrder: $("#section-Manufacturer > form > input").val(),
             processorOrder: $("#section-Processor > form > input").val(),
             farmerOrder: $("#section-Farmer > form > input").val(),
         };
         console.log(orderData);
         $.ajax({
-            url: `${configMap.baseUrl}/api/BeerGame/SendOrders`, //TODO: CORS
+            url: `${configMap.baseUrl}/api/BeerGame/SendOrders`,
             type: "POST",
             data: JSON.stringify(orderData),
             contentType: "application/json",
@@ -123,7 +124,31 @@ const BeerGame = (() => {
     const roundOff = (num) => {
         return + (Math.round(num + "e+2") + "e-2");
     }
-    
+
+    const promptOptions = () => {
+        $("body").append(`
+            <section class='option-prompt'>
+                <p class='option-prompt--text'>Choose your supply chain setup</p>
+                <button class='option-prompt--button' type='button' onclick='BeerGame.chooseOption("YouProvide")'>You provide</button>
+                <button class='option-prompt--button' type='button' onclick='BeerGame.chooseOption("YouProvideWithHelp")'>You provide with help</button>
+                <button class='option-prompt--button' type='button' onclick='BeerGame.chooseOption("TrustedParty")'>Trusted party</button>
+                <button class='option-prompt--button' type='button' onclick='BeerGame.chooseOption("DLT")'>DLT</button>
+            </section>`);
+    }
+
+    const chooseOption = (option) => {
+        $(".option-prompt").remove();
+        $.ajax({
+            url: `${configMap.baseUrl}/api/BeerGame/ChooseOption`,
+            type: "POST",
+            data: JSON.stringify({option: option, playerId: configMap.playerId}),
+            contentType: "application/json",
+            dataType: "text"
+        }).then(result => {
+            //TODO: update game with new setup chosen
+        });
+    }
+
     return{
         init: init,
         getGame: getGame,
@@ -131,7 +156,9 @@ const BeerGame = (() => {
         updateGame: updateGame,
         sendOrders: sendOrders,
         updateIncomingOrder: updateIncomingOrder,
-        updateIncomingDeliveries: updateIncomingDeliveries
+        updateIncomingDeliveries: updateIncomingDeliveries,
+        promptOptions: promptOptions,
+        chooseOption: chooseOption
     }
 })();
  
