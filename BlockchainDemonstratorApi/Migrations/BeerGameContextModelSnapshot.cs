@@ -164,7 +164,10 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("TransportationCosts")
+                    b.Property<double>("TransportCostOneTrip")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TransportCostPerDay")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -275,6 +278,9 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.Property<int>("Product")
                         .HasColumnType("int");
+
+                    b.Property<double>("ProductPrice")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

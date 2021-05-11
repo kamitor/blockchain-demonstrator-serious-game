@@ -15,7 +15,7 @@ namespace BeerGameConsoleApp
         {
             Player pl = new Player("Manufacturer")
             {
-                Role = new Role("Manufacturer", 2, Product.Beer), Inventory = 25, Balance = 10000
+                Role = new Role("Manufacturer", 2, Product.Beer, 2000), Inventory = 25, Balance = 10000
             };
 
             pl.Inventory = 1000;

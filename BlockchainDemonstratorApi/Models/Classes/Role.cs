@@ -17,13 +17,16 @@ namespace BlockchainDemonstratorApi.Models.Classes
         [Required]
         public Product Product { get; set; }
         [Required]
+        public double ProductPrice { get; set; }
+        [Required]
         public virtual List<Option> Options { get; set; } = new List<Option>(4);
 
-        public Role(string id, double leadTime, Product product)
+        public Role(string id, double leadTime, Product product, double productPrice)
         {
             Id = id;
             LeadTime = leadTime;
             Product = product;
+            ProductPrice = productPrice;
         }
     }
 

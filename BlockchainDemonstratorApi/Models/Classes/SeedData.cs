@@ -66,16 +66,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <returns>Retailer role with all options</returns>
         private static Role CreateRetailer() 
         {
-            Option youProvide = new Option("YouProvide", 10000, 1050, 54537, 2.5625, 100, 300);
-            Option youProvideWithHelp = new Option("YouProvideWithHelp", 60000, 2100, 48972, 1.708, 350, 450);
-            Option trustedParty = new Option("TrustedParty", 80000, 350, 51198, 2.05, 450, 675);
-            Option dlt = new Option("DLT", 30000, 350, 44520, 1.025, 200, 600);
-            Role retailer = new Role("Retailer", 1.7083333, Product.Beer);
+            Option youProvide = new Option("YouProvide", 10000, 1050, 1818, 709, 2.5625,100, 300 );
+            Option youProvideWithHelp = new Option("YouProvideWithHelp", 60000, 2100, 1632, 956,1.708, 350, 450 );
+            Option trustedParty = new Option("TrustedParty", 80000, 350, 1707, 832,2.05, 450, 675 );
+            Option dlt = new Option("DLT", 30000, 350, 1484, 1448,1.025, 200, 600 );
+            Option basic = new Option("Basic", 75000, 3500, 1855, 1086, 1.708333, 0, 750);
+            Role retailer = new Role("Retailer", 1.7083333, Product.Beer, Factors.RetailProductPrice);
 
             retailer.Options.Add(youProvide);
             retailer.Options.Add(youProvideWithHelp);
             retailer.Options.Add(trustedParty);
             retailer.Options.Add(dlt);
+            retailer.Options.Add(basic);
 
             return retailer;
         }
@@ -86,16 +88,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <returns>Manufacturer role with all options</returns>
         private static Role CreateManufacturer()
         {
-            Option youProvide = new Option("YouProvide", 80000, 3500, 20874, 2, 150, 300);
-            Option youProvideWithHelp = new Option("YouProvideWithHelp", 10000, 700, 18744, 1.375, 400, 375);
-            Option trustedParty = new Option("TrustedParty", 60000, 350, 19596, 1.56, 250, 525);
-            Option dlt = new Option("DLT", 30000, 1750, 17040, 0.825, 500, 750);
-            Role manufacturer = new Role("Manufacturer", 1.375, Product.Packs);
+            Option youProvide = new Option("YouProvide", 80000, 3500, 696, 348, 2, 150, 300);
+            Option youProvideWithHelp = new Option("YouProvideWithHelp", 10000, 700, 625, 454, 1.375, 400, 375);
+            Option trustedParty = new Option("TrustedParty", 60000, 350, 653, 419, 1.56, 250, 525);
+            Option dlt = new Option("DLT", 30000, 1750, 568, 688, 0.825, 500, 750);
+            Option basic = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
+            Role manufacturer = new Role("Manufacturer", 1.375, Product.Packs, Factors.ManuProductPrice);
 
             manufacturer.Options.Add(youProvide);
             manufacturer.Options.Add(youProvideWithHelp);
             manufacturer.Options.Add(trustedParty);
             manufacturer.Options.Add(dlt);
+            manufacturer.Options.Add(basic);
 
             return manufacturer;
         }
@@ -106,16 +110,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <returns>Processor role with all options</returns>
         private static Role CreateProcessor()
         {
-            Option youProvide = new Option("YouProvide", 70000, 2450, 1250, 25.75, 150, 225);
-            Option youProvideWithHelp = new Option("YouProvideWithHelp", 40000, 700, 33000, 17.17, 500, 750);
-            Option trustedParty = new Option("TrustedParty", 20000, 350, 34500, 20.60, 300, 375);
-            Option dlt = new Option("DLT", 100000, 3500, 30000, 10.09, 250, 525);
-            Role processor = new Role("Processor", 17.166667, Product.Barley);
+            Option youProvide = new Option("YouProvide", 70000, 2450, 1225,48, 25.75, 150, 225);
+            Option youProvideWithHelp = new Option("YouProvideWithHelp", 40000, 700, 1100, 64, 17.17, 500, 750);
+            Option trustedParty = new Option("TrustedParty", 20000, 350, 1150, 56, 20.60, 300, 375);
+            Option dlt = new Option("DLT", 100000, 3500, 1000, 99, 10.09, 250, 525);
+            Option basic = new Option("Basic", 75000, 3500, 1250, 73, 17.16667, 0, 750);
+            Role processor = new Role("Processor", 17.166667, Product.Barley, Factors.ProcProductPrice);
 
             processor.Options.Add(youProvide);
             processor.Options.Add(youProvideWithHelp);
             processor.Options.Add(trustedParty);
             processor.Options.Add(dlt);
+            processor.Options.Add(basic);
 
             return processor;
         }
@@ -126,16 +132,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <returns>Farmer role with all options</returns>
         private static Role CreateFarmer()
         {
-            Option youProvide = new Option("YouProvide", 100000, 2450, 116130, 12.666667, 100, 300);
-            Option youProvideWithHelp = new Option("YouProvideWithHelp", 30000, 700, 104280, 22.333333, 350, 450);
-            Option trustedParty = new Option("TrustedParty", 10000, 350, 109020, 26.8, 450, 675);
-            Option dlt = new Option("DLT", 80000, 3500, 94800, 13.4, 200, 600);
-            Role farmer = new Role("Farmer", 22.333333, Product.Seeds);
+            Option youProvide = new Option("YouProvide", 100000, 2450, 3871, 306, 12.666667, 100, 300);
+            Option youProvideWithHelp = new Option("YouProvideWithHelp", 30000, 700, 3476, 156, 22.333333, 350, 450);
+            Option trustedParty = new Option("TrustedParty", 10000, 350, 3634, 136, 26.8, 450, 675);
+            Option dlt = new Option("DLT", 80000, 3500, 3160, 236, 13.4, 200, 600);
+            Option basic = new Option("Basic", 75000, 3500, 3950, 177, 22.333333, 0, 750);
+            Role farmer = new Role("Farmer", 22.333333, Product.Seeds, Factors.FarmerProductPrice);
 
             farmer.Options.Add(youProvide);
             farmer.Options.Add(youProvideWithHelp);
             farmer.Options.Add(trustedParty);
             farmer.Options.Add(dlt);
+            farmer.Options.Add(basic);
 
             return farmer;
         }
