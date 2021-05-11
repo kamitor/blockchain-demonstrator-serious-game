@@ -350,20 +350,15 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Manufacturer.GetOutgoingDeliveries(CurrentDay);
             Processor.GetOutgoingDeliveries(CurrentDay);
             Farmer.GetOutgoingDeliveries(CurrentDay);
-            Farmer.OutgoingOrders.Add(new Order()
-            {
-                OrderDay = CurrentDay,
-                Volume = Farmer.CurrentOrder.Volume,
-                Deliveries = new List<Delivery>() {
+            Farmer.CurrentOrder.Deliveries = new List<Delivery>() {
                     new Delivery()
                     {
                         Volume = Farmer.CurrentOrder.Volume,
                         SendDeliveryDay = CurrentDay,
-                        ArrivalDay = CurrentDay = new Random().Next(3,6),
+                        ArrivalDay = CurrentDay + Factors.RoundIncrement + new Random().Next(0,4),
                         Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume
-                    } 
-                }
-            });
+                    }
+            };
         }
 
         ///<summary>
