@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "BeerGame";
-    ViewData["CurrentDay"] = 1;
+    int currentDay = (int) ViewData["CurrentDay"];
 }
 
     <section id="section-@Model.Role.Id" class="game-ui">
@@ -28,16 +28,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                @*@foreach (var order in Model.IncomingDeliveries) No longer works because this list got changed, update later
-                {
-                    @if (order.ArrivalDay <= (int) ViewData["CurrentDay"] && order.ArrivalDay > (int) ViewData["CurrentDay"] - Factors.RoundIncrement)
+                    @foreach (var order in Model.OutgoingOrders)
                     {
-                        <tr>
-                            <td class="order-history">@order.OrderNumber</td>
-                            <td class="order-history">@order.Volume</td>
-                        </tr>
+                        @foreach (var delivery in order.Deliveries)
+                        {
+                            @if (delivery.ArrivalDay <= currentDay && delivery.ArrivalDay > currentDay - Factors.RoundIncrement)
+                            {
+                                <tr>
+                                    <td class="order-history">@delivery.Volume</td>
+                                </tr>
+                            }
+                        }
                     }
-                }*@
                 </tbody>
             </table>
             <div>
@@ -80,15 +82,18 @@
                     <th>Volume</th>
                 </tr>
                 </thead>
-                @*<tbody> Order history no longer exists
-                @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OrderHistory)
-                {
-                    <tr>
-                        <td class="order-history">@order.OrderNumber</td>
-                        <td class="order-history">@order.Volume</td>
-                    </tr>
-                }
-                </tbody>*@
+                <tbody>
+                    @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OutgoingOrders)
+                    {
+                        @if (order.OrderDay > 1)
+                        {
+                            <tr>
+                                <td class="order-history">@order.OrderNumber</td>
+                                <td class="order-history">@order.Volume</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
             </table>
         </article>
     </section>

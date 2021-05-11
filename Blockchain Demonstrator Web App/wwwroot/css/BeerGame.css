@@ -38,3 +38,27 @@
     border-radius: 5px;
     margin: 5px;
 }
+
+.option-prompt {
+    position:fixed;
+    top:25%;
+    left:25%;
+    height:25%;
+    width:50%;
+    border:3px solid black;
+    display:flex;
+    justify-content:space-around;
+    background-color:white;
+    flex-wrap:wrap;
+}
+
+.option-prompt--text {
+    width:100%;
+    height:25%;
+    text-align:center;
+}
+
+.option-prompt--button{
+    width:20%;
+    height:25%;
+}
