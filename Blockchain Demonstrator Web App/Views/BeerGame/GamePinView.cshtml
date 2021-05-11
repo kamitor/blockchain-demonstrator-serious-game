@@ -34,7 +34,6 @@
             let name = $("#select-role-text").val();
             let playerId = "@Guid.NewGuid().ToString()"
             let gameId = $("#game-pin-text").val();
-            console.log('gameId:' + gameId);
             BeerGame.joinGame(gameId, role, name, playerId).then( ()=>{
                 $(".game-pin-id-input").val(playerId);
                 $("#joingame-form").submit();

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Blockchain_Demonstrator_Web_App.Hubs;
 
 namespace Blockchain_Demonstrator_Web_App
 {
@@ -29,6 +30,7 @@ namespace Blockchain_Demonstrator_Web_App
         {
             services.AddControllersWithViews();
             //services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +62,7 @@ namespace Blockchain_Demonstrator_Web_App
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<GameHub>("/GameHub");
             });
         }
     }

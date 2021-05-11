@@ -20,24 +20,18 @@ namespace BeerGameConsoleApp
 
             pl.Inventory = 1000;
             pl.Balance = 10000;
-            
-            //pl.OutgoingOrders.Add(new Order(){ArrivalDay = 1, Volume = 10, Price = 1000}); No longer works because order does not have price
-            
-            pl.ProcessDeliveries(1);
-            
-            pl.UpdateBalance(8);
 
-
-            for (int i = 0; i < 3; i++)
-            {
-                //pl.IncomingOrders.Add(new Order(){ArrivalDay = 1, Volume = 10, Price = 1000}); 
-            }
-
-            pl.GetOutgoingDeliveries(1);
-
-            pl.UpdateBalance(22);
+            pl.ChosenOption = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
             
-            Console.WriteLine(pl.Balance);
+            pl.AddTransportCost(1, 0);
+            
+            pl.AddTransportCost(1, 1);
+            
+            pl.AddTransportCost(1, 2);
+            
+            pl.AddTransportCost(1, 3);
+            
+           
         }
     }
 }
