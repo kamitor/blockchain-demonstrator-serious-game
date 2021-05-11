@@ -103,16 +103,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
         private String CreateUniqueId()
         {
             Random r = new Random();
-            int Id;
             while (true)
             {
-                Id = r.Next(100000, 1000000);
+                int id = r.Next(100000, 1000000);
 
-                if (!IdList.Contains(Id))
+                if (!IdList.Contains(id))
                 {
-                    IdList.Add(Id);
-                    String IdS = Id.ToString();
-                    return IdS;
+                    IdList.Add(id);
+                    return id.ToString();
                 }
             }
         }
