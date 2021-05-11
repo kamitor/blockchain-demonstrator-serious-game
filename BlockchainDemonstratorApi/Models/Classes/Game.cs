@@ -317,25 +317,24 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// </summary>
         private void CapacityPenalty()
         {
-            if (Retailer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
+            if (Retailer.CurrentOrder.Volume < Option.MinimumGuaranteedCapacity)
             {
-                Retailer.AddPenalty(Manufacturer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
+                Retailer.AddPenalty(Retailer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
             
-            if (Manufacturer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
+            if (Manufacturer.CurrentOrder.Volume < Option.MinimumGuaranteedCapacity)
             {
-                Manufacturer.AddPenalty(Processor.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
+                Manufacturer.AddPenalty(Manufacturer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
             
-            if (Processor.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
+            if (Processor.CurrentOrder.Volume < Option.MinimumGuaranteedCapacity)
             {
-                Processor.AddPenalty(Farmer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
+                Processor.AddPenalty(Processor.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
             
-            if (Farmer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
+            if (Farmer.CurrentOrder.Volume < Option.MinimumGuaranteedCapacity)
             {
-                //TODO: change to actual variables
-                Processor.AddPenalty(1200, CurrentDay);
+                Farmer.AddPenalty(Farmer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
         }
 
