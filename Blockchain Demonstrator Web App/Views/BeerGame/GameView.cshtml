@@ -36,21 +36,20 @@
                 </tr>
             </thead>
 
-            @*<tbody> No longer works because order does not have a arrivalday
-                        @foreach (var order in player.OutgoingOrders)
+            <tbody>
+                @foreach (var order in player.OutgoingOrders)
+                {
+                    @foreach (var delivery in order.Deliveries)
+                    {
+                        @if (delivery.ArrivalDay <= Model.CurrentDay && delivery.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
                         {
-            @if (order.ArrivalDay <= Model.CurrentDay && order.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
-            {
-            <tr>
-                <td class="order-history">@order.OrderNumber</td>
-                <td class="order-history">@order.Volume</td>
-                    </tbody>
-          
-
-    </tr>}}
-
-
-     </tbody>*@
+                            <tr>
+                                <td class="order-history">@delivery.Volume</td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
         </table>
 
         <form>
@@ -67,12 +66,16 @@
                 </tr>
             </thead>
             <tbody>
-                @* @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OrderHistory) Order history no longer exists
-                            {
-                <tr>
-                    <td class="order-history">@order.OrderNumber</td>
-                    <td class="order-history">@order.Volume</td>
-                </tr>}*@
+                @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OutgoingOrders)
+                {
+                    @if (order.OrderDay > 1)
+                    {
+                        <tr>
+                            <td class="order-history">@order.OrderNumber</td>
+                            <td class="order-history">@order.Volume</td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </section>
