@@ -224,7 +224,7 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Payment");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Player", b =>
@@ -234,6 +234,9 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.Property<double>("Balance")
                         .HasColumnType("float");
+
+                    b.Property<string>("ChosenOptionId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CurrentOrderId")
                         .HasColumnType("nvarchar(450)");
@@ -253,11 +256,13 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ChosenOptionId");
+
                     b.HasIndex("CurrentOrderId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Player");
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Role", b =>
@@ -331,6 +336,10 @@ namespace BlockchainDemonstratorApi.Migrations
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Player", b =>
                 {
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Option", "ChosenOption")
+                        .WithMany()
+                        .HasForeignKey("ChosenOptionId");
+
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Order", "CurrentOrder")
                         .WithMany()
                         .HasForeignKey("CurrentOrderId");

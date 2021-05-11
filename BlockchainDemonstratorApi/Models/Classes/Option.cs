@@ -25,6 +25,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public double Flexibility { get; set; }
         [Required]
         public double GuaranteedCapacityPenalty { get; set; }
+        [ForeignKey("Role")]
+        public string RoleId { get; set; }
         public static int MinimumGuaranteedCapacity { get; set; } = 8; //TODO: Ask about guaranteed capacity columns then ask whether minimum is always the same everywhere
 
         public Option(string name, double costOfStartUp, double costOfMaintenance, double transportationCosts, double leadTime, double flexibility, double guaranteedCapacityPenalty)

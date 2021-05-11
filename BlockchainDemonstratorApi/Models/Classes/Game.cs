@@ -238,6 +238,26 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
+        /// <summary>
+        /// Adds a standard payment for the setup costs to each actors payment list
+        /// </summary>
+        /// <remarks>Only needs to be called once, at the start of the game</remarks>
+        private void SetSetupPayment()
+        {
+            /*Retailer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Retailer.Id, Id = Guid.NewGuid().ToString()});
+            Manufacturer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Manufacturer.Id, Id = Guid.NewGuid().ToString()});
+            Processor.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Processor.Id, Id = Guid.NewGuid().ToString()});
+            Farmer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Farmer.Id, Id = Guid.NewGuid().ToString()});*/
+
+            foreach (Player player in Players)
+            {
+                player.Payments.Add(new Payment()
+                {
+                    Amount = Factors.SetupCost * -1, DueDay = 1, FromPlayer = false, PlayerId = player.Id,
+                    Id = Guid.NewGuid().ToString()
+                });
+            }
+        }
         #endregion
         
         /// <summary>Sets IncomingOrder for every actor</summary>
@@ -299,25 +319,25 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// </summary>
         private void CapacityPenalty()
         {
-            //TODO: change to actual variables
-            if (Retailer.CurrentOrder.Volume <= Manufacturer.Role.Options[1].GuaranteedCapacity)
+            if (Retailer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
             {
-                Retailer.AddPenalty(800, CurrentDay);
+                Retailer.AddPenalty(Manufacturer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
             
-            if (Manufacturer.CurrentOrder.Volume <= Processor.Role.Options[1].GuaranteedCapacity)
+            if (Manufacturer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
             {
-                Retailer.AddPenalty(800, CurrentDay);
+                Manufacturer.AddPenalty(Processor.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
             
-            if (Processor.CurrentOrder.Volume <= Farmer.Role.Options[1].GuaranteedCapacity)
+            if (Processor.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
             {
-                Retailer.AddPenalty(800, CurrentDay);
+                Processor.AddPenalty(Farmer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
             
-            if (Farmer.CurrentOrder.Volume <= Processor.Role.Options[1].GuaranteedCapacity)
+            if (Farmer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
             {
-                Retailer.AddPenalty(800, CurrentDay);
+                //TODO: change to actual variables
+                Processor.AddPenalty(1200, CurrentDay);
             }
         }
 
@@ -362,26 +382,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        /// <summary>
-        /// Adds a standard payment for the setup costs to each actors payment list
-        /// </summary>
-        /// <remarks>Only needs to be called once, at the start of the game</remarks>
-        private void SetSetupPayment()
-        {
-            /*Retailer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Retailer.Id, Id = Guid.NewGuid().ToString()});
-            Manufacturer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Manufacturer.Id, Id = Guid.NewGuid().ToString()});
-            Processor.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Processor.Id, Id = Guid.NewGuid().ToString()});
-            Farmer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Farmer.Id, Id = Guid.NewGuid().ToString()});*/
-
-            foreach (Player player in Players)
-            {
-                player.Payments.Add(new Payment()
-                {
-                    Amount = Factors.SetupCost * -1, DueDay = 1, FromPlayer = false, PlayerId = player.Id,
-                    Id = Guid.NewGuid().ToString()
-                });
-            }
-        }
+        
 
         /// <summary>
         /// Calls the UpdateBalance method for each player

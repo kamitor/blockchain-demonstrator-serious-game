@@ -91,6 +91,19 @@ namespace BlockchainDemonstratorApi.Controllers
             return BadRequest();
         }
 
+        [HttpPost("ChooseOption")]
+        public void ChooseOption([FromBody] dynamic data)
+        {
+            string option = (string) data.option;
+            string playerId = (string) data.playerId;
+
+            var player = _context.Players.Include(x => x.Role).FirstOrDefault(x => x.Id == playerId);
+            player.ChosenOption = _context.Options.FirstOrDefault(x => x.RoleId == player.Role.Id && x.Name == option);
+
+            _context.Players.Update(player);
+            _context.SaveChanges();
+        }
+
         [HttpPost("LeaveGame")]
         public void LeaveGame()
         {

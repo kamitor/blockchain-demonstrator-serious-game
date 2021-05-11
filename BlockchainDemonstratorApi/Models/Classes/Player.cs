@@ -21,14 +21,32 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         public double Profit
         {
-            get { return Balance - (Factors.InitialCapital + Factors.SetupCost); }
+            get { return Balance - (Factors.InitialCapital - Factors.SetupCost); }
         }
 
         public int Inventory { get; set; } = 20;
 
         public double Margin { get; set; }
 
-    //    public Option ChosenOption { get; set; }
+        private Option _chosenOption;
+        //TODO: add migration
+        public Option ChosenOption {
+            get
+            {
+                if (_chosenOption != null)
+                {
+                    return _chosenOption;
+                }
+                else
+                {
+                    return new Option("Basic", 0, 0, 0, 0, 0, 0);
+                }
+            }
+            set
+            {
+                _chosenOption = value;
+            } 
+        }
     
         public double MarginCalculator(int currentDay)
         {
@@ -143,7 +161,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                     {
                         Volume = pendingVolume,
                         SendDeliveryDay = currentDay,
-                        ArrivalDay = currentDay + Role.LeadTime + new Random().Next(0, 4),
+                        ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + new Random().Next(0, 4),
                         Price = price
                     };
                     IncomingOrders[i].Deliveries.Add(delivery);
@@ -181,7 +199,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                     {
                         Volume = Inventory,
                         SendDeliveryDay = currentDay,
-                        ArrivalDay = currentDay + Role.LeadTime,
+                        ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + new Random().Next(0, 4),
                         Price = price
                     };
                     IncomingOrders[i].Deliveries.Add(delivery);
@@ -257,7 +275,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <summary>
         /// Adds payment object to Payments for a completed delivery
         /// </summary>
-        /// <param name="delivery"></param>
+        /// <param name="delivery">Delivery object for which the player has to get paid</param>
         public void GetPaidForDelivery(Delivery delivery)
         {
             Payments.Add(new Payment()
