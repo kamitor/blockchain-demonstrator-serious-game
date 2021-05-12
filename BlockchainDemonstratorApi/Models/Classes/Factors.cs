@@ -16,7 +16,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int FarmerTransport { get; set; } = 177;
         
         //Holding cost factor
-        public static int HoldingFactor { get; set; } = 1;
+        public static double HoldingFactor { get; set; } = 0.5;
 
         //Round factors
         public static int RoundIncrement { get; set; } = 7;
@@ -33,7 +33,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public int manuTransport { get { return ManuTransport; } set { ManuTransport = value; } }
         public int procTransport { get { return ProcTransport; } set { ProcTransport = value; } }
         public int farmerTransport { get { return FarmerTransport; } set { FarmerTransport = value; } }
-        public int holdingFactor { get { return HoldingFactor; } set { HoldingFactor = value; } }
+        public double holdingFactor { get { return HoldingFactor; } set { HoldingFactor = value; } }
         public int roundIncrement { get { return RoundIncrement; } set { RoundIncrement = value; } }
         public int retailProductPrice { get { return RetailProductPrice; } set { RetailProductPrice = value; } }
         public int manuProductPrice { get { return ManuProductPrice; } set { ManuProductPrice = value; } }
