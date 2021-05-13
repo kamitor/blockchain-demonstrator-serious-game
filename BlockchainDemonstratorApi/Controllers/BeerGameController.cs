@@ -141,7 +141,6 @@ namespace BlockchainDemonstratorApi.Controllers
             {
                 return NotFound();
             }
-            game.Players = new List<Player>();
             return game;
         }
 

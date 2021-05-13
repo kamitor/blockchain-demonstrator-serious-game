@@ -42,6 +42,7 @@ const BeerGame = (() => {
     }
 
     const updateGame = (game) => {
+        console.log("binnen updategame func");
         gameSerialized = JSON.parse(game);
         updateOrderHistory("Retailer", gameSerialized.retailer.currentOrder.orderNumber, gameSerialized.retailer.currentOrder.volume);
         updateOrderHistory("Manufacturer", gameSerialized.manufacturer.currentOrder.orderNumber, gameSerialized.manufacturer.currentOrder.volume);
@@ -172,6 +173,7 @@ BeerGame.Signal = (() => {
     connection.start().then(function () {
         console.log("Connection has been made!");
         $("place-order-button").disabled = false;
+        joinGroup();
     }).catch(function (err) {
         return console.error(err.toString());
     });
@@ -193,8 +195,17 @@ BeerGame.Signal = (() => {
             return console.error(err.toString())
         })
     }
+    
+    let joinGroup = () => {
+        console.log("joined group")
+        connection.invoke("JoinGroup", BeerGame.Cookie.getCookie("JoinedGame")).catch(function (err) {
+            return console.error(err.toString())
+        })
+    }
 
     connection.on("UpdateGame", function (game) {
+        console.log("binnen signal route updategame")
+        console.log(game)
         BeerGame.updateGame(game);
     })
     
@@ -205,7 +216,7 @@ BeerGame.Signal = (() => {
     return {
         init: init,
         sendOrder: sendOrder,
-        helloWorld: helloWorld
+        helloWorld: helloWorld,
     }
 })();
 

@@ -25,7 +25,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 {
                     if (value.Role.Id != "Retailer")
                         throw new ArgumentException("Given role id does not match the expected role Retailer");
-                    Players.Add(value);
                     _retailer = value;
                 }
             }
@@ -42,7 +41,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 {
                     if (value.Role.Id != "Manufacturer")
                         throw new ArgumentException("Given role id does not match the expected role Manufacturer");
-                    Players.Add(value);
                     _manufacturer = value;
                 }
             }
@@ -59,7 +57,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 {
                     if (value.Role.Id != "Processor")
                         throw new ArgumentException("Given role id does not match the expected role Processor");
-                    Players.Add(value);
                     _processor = value;
                 }
             }
@@ -76,7 +73,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 {
                     if (value.Role.Id != "Farmer")
                         throw new ArgumentException("Given role id does not match the expected role Farmer");
-                    Players.Add(value);
                     _farmer = value;
                 }
             }
@@ -84,7 +80,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         //TODO: has bug where it is initialized twice, once during getting from database and second when serialized in web controller
         [NotMapped]
-        public virtual List<Player> Players { get; set; }
+        public virtual List<Player> Players {
+            get
+            {
+                return new List<Player>()
+                {
+                    Retailer,
+                    Manufacturer,
+                    Processor,
+                    Farmer
+                };
+            } 
+        }
         public bool GameStarted { get; set; }
 
 
@@ -92,7 +99,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         public Game()
         {
-            Players = new List<Player>();
             Id = CreateUniqueId(); //TODO: replace into database
             CurrentPhase = Phase.Phase1;
             CurrentDay = 1;
