@@ -45,7 +45,7 @@ const BeerGame = (() => {
         console.log("binnen updategame func");
         gameSerialized = JSON.parse(game);
         updateOrderHistory("Retailer", gameSerialized.retailer.currentOrder.orderNumber, gameSerialized.retailer.currentOrder.volume);
-        updateOrderHistory("Manufacturer", gameSerialized.manufacturer.currentOrder.orderNumber, gameSerialized.manufacturer.currentOrder.volume);
+        updateOrderHistory("Manufacturer", gameSerialized.Manufacturer.currentOrder.orderNumber, gameSerialized.Manufacturer.currentOrder.volume);
         updateOrderHistory("Processor", gameSerialized.processor.currentOrder.orderNumber, gameSerialized.processor.currentOrder.volume);
         updateOrderHistory("Farmer", gameSerialized.farmer.currentOrder.orderNumber, gameSerialized.farmer.currentOrder.volume);
 
@@ -60,27 +60,27 @@ const BeerGame = (() => {
         updateIncomingOrder("Farmer", gameSerialized);
 
         $("#balance-Retailer").html("<b>Balance: </b>" + roundOff(gameSerialized.retailer.balance));
-        $("#balance-Manufacturer").html("<b>Balance: </b>" + roundOff(gameSerialized.manufacturer.balance));
+        $("#balance-Manufacturer").html("<b>Balance: </b>" + roundOff(gameSerialized.Manufacturer.balance));
         $("#balance-Processor").html("<b>Balance: </b>" + roundOff(gameSerialized.processor.balance));
         $("#balance-Farmer").html("<b>Balance: </b>" + roundOff(gameSerialized.farmer.balance));
 
 /*        $("#profit-Retailer").html("<b>Profit: </b>" + roundOff(gameSerialized.retailer.profit));
-        $("#profit-Manufacturer").html("<b>Profit: </b>" + roundOff(gameSerialized.manufacturer.profit));
+        $("#profit-Manufacturer").html("<b>Profit: </b>" + roundOff(gameSerialized.Manufacturer.profit));
         $("#profit-Processor").html("<b>Profit: </b>" + roundOff(gameSerialized.processor.profit));
         $("#profit-Farmer").html("<b>Profit: </b>" + roundOff(gameSerialized.farmer.profit));*/
 
 /*        $("#section-Retailer").html("Margin: " + roundOff(gameSerialized.retailer.margin));
-        $("#section-Manufacturer").html("Margin: " + roundOff(gameSerialized.manufacturer.margin));
+        $("#section-Manufacturer").html("Margin: " + roundOff(gameSerialized.Manufacturer.margin));
         $("#section-Processor").html("Margin: " + roundOff(gameSerialized.processor.margin));
         $("#section-Farmer").html("Margin: " + roundOff(gameSerialized.farmer.margin));*/
 
         $("#inventory-Retailer").html("<b>Inventory: </b>" + gameSerialized.retailer.inventory);
-        $("#inventory-Manufacturer").html("<b>Inventory: </b>" + gameSerialized.manufacturer.inventory);
+        $("#inventory-Manufacturer").html("<b>Inventory: </b>" + gameSerialized.Manufacturer.inventory);
         $("#inventory-Processor").html("<b>Inventory: </b>" + gameSerialized.processor.inventory);
         $("#inventory-Farmer").html("<b>Inventory: </b>" + gameSerialized.farmer.inventory);
 
         $("#backorder-Retailer").html("<b>Backorder: </b>" + gameSerialized.retailer.backorder);
-        $("#backorder-Manufacturer").html("<b>Backorder: </b>" + gameSerialized.manufacturer.backorder);
+        $("#backorder-Manufacturer").html("<b>Backorder: </b>" + gameSerialized.Manufacturer.backorder);
         $("#backorder-Processor").html("<b>Backorder: </b>" + gameSerialized.processor.backorder);
         $("#backorder-Farmer").html("<b>Backorder: </b>" + gameSerialized.farmer.backorder);
     }
