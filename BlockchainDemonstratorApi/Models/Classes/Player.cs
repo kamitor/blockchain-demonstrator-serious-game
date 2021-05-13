@@ -17,7 +17,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         [Required]
         public string Name { get; set; }
 
-        public Role Role { get; set; }
+        public virtual Role Role { get; set; }
 
         public double Profit
         {
@@ -30,7 +30,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         private Option _chosenOption;
 
-        public Option ChosenOption
+        public virtual Option ChosenOption
         {
             get { return _chosenOption; }
             set { _chosenOption = value; }
@@ -53,7 +53,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        public Order CurrentOrder { get; set; }
+        public virtual Order CurrentOrder { get; set; }
 
         private List<Order> _outgoingOrders;
 
@@ -61,7 +61,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// The orders from the player itself
         /// </summary>
         [ForeignKey("OutgoingOrderForPlayerId")]
-        public List<Order> OutgoingOrders
+        public virtual List<Order> OutgoingOrders
         {
             get { return _outgoingOrders; }
             set { _outgoingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
@@ -73,15 +73,15 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// Order sent from your customer
         /// </summary>
         [ForeignKey("IncomingOrderForPlayerId")]
-        public List<Order> IncomingOrders
+        public virtual List<Order> IncomingOrders
         {
             get { return _incomingOrders; }
             set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
         }
 
         [ForeignKey("PlayerId")]
-        public List<Payment> Payments { get; set; }
-
+        public virtual List<Payment> Payments { get; set; }
+      
         public double Balance { get; set; }
 
         [NotMapped]

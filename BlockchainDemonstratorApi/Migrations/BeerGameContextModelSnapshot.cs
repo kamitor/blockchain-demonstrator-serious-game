@@ -63,8 +63,8 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("harvesterProductPrice")
                         .HasColumnType("int");
 
-                    b.Property<int>("holdingFactor")
-                        .HasColumnType("int");
+                    b.Property<double>("holdingFactor")
+                        .HasColumnType("float");
 
                     b.Property<int>("initialCapital")
                         .HasColumnType("int");

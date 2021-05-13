@@ -51,6 +51,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 {
                     Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Retailer");
+                    player.ChosenOption = _context.Options.FirstOrDefault(o => o.Name == "Basic" && o.RoleId == "Retailer");
                     game.Retailer = player;
                     joined = true;
                 }
@@ -58,6 +59,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 {
                     Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Manufacturer");
+                    player.ChosenOption = _context.Options.FirstOrDefault(o => o.Name == "Basic" && o.RoleId == "Manufacturer");
                     game.Manufacturer = player;
                     joined = true;
                 }
@@ -65,6 +67,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 {
                     Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Processor");
+                    player.ChosenOption = _context.Options.FirstOrDefault(o => o.Name == "Basic" && o.RoleId == "Processor");
                     game.Processor = player;
                     joined = true;
                 }
@@ -72,6 +75,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 {
                     Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Farmer");
+                    player.ChosenOption = _context.Options.FirstOrDefault(o => o.Name == "Basic" && o.RoleId == "Farmer");
                     game.Farmer = player;
                     joined = true;
                 }
@@ -242,7 +246,8 @@ namespace BlockchainDemonstratorApi.Controllers
 
         private Game GetGameFromContext(string gameId)
         {
-            Game game = _context.Games.FirstOrDefault(game => game.Id == gameId); //Seperated into chunks to reduce load time
+            Game game = _context.Games.FirstOrDefault(game => game.Id == gameId);
+            /*Seperated into chunks to reduce load time
             game.Retailer = _context.Games
                 .Include(g => g.Retailer).ThenInclude(p => p.Role)
                 .Include(g => g.Retailer).ThenInclude(p => p.CurrentOrder)
@@ -266,7 +271,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 .Include(g => g.Farmer).ThenInclude(p => p.CurrentOrder)
                 .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrders).ThenInclude(o => o.Deliveries)
                 .Include(g => g.Farmer).ThenInclude(p => p.OutgoingOrders).ThenInclude(o => o.Deliveries)
-                .FirstOrDefault(game => game.Id == gameId).Farmer;
+                .FirstOrDefault(game => game.Id == gameId).Farmer;*/
             return game;
         }
     }
