@@ -10,12 +10,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Game
     {
-        [Key] public string Id { get; set; }
+        [Key] 
+        public string Id { get; set; }
         public Phase CurrentPhase { get; set; }
         public int CurrentDay { get; set; }
         private Player _retailer;
 
-        public Player Retailer
+        public virtual Player Retailer
         {
             get { return _retailer; }
             set
@@ -32,7 +33,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         private Player _manufacturer;
 
-        public Player Manufacturer
+        public virtual Player Manufacturer
         {
             get { return _manufacturer; }
             set
@@ -49,7 +50,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         private Player _processor;
 
-        public Player Processor
+        public virtual Player Processor
         {
             get { return _processor; }
             set
@@ -66,7 +67,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         private Player _farmer;
 
-        public Player Farmer
+        public virtual Player Farmer
         {
             get { return _farmer; }
             set
@@ -82,7 +83,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         //TODO: has bug where it is initialized twice, once during getting from database and second when serialized in web controller
-        [NotMapped] public List<Player> Players { get; set; }
+        [NotMapped]
+        public virtual List<Player> Players { get; set; }
         public bool GameStarted { get; set; }
 
 
