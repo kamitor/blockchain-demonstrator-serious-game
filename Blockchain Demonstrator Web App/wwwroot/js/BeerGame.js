@@ -59,41 +59,41 @@ const BeerGame = (() => {
         updateIncomingOrder("Processor", gameSerialized);
         updateIncomingOrder("Farmer", gameSerialized);
 
-        $("#section-Retailer > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.retailer.balance));
-        $("#section-Manufacturer > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.manufacturer.balance));
-        $("#section-Processor > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.processor.balance));
-        $("#section-Farmer > h3[name='balance']").text("Balance: " + roundOff(gameSerialized.farmer.balance));
+        $("#balance-Retailer").html("<b>Balance: </b>" + roundOff(gameSerialized.retailer.balance));
+        $("#balance-Manufacturer").html("<b>Balance: </b>" + roundOff(gameSerialized.manufacturer.balance));
+        $("#balance-Processor").html("<b>Balance: </b>" + roundOff(gameSerialized.processor.balance));
+        $("#balance-Farmer").html("<b>Balance: </b>" + roundOff(gameSerialized.farmer.balance));
 
-        $("#section-Retailer > h3[name='profit']").text("Profit: " + roundOff(gameSerialized.retailer.profit));
-        $("#section-Manufacturer > h3[name='profit']").text("Profit: " + roundOff(gameSerialized.manufacturer.profit));
-        $("#section-Processor > h3[name='profit']").text("Profit: " + roundOff(gameSerialized.processor.profit));
-        $("#section-Farmer > h3[name='profit']").text("Profit: " + roundOff(gameSerialized.farmer.profit));
+/*        $("#profit-Retailer").html("<b>Profit: </b>" + roundOff(gameSerialized.retailer.profit));
+        $("#profit-Manufacturer").html("<b>Profit: </b>" + roundOff(gameSerialized.manufacturer.profit));
+        $("#profit-Processor").html("<b>Profit: </b>" + roundOff(gameSerialized.processor.profit));
+        $("#profit-Farmer").html("<b>Profit: </b>" + roundOff(gameSerialized.farmer.profit));*/
 
-        $("#section-Retailer > h3[name='margin']").text("Margin: " + roundOff(gameSerialized.retailer.margin));
-        $("#section-Manufacturer > h3[name='margin']").text("Margin: " + roundOff(gameSerialized.manufacturer.margin));
-        $("#section-Processor > h3[name='margin']").text("Margin: " + roundOff(gameSerialized.processor.margin));
-        $("#section-Farmer > h3[name='margin']").text("Margin: " + roundOff(gameSerialized.farmer.margin));
+/*        $("#section-Retailer").html("Margin: " + roundOff(gameSerialized.retailer.margin));
+        $("#section-Manufacturer").html("Margin: " + roundOff(gameSerialized.manufacturer.margin));
+        $("#section-Processor").html("Margin: " + roundOff(gameSerialized.processor.margin));
+        $("#section-Farmer").html("Margin: " + roundOff(gameSerialized.farmer.margin));*/
 
-        $("#section-Retailer > h3[name='inventory']").text("Inventory: " + gameSerialized.retailer.inventory);
-        $("#section-Manufacturer > h3[name='inventory']").text("Inventory: " + gameSerialized.manufacturer.inventory);
-        $("#section-Processor > h3[name='inventory']").text("Inventory: " + gameSerialized.processor.inventory);
-        $("#section-Farmer > h3[name='inventory']").text("Inventory: " + gameSerialized.farmer.inventory);
+        $("#inventory-Retailer").html("<b>Inventory: </b>" + gameSerialized.retailer.inventory);
+        $("#inventory-Manufacturer").html("<b>Inventory: </b>" + gameSerialized.manufacturer.inventory);
+        $("#inventory-Processor").html("<b>Inventory: </b>" + gameSerialized.processor.inventory);
+        $("#inventory-Farmer").html("<b>Inventory: </b>" + gameSerialized.farmer.inventory);
 
-        $("#section-Retailer > h3[name='backorder']").text("Backorder: " + gameSerialized.retailer.backorder);
-        $("#section-Manufacturer > h3[name='backorder']").text("Backorder: " + gameSerialized.manufacturer.backorder);
-        $("#section-Processor > h3[name='backorder']").text("Backorder: " + gameSerialized.processor.backorder);
-        $("#section-Farmer > h3[name='backorder']").text("Backorder: " + gameSerialized.farmer.backorder);
+        $("#backorder-Retailer").html("<b>Backorder: </b>" + gameSerialized.retailer.backorder);
+        $("#backorder-Manufacturer").html("<b>Backorder: </b>" + gameSerialized.manufacturer.backorder);
+        $("#backorder-Processor").html("<b>Backorder: </b>" + gameSerialized.processor.backorder);
+        $("#backorder-Farmer").html("<b>Backorder: </b>" + gameSerialized.farmer.backorder);
     }
 
     const updateOrderHistory = (id, orderNumber, orderVolume) => {
-        $(`#section-${id} > table[name='orderHistory'] > tbody`)
+        $(`#orderHistory-${id} > tbody`)
             .append($(`<tr><td class="order-history">${orderNumber}</td><td class="order-history">${orderVolume}</td></tr>`));
     }
 
     const updateIncomingOrder = (id, game) => {
         game[id.toLowerCase()].incomingOrders.forEach(order => {
             if (order.orderDay == game.currentDay - 7) {
-                $(`#section-${id} > h3[name='incomingOrder']`).text("Incoming order: " + order.volume);
+                $(`#incoming-order-${id}`).html("<b>Incoming order: </b>>" + order.volume);
             }
         });
     }

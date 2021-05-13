@@ -9,18 +9,14 @@
     <section id="section-@Model.Role.Id" class="game-ui">
     <section class="game-ui--left">
         <article class="name-article ui-item">
-            <div>@Model.Name</div>
-            <div>@Model.Role.Id</div>
-            <div>day: @ViewData["CurrentDay"]</div>
-            <div name="balance">
-                <b>Balance:</b> @Math.Round(Model.Balance, 2)
-            </div>
+            <p>@Model.Name</p>
+            <p>@Model.Role.Id</p>
+            <p>day: @ViewData["CurrentDay"]</p>
+            <p id="balance-@Model.Role.Id"><b>Balance:</b> @Math.Round(Model.Balance, 2)</p>
         </article>
 
         <article class="inventory-article ui-item">
-            <div>
-                <b>incoming delivery</b>
-            </div>
+            <p><b>incoming delivery</b></p>
             <table name="incomingDeliveries" class="order-history">
                 <thead>
                 <tr>
@@ -42,9 +38,7 @@
                     }
                 </tbody>
             </table>
-            <div>
-                <b>inventory:</b> @Model.Inventory
-            </div>
+            <p id="inventory-@Model.Role.Id"><b>inventory:</b> @Model.Inventory</p>
         </article>
 
         <article class="backorder-article ui-item">
@@ -52,12 +46,10 @@
             {
                 @if (order.OrderDay == (int) ViewData["CurrentDay"] - Factors.RoundIncrement)
                 {
-                    <div name="incomingOrder">
-                        <b>Incoming order:</b> @order.Volume
-                    </div>
+                    <p id="incoming-order-@Model.Role.Id"><b>Incoming order:</b> @order.Volume</p>
                 }
             }
-            <div>
+            <div id="backorder-@Model.Role.Id">
                 <b>backorder:</b> @Model.Backorder
             </div>
         </article>
@@ -72,10 +64,8 @@
         </article>
 
         <article class="order-history-article ui-item">
-            <div>
-                <b>Order History</b>
-            </div>
-            <table name="orderHistory" class="order-history">
+            <p><b>Order History</b></p>
+            <table id="orderHistory-@Model.Role.Id" class="order-history">
                 <thead>
                 <tr>
                     <th>Order number</th>

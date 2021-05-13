@@ -31,16 +31,22 @@ namespace BlockchainDemonstratorApi.Hubs
 
             Player player = game.Players.FirstOrDefault(x => x.Id.Equals(playerId));
             
+            //TODO: for testing purposes
+            game.Retailer.CurrentOrder = new Order() {Volume = 12};
+            game.Manufacturer.CurrentOrder = new Order() {Volume = 12};
+            game.Processor.CurrentOrder = new Order() {Volume = 12};
+            
             if (player != null)
                 player.CurrentOrder = new Order(){Volume = Convert.ToInt32(volume)};
-
-            _context.Games.Update(game);
-            _context.SaveChanges();
             
             if (game.Players.All(x => x.CurrentOrder != null))
             {
+                game.Progress();
                 await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(game));
             }
+            
+            _context.Games.Update(game);
+            _context.SaveChanges();
         }
 
         public Task JoinGroup(string gameId)
