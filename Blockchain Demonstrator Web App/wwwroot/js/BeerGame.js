@@ -1,17 +1,19 @@
 const BeerGame = (() => {
-    
+
     const configMap = {
         baseUrl: "https://localhost:44393",
         gameId: "",
         playerId: ""
     }
-    
-    const init = (gameId) => {
-        configMap.gameId = gameId
+
+    const init = (gameId, playerId) => {
+        configMap.gameId = gameId;
+        configMap.playerId = playerId;
+        BeerGame.Signal.init();
     }
-    
+
     const getGame = () => {
-        return  $.ajax({
+        return $.ajax({
             url: `${configMap.baseUrl}/api/BeerGame/GetGame`,
             type: "POST",
             data: JSON.stringify(configMap.gameId),
@@ -22,13 +24,13 @@ const BeerGame = (() => {
 
     const sendOrders = (gameId) => {
         orderData =
-        {
-            gameId: gameId,
-            retailerOrder: $("#section-Retailer > form > input").val(),
-            manufacturerOrder: $("#section-Manufacturer > form > input").val(),
-            processorOrder: $("#section-Processor > form > input").val(),
-            farmerOrder: $("#section-Farmer > form > input").val(),
-        };
+            {
+                gameId: gameId,
+                retailerOrder: $("#section-Retailer > form > input").val(),
+                manufacturerOrder: $("#section-Manufacturer > form > input").val(),
+                processorOrder: $("#section-Processor > form > input").val(),
+                farmerOrder: $("#section-Farmer > form > input").val(),
+            };
         console.log(orderData);
         $.ajax({
             url: `${configMap.baseUrl}/api/BeerGame/SendOrders`,
@@ -38,7 +40,7 @@ const BeerGame = (() => {
             dataType: "text"
         }).then(result => updateGame(result));
     }
-    
+
     const updateGame = (game) => {
         gameSerialized = JSON.parse(game);
         updateOrderHistory("Retailer", gameSerialized.retailer.currentOrder.orderNumber, gameSerialized.retailer.currentOrder.volume);
@@ -106,12 +108,12 @@ const BeerGame = (() => {
                         </tr>`));
                 }
             });
-        }); 
+        });
     }
-    
+
     const joinGame = (gameId, role, name, playerId) => {
-        if (configMap.gameId !== null){
-             return $.ajax({
+        if (configMap.gameId !== null) {
+            return $.ajax({
                 url: `${configMap.baseUrl}/api/BeerGame/JoinGame`,
                 type: "POST",
                 data: JSON.stringify({gameId: gameId, role: role, name: name, playerId: playerId}),
@@ -122,7 +124,7 @@ const BeerGame = (() => {
     }
 
     const roundOff = (num) => {
-        return + (Math.round(num + "e+2") + "e-2");
+        return +(Math.round(num + "e+2") + "e-2");
     }
 
     const promptOptions = () => {
@@ -149,7 +151,7 @@ const BeerGame = (() => {
         });
     }
 
-    return{
+    return {
         init: init,
         getGame: getGame,
         joinGame: joinGame,
@@ -161,5 +163,63 @@ const BeerGame = (() => {
         chooseOption: chooseOption
     }
 })();
+
+BeerGame.Signal = (() => {
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:44393/GameHub").build();
+    $("place-order-button").disabled = true;
+
+    connection.start().then(function () {
+        console.log("Connection has been made!");
+        $("place-order-button").disabled = false;
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    let init = () => {
+
+        console.log("binnen")
+    }
+
+    let sendOrder = (volume, gameId, playerId) => {
+        
+        connection.invoke("SendOrder", $('.place-order-text').val(), BeerGame.Cookie.getCookie('JoinedGame'), BeerGame.Cookie.getCookie('PlayerId')).catch(function (err) {
+            return console.error(err.toString())
+        })
+    }
+    
+    let helloWorld = () => {
+        connection.invoke("HelloWorld").catch(function (err) {
+            return console.error(err.toString())
+        })
+    }
+
+    connection.on("UpdateGame", function (game) {
+        BeerGame.updateGame(game);
+    })
+    
+    connection.on("HelloWorld", function () {
+        console.log("Hello from Hub");
+    })
+
+    return {
+        init: init,
+        sendOrder: sendOrder,
+        helloWorld: helloWorld
+    }
+})();
+
+BeerGame.Cookie = (() => {
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    return {
+        getCookie: getCookie
+    }
+})()
+
  
 

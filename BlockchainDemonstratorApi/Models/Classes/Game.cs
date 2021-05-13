@@ -10,7 +10,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Game
     {
-        [Key] public string Id { get; set; }
+        [Key] 
+        public string Id { get; set; }
         public Phase CurrentPhase { get; set; }
         public int CurrentDay { get; set; }
         private Player _retailer;

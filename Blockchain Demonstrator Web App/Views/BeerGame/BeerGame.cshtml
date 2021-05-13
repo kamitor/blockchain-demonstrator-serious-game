@@ -66,8 +66,8 @@
     <section class="game-ui--right">
         <article class="input-article ui-item">
             <form>
-                <input type="text" placeholder="Order volume">
-                <button type="submit">Place order</button>
+                <input class="place-order-text" type="text" placeholder="Order volume">
+                <button class="place-order-button" type="button">Place order</button>
             </form>
         </article>
 
@@ -103,15 +103,9 @@
 
 @section Scripts
 {
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/BeerGame.js"></script>
-    <script>
-        function getCookie(name) {
-               const value = `; ${document.cookie}`;
-               const parts = value.split(`; ${name}=`);
-               if (parts.length === 2) return parts.pop().split(';').shift();
-               }  
-    
-    
-        BeerGame.init(getCookie('JoinedGame'))
+    <script>      
+        $(".place-order-button").on('click', BeerGame.Signal.sendOrder);
     </script>
 }
