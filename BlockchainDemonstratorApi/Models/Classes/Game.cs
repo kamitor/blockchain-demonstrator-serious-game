@@ -291,10 +291,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public void AddingOrderNumber()
         {
             // Adding order number
-            Retailer.CurrentOrder.OrderNumber = Retailer.OutgoingOrders.Max(o => o.OrderNumber) + 1;
-            Manufacturer.CurrentOrder.OrderNumber = Manufacturer.OutgoingOrders.Max(o => o.OrderNumber) + 1;
-            Processor.CurrentOrder.OrderNumber = Processor.OutgoingOrders.Max(o => o.OrderNumber) + 1;
-            Farmer.CurrentOrder.OrderNumber = Farmer.OutgoingOrders.Max(o => o.OrderNumber) + 1;
+            Retailer.CurrentOrder.OrderNumber = Retailer.OutgoingOrders.Count + 1;
+            Manufacturer.CurrentOrder.OrderNumber = Manufacturer.OutgoingOrders.Count + 1;
+            Processor.CurrentOrder.OrderNumber = Processor.OutgoingOrders.Count + 1;
+            Farmer.CurrentOrder.OrderNumber = Farmer.OutgoingOrders.Count + 1;
         }
 
         /// <summary>
