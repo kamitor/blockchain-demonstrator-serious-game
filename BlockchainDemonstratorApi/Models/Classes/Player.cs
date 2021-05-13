@@ -11,9 +11,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 {
     public class Player
     {
-        [Key] public string Id { get; set; }
+        [Key]
+        public string Id { get; set; }
 
-        [Required] 
+        [Required]
         public string Name { get; set; }
 
         public virtual Role Role { get; set; }
@@ -80,6 +81,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
         [ForeignKey("PlayerId")]
         public virtual List<Payment> Payments { get; set; }
+      
         public double Balance { get; set; }
 
         [NotMapped]
@@ -210,7 +212,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 Id = Guid.NewGuid().ToString()
             });
         }
-        
+
         /// <summary>
         /// Adds a payment to the Payments list 
         /// </summary>
