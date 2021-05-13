@@ -135,7 +135,7 @@ namespace BlockchainDemonstratorApi.Controllers
         {
             if (gameId == "") return BadRequest();
 
-            var game = GetGameFromContext(gameId);
+            var game = _context.Games.FirstOrDefault(game => game.Id == gameId);
 
             if (game == null)
             {

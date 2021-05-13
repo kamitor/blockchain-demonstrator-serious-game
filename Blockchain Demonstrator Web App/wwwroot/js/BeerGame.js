@@ -44,10 +44,10 @@ const BeerGame = (() => {
     const updateGame = (game) => {
         console.log("binnen updategame func");
         gameSerialized = JSON.parse(game);
-        updateOrderHistory("Retailer", gameSerialized.retailer.currentOrder.orderNumber, gameSerialized.retailer.currentOrder.volume);
-        updateOrderHistory("Manufacturer", gameSerialized.Manufacturer.currentOrder.orderNumber, gameSerialized.Manufacturer.currentOrder.volume);
-        updateOrderHistory("Processor", gameSerialized.processor.currentOrder.orderNumber, gameSerialized.processor.currentOrder.volume);
-        updateOrderHistory("Farmer", gameSerialized.farmer.currentOrder.orderNumber, gameSerialized.farmer.currentOrder.volume);
+        updateOrderHistory("Retailer", gameSerialized.Retailer.CurrentOrder.OrderNumber, gameSerialized.Retailer.CurrentOrder.Volume);
+        updateOrderHistory("Manufacturer", gameSerialized.Manufacturer.CurrentOrder.OrderNumber, gameSerialized.Manufacturer.CurrentOrder.Volume);
+        updateOrderHistory("Processor", gameSerialized.Processor.CurrentOrder.OrderNumber, gameSerialized.Processor.CurrentOrder.Volume);
+        updateOrderHistory("Farmer", gameSerialized.Farmer.CurrentOrder.OrderNumber, gameSerialized.Farmer.CurrentOrder.Volume);
 
         updateIncomingDeliveries("Retailer", gameSerialized);
         updateIncomingDeliveries("Manufacturer", gameSerialized);
@@ -59,10 +59,10 @@ const BeerGame = (() => {
         updateIncomingOrder("Processor", gameSerialized);
         updateIncomingOrder("Farmer", gameSerialized);
 
-        $("#balance-Retailer").html("<b>Balance: </b>" + roundOff(gameSerialized.retailer.balance));
-        $("#balance-Manufacturer").html("<b>Balance: </b>" + roundOff(gameSerialized.Manufacturer.balance));
-        $("#balance-Processor").html("<b>Balance: </b>" + roundOff(gameSerialized.processor.balance));
-        $("#balance-Farmer").html("<b>Balance: </b>" + roundOff(gameSerialized.farmer.balance));
+        $("#balance-Retailer").html("<b>Balance: </b>" + roundOff(gameSerialized.Retailer.Balance));
+        $("#balance-Manufacturer").html("<b>Balance: </b>" + roundOff(gameSerialized.Manufacturer.Balance));
+        $("#balance-Processor").html("<b>Balance: </b>" + roundOff(gameSerialized.Processor.Balance));
+        $("#balance-Farmer").html("<b>Balance: </b>" + roundOff(gameSerialized.Farmer.Balance));
 
 /*        $("#profit-Retailer").html("<b>Profit: </b>" + roundOff(gameSerialized.retailer.profit));
         $("#profit-Manufacturer").html("<b>Profit: </b>" + roundOff(gameSerialized.Manufacturer.profit));
@@ -74,15 +74,17 @@ const BeerGame = (() => {
         $("#section-Processor").html("Margin: " + roundOff(gameSerialized.processor.margin));
         $("#section-Farmer").html("Margin: " + roundOff(gameSerialized.farmer.margin));*/
 
-        $("#inventory-Retailer").html("<b>Inventory: </b>" + gameSerialized.retailer.inventory);
-        $("#inventory-Manufacturer").html("<b>Inventory: </b>" + gameSerialized.Manufacturer.inventory);
-        $("#inventory-Processor").html("<b>Inventory: </b>" + gameSerialized.processor.inventory);
-        $("#inventory-Farmer").html("<b>Inventory: </b>" + gameSerialized.farmer.inventory);
+        $("#inventory-Retailer").html("<b>Inventory: </b>" + gameSerialized.Retailer.Inventory);
+        $("#inventory-Manufacturer").html("<b>Inventory: </b>" + gameSerialized.Manufacturer.Inventory);
+        $("#inventory-Processor").html("<b>Inventory: </b>" + gameSerialized.Processor.Inventory);
+        $("#inventory-Farmer").html("<b>Inventory: </b>" + gameSerialized.Farmer.Inventory);
 
-        $("#backorder-Retailer").html("<b>Backorder: </b>" + gameSerialized.retailer.backorder);
-        $("#backorder-Manufacturer").html("<b>Backorder: </b>" + gameSerialized.Manufacturer.backorder);
-        $("#backorder-Processor").html("<b>Backorder: </b>" + gameSerialized.processor.backorder);
-        $("#backorder-Farmer").html("<b>Backorder: </b>" + gameSerialized.farmer.backorder);
+        $("#backorder-Retailer").html("<b>Backorder: </b>" + gameSerialized.Retailer.Backorder);
+        $("#backorder-Manufacturer").html("<b>Backorder: </b>" + gameSerialized.Manufacturer.Backorder);
+        $("#backorder-Processor").html("<b>Backorder: </b>" + gameSerialized.Processor.Backorder);
+        $("#backorder-Farmer").html("<b>Backorder: </b>" + gameSerialized.Farmer.Backorder);
+
+        $("#currentDay").text("day: " + gameSerialized.CurrentDay);
     }
 
     const updateOrderHistory = (id, orderNumber, orderVolume) => {
@@ -91,21 +93,22 @@ const BeerGame = (() => {
     }
 
     const updateIncomingOrder = (id, game) => {
-        game[id.toLowerCase()].incomingOrders.forEach(order => {
-            if (order.orderDay == game.currentDay - 7) {
-                $(`#incoming-order-${id}`).html("<b>Incoming order: </b>>" + order.volume);
+        game[id].IncomingOrders.forEach(order => {
+            if (order.OrderDay == game.CurrentDay - 7) {
+                $(`#incoming-order-${id}`).html("<b>Incoming order: </b>>" + order.Volume);
             }
         });
     }
 
     const updateIncomingDeliveries = (id, game) => {
-        $(`#section-${id} > table[name='incomingDeliveries'] > tbody`).empty();
-        game[id.toLowerCase()].outgoingOrders.forEach(order => {
-            order.deliveries.forEach(delivery => {
-                if (delivery.arrivalDay <= game.currentDay && delivery.arrivalDay > game.currentDay - 7) {
-                    $(`#section-${id} > table[name='incomingDeliveries'] > tbody`)
+        $(`#incomingDeliveries-${id} > tbody`).empty();
+        console.log(game[id].OutgoingOrders);
+        game[id].OutgoingOrders.forEach(order => {
+            order.Deliveries.forEach(delivery => {
+                if (delivery.ArrivalDay <= game.CurrentDay && delivery.ArrivalDay > game.CurrentDay - 7) {
+                    $(`#incomingDeliveries-${id} > tbody`)
                         .append($(`<tr>
-                        <td class="order-history">${delivery.volume}</td>
+                        <td class="order-history">${delivery.Volume}</td>
                         </tr>`));
                 }
             });

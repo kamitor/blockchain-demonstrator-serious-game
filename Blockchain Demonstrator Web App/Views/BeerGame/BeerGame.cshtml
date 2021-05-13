@@ -11,13 +11,13 @@
         <article class="name-article ui-item">
             <p>@Model.Name</p>
             <p>@Model.Role.Id</p>
-            <p>day: @ViewData["CurrentDay"]</p>
+            <p id="currentDay">day: @ViewData["CurrentDay"]</p>
             <p id="balance-@Model.Role.Id"><b>Balance:</b> @Math.Round(Model.Balance, 2)</p>
         </article>
 
         <article class="inventory-article ui-item">
             <p><b>incoming delivery</b></p>
-            <table name="incomingDeliveries" class="order-history">
+            <table id="incomingDeliveries-@Model.Role.Id" class="order-history">
                 <thead>
                 <tr>
                     <th>Volume</th>
@@ -75,7 +75,7 @@
                 <tbody>
                     @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OutgoingOrders)
                     {
-                        @if (order.OrderDay > 1)
+                        @if (order.OrderDay >= 1)
                         {
                             <tr>
                                 <td class="order-history">@order.OrderNumber</td>

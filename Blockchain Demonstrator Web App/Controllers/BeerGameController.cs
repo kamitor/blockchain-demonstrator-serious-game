@@ -66,7 +66,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     {
                         Game game = JsonConvert.DeserializeObject<Game>(responseString);
 
-                        Player player = game.Players.Find(x => x.Id.Equals(playerId));
+                        Player player = game.Players.Find(x => string.Equals(x.Id, playerId));
                         ViewData["CurrentDay"] = game.CurrentDay;
 
                         return View(player);
