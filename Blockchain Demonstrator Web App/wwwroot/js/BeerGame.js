@@ -95,7 +95,7 @@ const BeerGame = (() => {
     const updateIncomingOrder = (id, game) => {
         game[id].IncomingOrders.forEach(order => {
             if (order.OrderDay == game.CurrentDay - 7) {
-                $(`#incoming-order-${id}`).html("<b>Incoming order: </b>>" + order.Volume);
+                $(`#incoming-order-${id}`).html("<b>Incoming order: </b>" + order.Volume);
             }
         });
     }

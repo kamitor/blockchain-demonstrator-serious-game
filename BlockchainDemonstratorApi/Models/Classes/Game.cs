@@ -83,13 +83,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public virtual List<Player> Players {
             get
             {
-                return new List<Player>()
-                {
-                    Retailer,
-                    Manufacturer,
-                    Processor,
-                    Farmer
-                };
+                List<Player> list = new List<Player>();
+
+                if (Retailer != null) list.Add(Retailer);
+                if (Manufacturer != null) list.Add(Manufacturer);
+                if (Processor != null) list.Add(Processor);
+                if (Farmer != null) list.Add(Farmer);
+                
+                return list;
             } 
         }
         public bool GameStarted { get; set; }

@@ -139,6 +139,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                     AddTransportCost(currentDay, leadTimeRand);
 
                     IncomingOrders.RemoveAt(i);
+                    Inventory -= pendingVolume;
                     i--;
                 }
                 else if (Inventory > 0)
