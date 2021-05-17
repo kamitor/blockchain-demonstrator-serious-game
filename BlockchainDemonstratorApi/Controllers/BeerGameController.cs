@@ -26,11 +26,30 @@ namespace BlockchainDemonstratorApi.Controllers
         [HttpPost("CreateGame")]
         public ActionResult CreateGame()
         {
-            Game game = new Game(); //TODO: Make try catch
+            Game game = new Game(GetUniqueId());
             _context.Games.Add(game);
             _context.SaveChanges();
             return Ok();
         }
+
+        /// <summary>Creates a unique id using six numbers</summary>
+        /// <returns>Unique id as string</returns>
+        /// <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>
+        private string GetUniqueId()
+        {
+            List<string> usedIds = _context.Games.Select(g => g.Id).ToList();
+
+            Random r = new Random();
+            while (true)
+            {
+                int id = r.Next(100000, 1000000);
+
+                if (!usedIds.Contains(id.ToString()))
+                {
+                    return id.ToString();
+                }
+            }
+        } 
 
         [HttpPost("JoinGame")]
         public ActionResult JoinGame([FromBody] dynamic data)
