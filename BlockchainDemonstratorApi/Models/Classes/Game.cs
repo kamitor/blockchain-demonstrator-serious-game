@@ -132,7 +132,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
-        #region SetupFor1stRound
+        #region Setup
         
         /// <summary>
         /// Adds default order to each actor
@@ -140,18 +140,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <remarks>Only needs to be used at the start of each game</remarks>
         private void SetSetupOrders() //Reworked to new order system
         {
-            Order orderC = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = 5 };
+            Order orderC = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetUpOrderVolume };
             Retailer.IncomingOrders.Add(orderC);
 
-            Order orderR = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = 5 };
+            Order orderR = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetUpOrderVolume };
             Retailer.OutgoingOrders.Add(orderR);
             Manufacturer.IncomingOrders.Add(orderR);
 
-            Order orderM = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = 5 };
+            Order orderM = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetUpOrderVolume };
             Manufacturer.OutgoingOrders.Add(orderM);
             Processor.IncomingOrders.Add(orderM);
 
-            Order orderP = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = 5 };
+            Order orderP = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetUpOrderVolume };
             Processor.OutgoingOrders.Add(orderP);
             Farmer.IncomingOrders.Add(orderP);
         }
@@ -164,50 +164,51 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             for (int i = 0; i < (int)Math.Ceiling(Manufacturer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
             {
-                Order order = new Order() { Volume = 5 };
+                Order order = new Order() { Volume = Factors.SetUpDeliveryVolume };
                 order.Deliveries.Add(new Delivery() {
-                    Volume = 5, 
+                    Volume = Factors.SetUpDeliveryVolume, 
                     SendDeliveryDay = Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Manufacturer.Role.LeadTime)), 
                     ArrivalDay = Factors.RoundIncrement * i + 1, 
-                    Price = Factors.ManuProductPrice * 5 });
+                    Price = Factors.ManuProductPrice * Factors.SetUpDeliveryVolume
+                });
                 Retailer.OutgoingOrders.Add(order);
             }
 
             for (int i = 0; i < (int)Math.Ceiling(Processor.Role.LeadTime / (double)Factors.RoundIncrement); i++)
             {
-                Order order = new Order() { Volume = 5 };
+                Order order = new Order() { Volume = Factors.SetUpDeliveryVolume };
                 order.Deliveries.Add(new Delivery()
                 {
-                    Volume = 5,
+                    Volume = Factors.SetUpDeliveryVolume,
                     SendDeliveryDay = Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Processor.Role.LeadTime)),
                     ArrivalDay = Factors.RoundIncrement * i + 1,
-                    Price = Factors.ProcProductPrice * 5
+                    Price = Factors.ProcProductPrice * Factors.SetUpDeliveryVolume
                 });
                 Manufacturer.OutgoingOrders.Add(order);
             }
 
             for (int i = 0; i < (int)Math.Ceiling(Farmer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
             {
-                Order order = new Order() { Volume = 5 };
+                Order order = new Order() { Volume = Factors.SetUpDeliveryVolume };
                 order.Deliveries.Add(new Delivery()
                 {
-                    Volume = 5,
+                    Volume = Factors.SetUpDeliveryVolume,
                     SendDeliveryDay = Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Farmer.Role.LeadTime)),
                     ArrivalDay = Factors.RoundIncrement * i + 1,
-                    Price = Factors.FarmerProductPrice * 5
+                    Price = Factors.FarmerProductPrice * Factors.SetUpDeliveryVolume
                 });
                 Processor.OutgoingOrders.Add(order);
             }
 
             for (int i = 0; i < (int)Math.Ceiling(1 / (double)Factors.RoundIncrement); i++)
             {
-                Order order = new Order() { Volume = 5 };
+                Order order = new Order() { Volume = Factors.SetUpDeliveryVolume };
                 order.Deliveries.Add(new Delivery()
                 {
-                    Volume = 5,
+                    Volume = Factors.SetUpDeliveryVolume,
                     SendDeliveryDay = Factors.RoundIncrement * i,
                     ArrivalDay = Factors.RoundIncrement * i + 1,
-                    Price = Factors.HarvesterProductPrice * 5
+                    Price = Factors.HarvesterProductPrice * Factors.SetUpDeliveryVolume
                 });
                 Farmer.OutgoingOrders.Add(order);
             }
@@ -287,7 +288,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Retailer.IncomingOrders.Add(new Order() {
                 OrderNumber = Convert.ToInt32(Math.Ceiling((double)(CurrentDay / Factors.RoundIncrement))),
                 OrderDay = CurrentDay, 
-                Volume = new Random().Next(5, 15)
+                Volume = new Random().Next(Factors.RetailerOrderVolumeRandomMinimum, Factors.RetailerOrderVolumeRandomMaximum + 1)
             });
 
             Retailer.OutgoingOrders.Add(Retailer.CurrentOrder);
@@ -309,23 +310,22 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             if (Retailer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
             {
-                Retailer.AddPenalty(Manufacturer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
+                Retailer.AddPenalty(Retailer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
             
             if (Manufacturer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
             {
-                Manufacturer.AddPenalty(Processor.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
+                Manufacturer.AddPenalty(Manufacturer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
             
             if (Processor.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
             {
-                Processor.AddPenalty(Farmer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
+                Processor.AddPenalty(Processor.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
             
             if (Farmer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
             {
-                //TODO: change to actual variables
-                Processor.AddPenalty(1200, CurrentDay);
+                Farmer.AddPenalty(Farmer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
             }
         }
 

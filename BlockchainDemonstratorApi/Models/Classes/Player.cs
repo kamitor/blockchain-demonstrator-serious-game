@@ -24,7 +24,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             get { return Balance - (Factors.InitialCapital - Factors.SetupCost); }
         }
 
-        public int Inventory { get; set; } = 20;
+        public int Inventory { get; set; } = Factors.DefaultInventory;
 
         public double Margin { get; set; }
 
@@ -121,7 +121,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             for (int i = 0; i < IncomingOrders.Count; i++)
             {
-                int leadTimeRand = new Random().Next(0, 4);
+                int leadTimeRand = new Random().Next(Factors.OrderLeadTimeRandomMinimum, Factors.OrderLeadTimeRandomMaximum + 1);
 
                 int pendingVolume = IncomingOrders[i].Volume - IncomingOrders[i].Deliveries.Sum(d => d.Volume);
                 if (pendingVolume <= Inventory)
