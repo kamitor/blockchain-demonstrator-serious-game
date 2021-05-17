@@ -216,6 +216,10 @@ BeerGame.Signal = (() => {
         console.log("Hello from Hub");
     })
 
+    connection.on("PromptOptions", function () {
+        BeerGame.promptOptions();
+    })
+
     return {
         init: init,
         sendOrder: sendOrder,

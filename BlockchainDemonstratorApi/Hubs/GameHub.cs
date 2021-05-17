@@ -63,5 +63,10 @@ namespace BlockchainDemonstratorApi.Hubs
             await Clients.Group(gameId)
                 .SendAsync("UpdateGame", JsonConvert.SerializeObject(_context.Games.FirstOrDefault(x => x.Id.Equals(gameId))) );
         }
+
+        public async Task PromptOptions(string gameId)
+        {
+            await Clients.Group(gameId).SendAsync("PromptOptions");
+        }
     }
 }

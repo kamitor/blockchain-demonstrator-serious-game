@@ -124,6 +124,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 
                 CapacityPenalty();
                 SetHoldingCosts();
+                AddFlexibilityReward();
                 UpdateBalance();
 
                 SendOrders();
@@ -385,6 +386,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
             foreach (Player player in Players)
             {
                 player.SetHoldingCost(CurrentDay);
+            }
+        }
+
+        private void AddFlexibilityReward()
+        {
+            foreach (Player player in Players)
+            {
+                player.Payments.Add(new Payment { Amount = player.ChosenOption.Flexibility, DueDay = CurrentDay, FromPlayer = false, PlayerId = player.Id });
             }
         }
     }
