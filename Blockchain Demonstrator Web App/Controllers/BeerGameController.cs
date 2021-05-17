@@ -50,8 +50,19 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 
         public IActionResult BeerGame(string gameId, string playerId)
         {
-            SetCookie("JoinedGame", gameId, 480);
-            SetCookie("PlayerId", playerId, 480);
+            if (gameId == null)
+            {
+                if (Request.Cookies["JoinedGame"] != null) gameId = Request.Cookies["JoinedGame"];
+                else throw new ArgumentNullException("gameId as well as JoinedGame cookie is null");
+            }
+            else SetCookie("JoinedGame", gameId, 480);
+
+            if(playerId == null)
+            {
+                if (Request.Cookies["PlayerId"] != null) playerId = Request.Cookies["PlayerId"];
+                else throw new ArgumentNullException("playerId as well as PlayerId cookie is null");
+            }
+            else SetCookie("PlayerId", playerId, 480);
             
             using (var client = new HttpClient())
             {
@@ -68,6 +79,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 
                         Player player = game.Players.Find(x => string.Equals(x.Id, playerId));
                         ViewData["CurrentDay"] = game.CurrentDay;
+                        ViewData["GameId"] = game.Id;
 
                         return View(player);
                     }

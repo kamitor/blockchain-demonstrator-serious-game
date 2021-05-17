@@ -47,6 +47,7 @@ namespace BlockchainDemonstratorApi.Hubs
             {
                 game.Progress();
                 await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(game));
+                if (game.CurrentDay == Factors.RoundIncrement * 10 + 1) await PromptOptions(gameId);
             }
             
             _context.Games.Update(game);
