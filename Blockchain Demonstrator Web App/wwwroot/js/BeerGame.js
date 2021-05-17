@@ -64,15 +64,15 @@ const BeerGame = (() => {
         $("#balance-Processor").html("<b>Balance: </b>" + roundOff(gameSerialized.Processor.Balance));
         $("#balance-Farmer").html("<b>Balance: </b>" + roundOff(gameSerialized.Farmer.Balance));
 
-/*        $("#profit-Retailer").html("<b>Profit: </b>" + roundOff(gameSerialized.retailer.profit));
-        $("#profit-Manufacturer").html("<b>Profit: </b>" + roundOff(gameSerialized.Manufacturer.profit));
-        $("#profit-Processor").html("<b>Profit: </b>" + roundOff(gameSerialized.processor.profit));
-        $("#profit-Farmer").html("<b>Profit: </b>" + roundOff(gameSerialized.farmer.profit));*/
+        /*        $("#profit-Retailer").html("<b>Profit: </b>" + roundOff(gameSerialized.retailer.profit));
+                $("#profit-Manufacturer").html("<b>Profit: </b>" + roundOff(gameSerialized.Manufacturer.profit));
+                $("#profit-Processor").html("<b>Profit: </b>" + roundOff(gameSerialized.processor.profit));
+                $("#profit-Farmer").html("<b>Profit: </b>" + roundOff(gameSerialized.farmer.profit));*/
 
-/*        $("#section-Retailer").html("Margin: " + roundOff(gameSerialized.retailer.margin));
-        $("#section-Manufacturer").html("Margin: " + roundOff(gameSerialized.Manufacturer.margin));
-        $("#section-Processor").html("Margin: " + roundOff(gameSerialized.processor.margin));
-        $("#section-Farmer").html("Margin: " + roundOff(gameSerialized.farmer.margin));*/
+        /*        $("#section-Retailer").html("Margin: " + roundOff(gameSerialized.retailer.margin));
+                $("#section-Manufacturer").html("Margin: " + roundOff(gameSerialized.Manufacturer.margin));
+                $("#section-Processor").html("Margin: " + roundOff(gameSerialized.processor.margin));
+                $("#section-Farmer").html("Margin: " + roundOff(gameSerialized.farmer.margin));*/
 
         $("#inventory-Retailer").html("<b>Inventory: </b>" + gameSerialized.Retailer.Inventory);
         $("#inventory-Manufacturer").html("<b>Inventory: </b>" + gameSerialized.Manufacturer.Inventory);
@@ -183,22 +183,18 @@ BeerGame.Signal = (() => {
 
     let init = () => {
 
-        console.log("binnen")
     }
 
-    let sendOrder = (volume, gameId, playerId) => {
-        
-        connection.invoke("SendOrder", $('.place-order-text').val(), BeerGame.Cookie.getCookie('JoinedGame'), BeerGame.Cookie.getCookie('PlayerId')).catch(function (err) {
+    let sendOrder = () => {
+        connection.invoke("SendOrder",
+                $('.place-order-text').val(), 
+                BeerGame.Cookie.getCookie('JoinedGame'), 
+                BeerGame.Cookie.getCookie('PlayerId'))
+            .catch(function (err) {
             return console.error(err.toString())
         })
     }
-    
-    let helloWorld = () => {
-        connection.invoke("HelloWorld").catch(function (err) {
-            return console.error(err.toString())
-        })
-    }
-    
+
     let joinGroup = () => {
         console.log("joined group")
         connection.invoke("JoinGroup", BeerGame.Cookie.getCookie("JoinedGame")).catch(function (err) {
@@ -207,11 +203,9 @@ BeerGame.Signal = (() => {
     }
 
     connection.on("UpdateGame", function (game) {
-        console.log("binnen signal route updategame")
-        console.log(game)
         BeerGame.updateGame(game);
     })
-    
+
     connection.on("HelloWorld", function () {
         console.log("Hello from Hub");
     })
@@ -222,8 +216,7 @@ BeerGame.Signal = (() => {
 
     return {
         init: init,
-        sendOrder: sendOrder,
-        helloWorld: helloWorld,
+        sendOrder: sendOrder
     }
 })();
 

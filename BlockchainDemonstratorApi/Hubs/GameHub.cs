@@ -11,6 +11,7 @@ namespace BlockchainDemonstratorApi.Hubs
 {
     public class GameHub : Hub
     {
+        //TODO: setup heartbeat
         private readonly BeerGameContext _context;
 
         public GameHub(BeerGameContext context)
@@ -18,11 +19,6 @@ namespace BlockchainDemonstratorApi.Hubs
             _context = context;
         }
 
-        public async Task HelloWorld()
-        {
-            await Clients.All.SendAsync("HelloWorld");
-        }
-        
         public async Task SendOrder(string volume, string gameId, string playerId)
         {
             Game game = _context.Games.FirstOrDefault(x => x.Id.Equals(gameId));
