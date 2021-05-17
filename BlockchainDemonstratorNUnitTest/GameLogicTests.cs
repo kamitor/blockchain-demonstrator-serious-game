@@ -17,7 +17,7 @@ namespace BlockchainDemonstratorNUnitTest
         [SetUp]
         public void SetUp()
         {
-            _game = new Game();
+            _game = new Game("123456");
 
 
             Player retailer = new Player("RetailerTest");

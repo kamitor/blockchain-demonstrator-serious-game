@@ -94,33 +94,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
         public bool GameStarted { get; set; }
 
-
-        public HashSet<int> IdList = new HashSet<int>();
-
-        public Game()
+        public Game(string id)
         {
-            Id = CreateUniqueId(); //TODO: replace into database
+            Id = id;
             CurrentPhase = Phase.Phase1;
             CurrentDay = 1;
             GameStarted = false;
-        }
-        
-        /// <summary>Creates a unique id using six numbers</summary>
-        /// <returns>Unique id as string</returns>
-        /// <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>
-        private String CreateUniqueId()
-        {
-            Random r = new Random();
-            while (true)
-            {
-                int id = r.Next(100000, 1000000);
-
-                if (!IdList.Contains(id))
-                {
-                    IdList.Add(id);
-                    return id.ToString();
-                }
-            }
         }
         
         /// <summary>
