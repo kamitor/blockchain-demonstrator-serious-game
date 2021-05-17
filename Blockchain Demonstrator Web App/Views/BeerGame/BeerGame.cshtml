@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Acme Web Design</title>
+    <title>Block Chain demonstrator</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <link rel="stylesheet" href="~/css/StyleSheet.css">
@@ -24,7 +24,7 @@
             <div class="company-info">
                 <h3>Your warehous status</h3>
                 <ul>
-                    <li> komt later</li>
+                    <li> will be implemented later</li>
                     <li>            </li>
                     <li>            </li>
                     <li>            </li>
@@ -34,7 +34,7 @@
 
                 <h3>Your Custome Orders</h3>
                 <ul>
-                    <li> komt later</li>
+                    <li> will be implemented later</li>
                     <li>            </li>
                     <li>            </li>
                     <li>            </li>
@@ -64,8 +64,7 @@
                 {
                 <tr>
                     <td class="order-history">@delivery.Volume</td>
-                </tr>
-}}}
+                </tr>}}}
                             </tbody>
                         </table>
                         <div>
@@ -98,6 +97,33 @@
 
 
 
+                    <article class="order-history-article ui-item">
+                        <div>
+                            <b>Order History</b>
+                        </div>
+                        <table name="orderHistory" class="order-history">
+                            <thead>
+                                <tr>
+                                    <th>Order number</th>
+                                    <th>Volume</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OutgoingOrders)
+                                {
+                    @if (order.OrderDay > 1)
+                    {
+                <tr>
+                    <td class="order-history">@order.OrderNumber</td>
+                    <td class="order-history">@order.Volume</td>
+                </tr>}}
+                            </tbody>
+                        </table>
+                    </article>
+
+
+
+
                     <article class="input-article ui-item">
                         <form>
                             <input type="text" placeholder="Order volume">
@@ -111,110 +137,7 @@
     </div>
 </body>
 
-<article class="name-article ui-item">
 
-    <section>
-        <nav class="navbar navbar-expand-lg navbar-dark navbar-height" style="background-color: #4863A0!important;">
-
-            <div class="container s">
-                <article class="name-article ui-item">
-                    <div>day: @ViewData["CurrentDay"]</div>
-                </article>
-                <a href="https://localhost:44313/Factors/Edit/DefaultFactors" class="btn btn-outline-primary my-2 my-sm-0 login-color"
-                   style=" green">DefaultFactors</a>
-
-            </div>
-
-        </nav>
-    </section>
-
-    <section id="section-@Model.Role.Id" class="game-ui">
-        <section class="game-ui--left">
-            <article class="name-article ui-item">
-                <div>@Model.Name</div>
-                <div>@Model.Role.Id</div>
-                <div>day: @ViewData["CurrentDay"]</div>
-                <div name="balance">
-                    <b>Balance:</b> @Math.Round(Model.Balance, 2)
-                </div>
-            </article>
-
-            <article class="inventory-article ui-item">
-                <div>
-                    <b>incoming delivery</b>
-                </div>
-                <table name="incomingDeliveries" class="order-history">
-                    <thead>
-                        <tr>
-                            <th>Volume</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var order in Model.OutgoingOrders)
-                        {
-            @foreach (var delivery in order.Deliveries)
-            {
-@if (delivery.ArrivalDay <= currentDay && delivery.ArrivalDay > currentDay - Factors.RoundIncrement)
-{
-<tr>
-    <td class="order-history">@delivery.Volume</td>
-</tr>}}}
-                    </tbody>
-                </table>
-                <div>
-                    <b>inventory:</b> @Model.Inventory
-                </div>
-            </article>
-
-            <article class="backorder-article ui-item">
-                @foreach (var order in Model.IncomingOrders)
-                {
-    @if (order.OrderDay == (int)ViewData["CurrentDay"] - Factors.RoundIncrement)
-    {
-<div name="incomingOrder">
-    <b>Incoming order:</b> @order.Volume
-</div>          }}
-                <div>
-                    <b>backorder:</b> @Model.Backorder
-                </div>
-            </article>
-        </section>
-
-        <section class="game-ui--right">
-            <article class="input-article ui-item">
-                <form>
-                    <input type="text" placeholder="Order volume">
-                    <button type="submit">Place order</button>
-                </form>
-            </article>
-
-            <article class="order-history-article ui-item">
-                <div>
-                    <b>Order History</b>
-                </div>
-                <table name="orderHistory" class="order-history">
-                    <thead>
-                        <tr>
-                            <th>Order number</th>
-                            <th>Volume</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OutgoingOrders)
-                        {
-            @if (order.OrderDay > 1)
-            {
-<tr>
-    <td class="order-history">@order.OrderNumber</td>
-    <td class="order-history">@order.Volume</td>
-</tr>}}
-                    </tbody>
-                </table>
-            </article>
-        </section>
-    </section>
-
-</article>
 
     @section Scripts
 {
