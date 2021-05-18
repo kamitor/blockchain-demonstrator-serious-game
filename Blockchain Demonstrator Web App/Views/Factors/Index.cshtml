@@ -1,10 +1,13 @@
-﻿@model IEnumerable<BlockchainDemonstratorApi.Models.Classes.Factors>
+﻿@using BlockchainDemonstratorApi.Models.Classes;
+@model IEnumerable<BlockchainDemonstratorApi.Models.Classes.Factors>
 
 @{
     ViewData["Title"] = "Index";
+    List<Option> options = (List<Option>)ViewData["Options"];
+    List<Option> roles = (List<Option>)ViewData["Roles"];
 }
 
-<h1>Index</h1>
+<h1>Game tuning</h1>
 
 <table class="table">
     <thead>
@@ -52,51 +55,52 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.retailTransport)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.manuTransport)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.procTransport)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.farmerTransport)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.holdingFactor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.roundIncrement)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.retailProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.manuProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.procProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.farmerProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.harvesterProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.setupCost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.initialCapital)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.retailTransport)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.manuTransport)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.procTransport)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.farmerTransport)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.holdingFactor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.roundIncrement)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.retailProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.manuProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.procProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.farmerProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.harvesterProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.setupCost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.initialCapital)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

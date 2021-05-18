@@ -23,9 +23,13 @@ namespace BlockchainDemonstratorApi.Controllers
 
         // GET: api/Factors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Factors>>> GetFactors()
+        public async Task<ActionResult<object>> GetFactors()
         {
-            return await _context.Factors.ToListAsync();
+            return new { 
+                defaultFactors = await _context.Factors.FirstAsync(f => f.Id == "DefaultFactors"),
+                options = await _context.Options.ToListAsync(),
+                roles = await _context.Roles.ToListAsync()
+            };
         }
 
         // GET: api/Factors/5

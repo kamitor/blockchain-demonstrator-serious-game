@@ -26,13 +26,19 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         {
             using (var client = new HttpClient())
             {
-                var response = client.GetAsync(Config.RestApiUrl + "/api/Factors").Result;
+                var response = client.GetAsync(Config.RestApiUrl + "/api/Factors/").Result;
 
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = response.Content;
                     var responseString = responseContent.ReadAsStringAsync().Result;
-                    if (responseString != null) return View(JsonConvert.DeserializeObject<List<Factors>>(responseString));
+                    if (responseString != null)
+                    {
+                        dynamic responseObject = JsonConvert.DeserializeObject<object>(responseString);
+                        ViewData["Options"] = responseObject.options.ToObject<List<Option>>(); ;
+                        ViewData["Roles"] = responseObject.roles.ToObject<List<Role>>(); ;
+                        return View(responseObject.defaultFactors.ToObject<Factors>()); 
+                    }
                 }
             }
             return BadRequest();
