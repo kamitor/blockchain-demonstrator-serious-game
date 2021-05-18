@@ -9,80 +9,78 @@
 </head>
 
 <body>
+
+   
+
     <section class="actor-display">
         @if (Model != null)
         {
     @foreach (var player in Model.Players)
     {
-    <section id="section-@player.Role.Id">
-        <h3 name="name">Name: @player.Name</h3>
-        <h3 name="role">Role: @player.Role.Id</h3>
-        <h3 name="balance">Balance: @Math.Round(player.Balance, 2)</h3>
-        <h3 name="profit">Profit: @Math.Round(player.Profit, 2)</h3>
-        <h3 name="margin">Margin: @Math.Round(player.Margin, 2)</h3>
-        <h3 name="inventory">Inventory: @player.Inventory</h3>
-        <h3 name="backorder">Backorder: @player.Backorder</h3>
+    
+                        <section id="section-@player.Role.Id">
+                            <h3 name="name">Name: @player.Name</h3>
+                            <h3 name="role">Role: @player.Role.Id</h3>
+                            <h3 name="balance">Balance: @Math.Round(player.Balance, 2)</h3>
+                            <h3 name="profit">Profit: @Math.Round(player.Profit, 2)</h3>
+                            <h3 name="margin">Margin: @Math.Round(player.Margin, 2)</h3>
+                            <h3 name="inventory">Inventory: @player.Inventory</h3>
+                            <h3 name="backorder">Backorder: @player.Backorder</h3>
 
-        @foreach (var order in player.IncomingOrders)
+                            @foreach (var order in player.IncomingOrders)
+                            {
+        @if (order.OrderDay == Model.CurrentDay - BlockchainDemonstratorApi.Models.Classes.Factors.RoundIncrement)
         {
-    @if (order.OrderDay == Model.CurrentDay - BlockchainDemonstratorApi.Models.Classes.Factors.RoundIncrement)
-    {
     <h3 name="incomingOrder">Incoming order: @order.Volume</h3>}}
-        <h3>Incoming deliveries</h3>
-        <table name="incomingDeliveries" class="order-history">
-            <thead>
-                <tr>
-                    <th>Volume</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in player.OutgoingOrders)
+                            <h3>Incoming deliveries</h3>
+                            <table name="incomingDeliveries" class="order-history">
+                                <thead>
+                                    <tr>
+                                        <th>Volume</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in player.OutgoingOrders)
+                                    {
+                @foreach (var delivery in order.Deliveries)
                 {
-                    @foreach (var delivery in order.Deliveries)
-                    {
-                        @if (delivery.ArrivalDay <= Model.CurrentDay && delivery.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
-                        {
-                            <tr>
-                                <td class="order-history">@delivery.Volume</td>
-                            </tr>
-                        }
-                    }
-                }
-            </tbody>
-        </table>
+    @if (delivery.ArrivalDay <= Model.CurrentDay && delivery.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
+    {
+    <tr>
+        <td class="order-history">@delivery.Volume</td>
+    </tr>
+}}}
+                                </tbody>
+                            </table>
 
-        <form>
-            <h6>Order volume: </h6>
-            <input type="number" name="order">
-        </form>
+                            <form>
+                                <h6>Order volume: </h6>
+                                <input type="number" name="order">
+                            </form>
 
-        <h3>Order history:</h3>
-        <table name="orderHistory" class="order-history">
-            <thead>
-                <tr>
-                    <th>Order number</th>
-                    <th>Volume</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OutgoingOrders)
+                            <h3>Order history:</h3>
+                            <table name="orderHistory" class="order-history">
+                                <thead>
+                                    <tr>
+                                        <th>Order number</th>
+                                        <th>Volume</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OutgoingOrders)
+                                    {
+                @if (order.OrderDay > 1)
                 {
-                    @if (order.OrderDay > 1)
-                    {
-                        <tr>
-                            <td class="order-history">@order.OrderNumber</td>
-                            <td class="order-history">@order.Volume</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
+    <tr>
+        <td class="order-history">@order.OrderNumber</td>
+        <td class="order-history">@order.Volume</td>
+    </tr>
+}}
+                                </tbody>
+                            </table>
+                        </section>}}
     </section>
-    }
-
-    }
-    </section>
-<button onclick="BeerGame.sendOrders('@Model.Id')">Send orders</button>
+    <button onclick="BeerGame.sendOrders('@Model.Id')">Send orders</button>
 </body>
 
 @section Scripts
