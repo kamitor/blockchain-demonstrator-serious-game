@@ -187,7 +187,7 @@ BeerGame.Signal = (() => {
 
     let sendOrder = () => {
         connection.invoke("SendOrder",
-                $('.place-order-text').val(), 
+                $('#place-order-text').val(), 
                 BeerGame.Cookie.getCookie('JoinedGame'), 
                 BeerGame.Cookie.getCookie('PlayerId'))
             .catch(function (err) {

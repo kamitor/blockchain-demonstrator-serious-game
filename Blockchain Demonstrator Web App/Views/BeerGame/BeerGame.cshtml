@@ -12,13 +12,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Block Chain demonstrator</title>
+    <title>Blockchain Demonstrator</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <link rel="stylesheet" href="~/css/StyleSheet.css">
 </head>
 <body>
-
     <div class="container">
         <h1 class="brand">The<span>Blockchain</span>Game</h1>
         <div class="wrapper animated bounceInLeft">
@@ -50,7 +49,7 @@
                         <div>
                             <b>incoming delivery</b>
                         </div>
-                        <table name="incomingDeliveries" class="order-history">
+                        <table id="incomingDeliveries-@Model.Role.Id" class="order-history">
                             <thead>
                                 <tr>
                                     <th>Volume</th>
@@ -68,7 +67,7 @@
                 </tr>}}}
                             </tbody>
                         </table>
-                        <div>
+                        <div id="inventory-@Model.Role.Id">
                             <b>inventory:</b> @Model.Inventory
                         </div>
                     </article>
@@ -76,8 +75,8 @@
                     <article class="name-article ui-item">
                         <div>@Model.Name</div>
                         <div>@Model.Role.Id</div>
-                        <div>day: @ViewData["CurrentDay"]</div>
-                        <div name="balance">
+                        <div id="currentDay">day: @ViewData["CurrentDay"]</div>
+                        <div id="balance-@Model.Role.Id">
                             <b>Balance:</b> @Math.Round(Model.Balance, 2)
                         </div>
                     </article>
@@ -88,10 +87,10 @@
                         {
                 @if (order.OrderDay == (int)ViewData["CurrentDay"] - Factors.RoundIncrement)
                 {
-                <div name="incomingOrder">
+                <div id="incomingOrder-@Model.Role.Id">
                     <b>Incoming order:</b> @order.Volume
                 </div>}}
-                        <div>
+                        <div id="backorder-@Model.Role.Id">
                             <b>backorder:</b> @Model.Backorder
                         </div>
                     </article>
@@ -102,7 +101,7 @@
                         <div>
                             <b>Order History</b>
                         </div>
-                        <table name="orderHistory" class="order-history">
+                        <table id="orderHistory-@Model.Role.Id" class="order-history">
                             <thead>
                                 <tr>
                                     <th>Order number</th>
@@ -126,10 +125,8 @@
 
 
                     <article class="input-article ui-item">
-                        <form>
-                            <input type="text" placeholder="Order volume">
-                            <button type="submit">Place order</button>
-                        </form>
+                        <input id="place-order-text" type="text" placeholder="Order volume">
+                        <button id="place-order-button" type="button">Place order</button>
                     </article>
 
                 </form>
@@ -142,6 +139,7 @@
 
     @section Scripts
 {
+        <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
         <script src="~/js/BeerGame.js"></script>
         <script>
             function getCookie(name) {
@@ -149,8 +147,7 @@
                 const parts = value.split(`; ${name}=`);
                 if (parts.length === 2) return parts.pop().split(';').shift();
             }
-
-
-            BeerGame.init(getCookie('JoinedGame'))
+            BeerGame.init("@gameId", "@Model.Id");
+            $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
         </script>
     }
