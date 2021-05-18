@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\css\StyleSheet.css" />
+    <None Include="wwwroot\css\StyleSheetBeerGame.css" />
   </ItemGroup>
 
   <ItemGroup>
