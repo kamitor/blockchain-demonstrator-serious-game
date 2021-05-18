@@ -15,8 +15,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         #region Setup factors
         public static int InitialCapital { get; set; } = 250000;
         public static int SetupCost { get; set; } = 75000;
-        public static int SetUpOrderVolume { get; set; } = 5;
-        public static int SetUpDeliveryVolume { get; set; } = 5;
+        public static int SetupOrderVolume { get; set; } = 5;
+        public static int SetupDeliveryVolume { get; set; } = 5;
         #endregion
 
         #region Transport factors
@@ -60,8 +60,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public int harvesterProductPrice { get { return HarvesterProductPrice; } set { HarvesterProductPrice = value; } }
         public int setupCost { get { return SetupCost; } set { SetupCost = value; } }
         public int initialCapital { get { return InitialCapital; } set { InitialCapital = value; } }
-        public int setUpOrderVolume { get { return SetUpOrderVolume; } set { SetUpOrderVolume = value; } }
-        public int setUpDeliveryVolume { get { return SetUpDeliveryVolume; } set { SetUpDeliveryVolume = value; } }
+        public int setUpOrderVolume { get { return SetupOrderVolume; } set { SetupOrderVolume = value; } }
+        public int setUpDeliveryVolume { get { return SetupDeliveryVolume; } set { SetupDeliveryVolume = value; } }
         public int retailerOrderVolumeRandomMinimum { get { return RetailerOrderVolumeRandomMinimum; } set { RetailerOrderVolumeRandomMinimum = value; } }
         public int retailerOrderVolumeRandomMaximum { get { return RetailerOrderVolumeRandomMaximum; } set { RetailerOrderVolumeRandomMaximum = value; } }
         public int defaultInventory { get { return DefaultInventory; } set { DefaultInventory = value; } }

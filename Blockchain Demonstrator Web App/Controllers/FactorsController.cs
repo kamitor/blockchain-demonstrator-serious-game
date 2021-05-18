@@ -47,8 +47,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         // GET: Factors/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-
-
+            
             using (var client = new HttpClient())
             {
                 var response = client.GetAsync(Config.RestApiUrl + "/api/Factors/" + id).Result;
