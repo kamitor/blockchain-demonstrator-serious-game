@@ -190,7 +190,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <summary>
         /// Adds payment object to Payments for a completed delivery
         /// </summary>
-        /// <param name="delivery">Delivery object for which the player has to get paid</param>
+        /// <param name="delivery">Delivery object for which this player has to get paid</param>
         public void GetPaidForDelivery(Delivery delivery)
         {
             Payments.Add(new Payment()
