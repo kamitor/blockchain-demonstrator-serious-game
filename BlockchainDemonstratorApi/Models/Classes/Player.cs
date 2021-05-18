@@ -79,9 +79,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
             set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
         }
 
+        private List<Payment> _payments;
         [ForeignKey("PlayerId")]
-        public virtual List<Payment> Payments { get; set; }
-      
+        public virtual List<Payment> Payments
+        {
+            get { return _payments; }
+            set { _payments = value.OrderBy(o => o.DueDay).ThenBy(o => o.Topic).ToList(); }
+        }
         public double Balance { get; set; }
 
         [NotMapped]
@@ -180,7 +184,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
                         {
                             Amount = delivery.Price * -1,
                             DueDay = delivery.ArrivalDay + Factors.RoundIncrement,
-                            FromPlayer = true
+                            FromPlayer = true,
+                            Topic = "Order"
                         });
                     }
                 }
@@ -195,8 +200,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             Payments.Add(new Payment()
             {
-                Amount = delivery.Price, Id = Guid.NewGuid().ToString(),
-                DueDay = delivery.ArrivalDay + (2 * Factors.RoundIncrement), FromPlayer = true, PlayerId = this.Id
+                Amount = delivery.Price, 
+                DueDay = delivery.ArrivalDay + (2 * Factors.RoundIncrement), 
+                FromPlayer = true, 
+                PlayerId = this.Id,
+                Topic = "Delivery"
             });
         }
 
@@ -210,7 +218,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 Amount = (ChosenOption.TransportCostOneTrip + (ChosenOption.TransportCostPerDay * leadTimeChange)) * -1,
                 DueDay = currentDay, FromPlayer = false,
                 PlayerId = this.Id,
-                Id = Guid.NewGuid().ToString()
+                Topic = "Transport"
             });
         }
 
@@ -227,7 +235,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
                 DueDay = currentDay,
                 FromPlayer = false,
                 PlayerId = this.Id,
-                Id = Guid.NewGuid().ToString()
+                Topic = "Penalty"
             });
         }
 
@@ -237,8 +245,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             Payments.Add(new Payment()
             {
-                Amount = HoldingCosts * -1, DueDay = currentDay, FromPlayer = false, PlayerId = this.Id,
-                Id = Guid.NewGuid().ToString()
+                Amount = HoldingCosts * -1, 
+                DueDay = currentDay, 
+                FromPlayer = false, 
+                PlayerId = this.Id,
+                Topic = "Holding cost"    
             });
         }
 

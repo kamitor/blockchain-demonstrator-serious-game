@@ -4,7 +4,7 @@
 }
 
 .actor-display {
-    display: none;
+    display: flex;
 }
 
 .game-pin {
