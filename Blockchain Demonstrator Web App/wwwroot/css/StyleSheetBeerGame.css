@@ -47,7 +47,10 @@ ul {
     }
 
 .contact {
+    justify-content: space-around;
     background: #f9feff;
+    display: grid;
+    
 }
 
     /* FORM STYLES */
@@ -103,3 +106,5 @@ ul {
         text-align: left;
     }
 }
+
+
