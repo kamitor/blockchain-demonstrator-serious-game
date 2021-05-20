@@ -13,7 +13,7 @@ body {
     max-width: 1170px;
     margin-left: auto;
     margin-right: auto;
-    padding: 1em;
+    padding: 0em;
 }
 
 ul {
@@ -39,6 +39,7 @@ ul {
 
 .company-info {
     background: #c9e6ff;
+    min-width: 300px;
 }
 
     .company-info h3, .company-info ul {
@@ -87,6 +88,28 @@ ul {
                 outline: 0;
                 transition: background-color 2s ease-out;
             }
+.tab {
+    padding: 5px;
+    box-shadow: 0 0 20px 0 rgba(72,94,116,0.7);
+}
+
+.bottomBar {
+    left:40%;
+    margin-top: 20px;
+    padding: 10px;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+}
+
+.buttonGameView {
+    border: 0px;
+    background-color: white;
+    box-shadow: 0 0 20px 0 rgba(72,94,116,0.7);
+    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /* LARGE SCREENS */
 @media(min-width:700px) {

@@ -49,7 +49,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
             }
         }
 
+        private List<Delivery> _deliveries = new List<Delivery>();
         [ForeignKey("OrderId")]
-        public virtual List<Delivery> Deliveries { get; set; } = new List<Delivery>();
+        public virtual List<Delivery> Deliveries
+        {
+            get{ return _deliveries; }
+            set { _deliveries = value.OrderBy(d => d.ArrivalDay).ToList(); }
+        }
     }
 }

@@ -1,6 +1,23 @@
-﻿.order-history {
-    border: solid 2px black;
+﻿table {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
     border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 5px;
+}
+
+tr:nth-child(even) {
+    background-color: #daeaf7;
+}
+
+.table-scroll {
+    overflow: scroll;
+    max-height: 200px;
 }
 
 .actor-display {
