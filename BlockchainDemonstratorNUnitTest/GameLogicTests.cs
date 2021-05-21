@@ -21,19 +21,19 @@ namespace BlockchainDemonstratorNUnitTest
 
 
             Player retailer = new Player("RetailerTest");
-            retailer.Role = new Role("Retailer", 1.7083333, Product.Beer, Factors.RetailProductPrice);
+            retailer.Role = new Role("Retailer", 1.7083333, Product.Beer);
             _game.Retailer = retailer;
 
             Player manufacturer = new Player("ManufacturerTest");
-            manufacturer.Role = new Role("Manufacturer", 1.375, Product.Packs, Factors.ManuProductPrice);
+            manufacturer.Role = new Role("Manufacturer", 1.375, Product.Packs);
             _game.Manufacturer = manufacturer;
 
             Player processor = new Player("ProcessorTest");
-            processor.Role = new Role("Processor", 17.166667, Product.Barley, Factors.ProcProductPrice);
+            processor.Role = new Role("Processor", 17.166667, Product.Barley);
             _game.Processor = processor;
 
             Player farmer = new Player("FarmerTest");
-            farmer.Role = new Role("Farmer", 22.333333, Product.Seeds, Factors.FarmerProductPrice);
+            farmer.Role = new Role("Farmer", 22.333333, Product.Seeds);
             _game.Farmer = farmer;
 
             _game.Retailer.CurrentOrder = new Order { Volume = 10 };

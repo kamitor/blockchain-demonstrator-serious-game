@@ -3,9 +3,194 @@
 
 @{
     ViewData["Title"] = "Index";
-    List<Option> options = (List<Option>)ViewData["Options"];
-    List<Role> roles = (List<Role>)ViewData["Roles"];
+    List<Option> options = (List<Option>) ViewData["Options"];
+    List<Role> roles = (List<Role>) ViewData["Roles"];
 }
+
+<link rel="stylesheet" href="~/css/GameTuning.css"/>
 
 <h1>Game tuning</h1>
 
+<div class="tabs">
+    <button id="Factors-button" class="tabs--button" onclick="openTab('Factors');clickTab('Factors-button','tabs--button')">Factors</button>
+    <button id="Retailer-button" class="tabs--button" onclick="openTab('Retailer');clickTab('Retailer-button','tabs--button')">Retailer</button>
+    <button id="Manufacturer-button" class="tabs--button" onclick="openTab('Manufacturer');clickTab('Manufacturer-button','tabs--button')">Manufacturer</button>
+    <button id="Processor-button" class="tabs--button" onclick="openTab('Processor');clickTab('Processor-button','tabs--button')">Processor</button>
+    <button id="Farmer-button" class="tabs--button" onclick="openTab('Farmer');clickTab('Farmer-button','tabs--button')">Farmer</button>
+</div>
+
+<div id="Factors" class="tabs--content">
+    <h4>Factors</h4>
+    <hr/>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id"/>
+                <div class="form-group">
+                    <label asp-for="retailTransport" class="control-label"></label>
+                    <input asp-for="retailTransport" class="form-control"/>
+                    <span asp-validation-for="retailTransport" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="manuTransport" class="control-label"></label>
+                    <input asp-for="manuTransport" class="form-control"/>
+                    <span asp-validation-for="manuTransport" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="procTransport" class="control-label"></label>
+                    <input asp-for="procTransport" class="form-control"/>
+                    <span asp-validation-for="procTransport" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="farmerTransport" class="control-label"></label>
+                    <input asp-for="farmerTransport" class="form-control"/>
+                    <span asp-validation-for="farmerTransport" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="holdingFactor" class="control-label"></label>
+                    <input asp-for="holdingFactor" class="form-control"/>
+                    <span asp-validation-for="holdingFactor" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="roundIncrement" class="control-label"></label>
+                    <input asp-for="roundIncrement" class="form-control"/>
+                    <span asp-validation-for="roundIncrement" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="retailProductPrice" class="control-label"></label>
+                    <input asp-for="retailProductPrice" class="form-control"/>
+                    <span asp-validation-for="retailProductPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="manuProductPrice" class="control-label"></label>
+                    <input asp-for="manuProductPrice" class="form-control"/>
+                    <span asp-validation-for="manuProductPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="procProductPrice" class="control-label"></label>
+                    <input asp-for="procProductPrice" class="form-control"/>
+                    <span asp-validation-for="procProductPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="farmerProductPrice" class="control-label"></label>
+                    <input asp-for="farmerProductPrice" class="form-control"/>
+                    <span asp-validation-for="farmerProductPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="harvesterProductPrice" class="control-label"></label>
+                    <input asp-for="harvesterProductPrice" class="form-control"/>
+                    <span asp-validation-for="harvesterProductPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="setupCost" class="control-label"></label>
+                    <input asp-for="setupCost" class="form-control"/>
+                    <span asp-validation-for="setupCost" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="initialCapital" class="control-label"></label>
+                    <input asp-for="initialCapital" class="form-control"/>
+                    <span asp-validation-for="initialCapital" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@foreach (var role in roles)
+{
+    <div id="@role.Id" class="tabs--content">
+        <h4>@role.Id</h4>
+        <hr/>
+        <div class="tabs">
+            <button id="@role.Id-button-Basic" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-Basic');clickTab('@role.Id-button-Basic','tabs--content--options-button')">Basic</button>
+            <button id="@role.Id-button-YouProvide" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-YouProvide');clickTab('@role.Id-button-YouProvide','tabs--content--options-button')">You Provide</button>
+            <button id="@role.Id-button-YouProvideWithHelp" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-YouProvideWithHelp');clickTab('@role.Id-button-YouProvideWithHelp','tabs--content--options-button')">You Provide with Help</button>
+            <button id="@role.Id-button-TrustedParty" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-TrustedParty');clickTab('@role.Id-button-TrustedParty','tabs--content--options-button')">Trusted party</button>
+            <button id="@role.Id-button-DLT" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-DLT');clickTab('@role.Id-button-DLT','tabs--content--options-button')">DLT</button>
+        </div>
+
+        @foreach (var option in options.Where(x => x.RoleId == role.Id))
+        {
+            <div id="@role.Id-@option.Name" class="tabs--content--options-content">
+                <form asp-action="EditOption">
+                    <input type="hidden" name="roleId" value="@role.Id"/>
+                    <input type="hidden" name="optionName" value="@option.Name"/>
+                    <div>
+                        <label class="control-label">Cost of start up</label>
+                        <input class="form-control" type="number" value="@option.CostOfStartUp" name="costStartup"/>
+                    </div>
+                    <div>
+                        <label class="control-label">Cost of maintenance</label>
+                        <input class="form-control" type="number" value="@option.CostOfMaintenance" name="costMaintenance"/>
+                    </div>
+                    <div>
+                        <label class="control-label">Transport cost one trip</label>
+                        <input class="form-control" type="number" value="@option.TransportCostOneTrip" name="transportOneTrip"/>
+                    </div>
+                    <div>
+                        <label class="control-label">Transport cost per day</label>
+                        <input class="form-control" type="number" value="@option.TransportCostPerDay" name="transportPerDay"/>
+                    </div>
+                    <div>
+                        <label class="control-label">leadtime</label>
+                        <input class="form-control" type="number" value="@option.LeadTime" name="leadTime"/>
+                    </div>
+                    <div>
+                        <label class="control-label">flexibility</label>
+                        <input class="form-control" type="number" value="@option.Flexibility" name="flexibility"/>
+                    </div>
+                    <div>
+                        <label class="control-label">Guaranteed capacity penalty</label>
+                        <input class="form-control" type="number" value="@option.GuaranteedCapacityPenalty" name="penalty"/>
+                    </div>
+                    <input type="submit" value="Save" class="btn btn-primary"/>
+                </form>
+            </div>
+        }
+
+    </div>
+}
+
+@section Scripts
+{
+    <script>
+    
+    function openTab(tabName) {      
+      // Get all elements with class="tabcontent" and hide them
+      let tabs = $(".tabs--content")
+      
+      tabs.css('display', 'none')
+    
+      // Get all elements with class="tablinks" and remove the class "active"
+      tabs.removeClass('active')
+    
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      let selectedTab = $(`#${tabName}`)
+      selectedTab.css('display', 'block');
+      selectedTab.addClass('active');
+    }
+    
+    function openOptionsTab(tabName) {      
+      // Get all elements with class="tabcontent" and hide them
+      let tabs = $(".tabs--content--options-content")
+      
+      tabs.css('display', 'none')
+      
+      // Get all elements with class="tablinks" and remove the class "active"
+      tabs.removeClass('active')
+    
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      let selectedTab = $(`#${tabName}`)
+      selectedTab.css('display', 'block');
+      selectedTab.addClass('active');
+    }
+        
+    function clickTab(buttonId, tabClass){
+        $(`.${tabClass}`).css('background-color', '#f1f1f1')
+        $(`#${buttonId}`).css('background-color', '#5ca1ec')
+    }
+    </script>
+}

@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "BeerGame";
     int currentDay = (int) ViewData["CurrentDay"];
-    string gameId = (string)ViewData["GameId"];
+    string gameId = (string) ViewData["GameId"];
 }
 
 
@@ -14,7 +14,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Blockchain Demonstrator</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css"/>
     <link rel="stylesheet" href="~/css/StyleSheet.css">
 </head>
 <body>
@@ -58,7 +58,31 @@
                             <tbody>
                                 @foreach (var order in Model.OutgoingOrders)
                                 {
-                    @foreach (var delivery in order.Deliveries)
+                                    <tr>
+                                        <td class="order-history">@delivery.Volume</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                        </tbody>
+                    </table>
+                    <div>
+                        <b>inventory:</b> @Model.Inventory
+                    </div>
+                </article>
+
+                <article class="name-article ui-item">
+                    <div>@Model.Name</div>
+                    <div>@Model.Role.Id</div>
+                    <div>day: @ViewData["CurrentDay"]</div>
+                    <div name="balance">
+                        <b>Balance:</b> @Math.Round(Model.Balance, 2)
+                    </div>
+                </article>
+
+
+                <article class="backorder-article ui-item">
+                    @foreach (var order in Model.IncomingOrders)
                     {
                 @if (delivery.ArrivalDay <= currentDay && delivery.ArrivalDay > currentDay - Factors.RoundIncrement)
                 {
@@ -80,7 +104,6 @@
                             <b>Balance:</b> @Math.Round(Model.Balance, 2)
                         </div>
                     </article>
-
 
                     <article class="backorder-article ui-item">
                         @foreach (var order in Model.IncomingOrders)
@@ -104,25 +127,22 @@
                         <table id="orderHistory-@Model.Role.Id" class="order-history">
                             <thead>
                                 <tr>
-                                    <th>Order number</th>
-                                    <th>Volume</th>
+                                    <td class="order-history">@order.OrderNumber</td>
+                                    <td class="order-history">@order.Volume</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OutgoingOrders)
-                                {
-                    @if (order.OrderDay > 1)
-                    {
-                <tr>
-                    <td class="order-history">@order.OrderNumber</td>
-                    <td class="order-history">@order.Volume</td>
-                </tr>}}
-                            </tbody>
-                        </table>
-                    </article>
+                            }
+                        }
+                        </tbody>
+                    </table>
+                </article>
 
 
-
+                <article class="input-article ui-item">
+                    <form>
+                        <input type="text" placeholder="Order volume">
+                        <button type="submit">Place order</button>
+                    </form>
+                </article>
 
                     <article class="input-article ui-item">
                         <input id="place-order-text" type="text" placeholder="Order volume">
@@ -133,11 +153,11 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 
 
-
-    @section Scripts
+@section Scripts
 {
         <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
         <script src="~/js/BeerGame.js"></script>
@@ -152,4 +172,4 @@
                 $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
             })
         </script>
-    }
+}

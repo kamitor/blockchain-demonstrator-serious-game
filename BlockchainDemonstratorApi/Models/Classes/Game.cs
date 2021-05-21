@@ -140,18 +140,18 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <remarks>Only needs to be used at the start of each game</remarks>
         private void SetSetupOrders() //Reworked to new order system
         {
-            Order orderC = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetUpOrderVolume };
+            Order orderC = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume };
             Retailer.IncomingOrders.Add(orderC);
 
-            Order orderR = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetUpOrderVolume };
+            Order orderR = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume };
             Retailer.OutgoingOrders.Add(orderR);
             Manufacturer.IncomingOrders.Add(orderR);
 
-            Order orderM = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetUpOrderVolume };
+            Order orderM = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume };
             Manufacturer.OutgoingOrders.Add(orderM);
             Processor.IncomingOrders.Add(orderM);
 
-            Order orderP = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetUpOrderVolume };
+            Order orderP = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume };
             Processor.OutgoingOrders.Add(orderP);
             Farmer.IncomingOrders.Add(orderP);
         }
@@ -164,51 +164,51 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             for (int i = 0; i < (int)Math.Ceiling(Manufacturer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
             {
-                Order order = new Order() { Volume = Factors.SetUpDeliveryVolume };
+                Order order = new Order() { Volume = Factors.SetupDeliveryVolume };
                 order.Deliveries.Add(new Delivery() {
-                    Volume = Factors.SetUpDeliveryVolume, 
+                    Volume = Factors.SetupDeliveryVolume, 
                     SendDeliveryDay = Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Manufacturer.Role.LeadTime)), 
                     ArrivalDay = Factors.RoundIncrement * i + 1, 
-                    Price = Factors.ManuProductPrice * Factors.SetUpDeliveryVolume
+                    Price = Factors.ManuProductPrice * Factors.SetupDeliveryVolume
                 });
                 Retailer.OutgoingOrders.Add(order);
             }
 
             for (int i = 0; i < (int)Math.Ceiling(Processor.Role.LeadTime / (double)Factors.RoundIncrement); i++)
             {
-                Order order = new Order() { Volume = Factors.SetUpDeliveryVolume };
+                Order order = new Order() { Volume = Factors.SetupDeliveryVolume };
                 order.Deliveries.Add(new Delivery()
                 {
-                    Volume = Factors.SetUpDeliveryVolume,
+                    Volume = Factors.SetupDeliveryVolume,
                     SendDeliveryDay = Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Processor.Role.LeadTime)),
                     ArrivalDay = Factors.RoundIncrement * i + 1,
-                    Price = Factors.ProcProductPrice * Factors.SetUpDeliveryVolume
+                    Price = Factors.ProcProductPrice * Factors.SetupDeliveryVolume
                 });
                 Manufacturer.OutgoingOrders.Add(order);
             }
 
             for (int i = 0; i < (int)Math.Ceiling(Farmer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
             {
-                Order order = new Order() { Volume = Factors.SetUpDeliveryVolume };
+                Order order = new Order() { Volume = Factors.SetupDeliveryVolume };
                 order.Deliveries.Add(new Delivery()
                 {
-                    Volume = Factors.SetUpDeliveryVolume,
+                    Volume = Factors.SetupDeliveryVolume,
                     SendDeliveryDay = Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Farmer.Role.LeadTime)),
                     ArrivalDay = Factors.RoundIncrement * i + 1,
-                    Price = Factors.FarmerProductPrice * Factors.SetUpDeliveryVolume
+                    Price = Factors.FarmerProductPrice * Factors.SetupDeliveryVolume
                 });
                 Processor.OutgoingOrders.Add(order);
             }
 
             for (int i = 0; i < (int)Math.Ceiling(1 / (double)Factors.RoundIncrement); i++)
             {
-                Order order = new Order() { Volume = Factors.SetUpDeliveryVolume };
+                Order order = new Order() { Volume = Factors.SetupDeliveryVolume };
                 order.Deliveries.Add(new Delivery()
                 {
-                    Volume = Factors.SetUpDeliveryVolume,
+                    Volume = Factors.SetupDeliveryVolume,
                     SendDeliveryDay = Factors.RoundIncrement * i,
                     ArrivalDay = Factors.RoundIncrement * i + 1,
-                    Price = Factors.HarvesterProductPrice * Factors.SetUpDeliveryVolume
+                    Price = Factors.HarvesterProductPrice * Factors.SetupDeliveryVolume
                 });
                 Farmer.OutgoingOrders.Add(order);
             }
