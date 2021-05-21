@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using BlockchainDemonstratorApi.Data;
 using BlockchainDemonstratorApi.Hubs;
 using BlockchainDemonstratorApi.Models.Classes;
+using Newtonsoft.Json.Serialization;
 
 namespace BlockchainDemonstratorApi
 {
@@ -32,8 +33,11 @@ namespace BlockchainDemonstratorApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson(options => 
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            });
 
             services.AddDbContext<BeerGameContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("BeerGameContext")));

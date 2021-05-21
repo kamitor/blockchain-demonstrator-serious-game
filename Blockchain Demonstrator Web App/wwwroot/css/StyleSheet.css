@@ -42,21 +42,22 @@ ul {
     min-width: 300px;
 }
 
-.company-info h3, .company-info ul {
-    text-align: center;
-    margin: 0 0 1rem 0;
-}
+    .company-info h3, .company-info ul {
+        text-align: center;
+        margin: 0 0 1rem 0;
+    }
 
 .contact {
     background: #f9feff;
 }
 
-/* FORM STYLES */
-.contact form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
-}
+    /* FORM STYLES */
+    .contact form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+        justify-items: stretch;
+    }
 
 .contact form label {
     display: block;
