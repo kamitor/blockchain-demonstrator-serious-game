@@ -11,16 +11,15 @@
 
 <h1>Game tuning</h1>
 
-
 <div class="tabs">
-    <button class="tabs--button" onclick="openTab('factors')">Factors</button>
-    <button class="tabs--button" onclick="openTab('retailer')">Retailer</button>
-    <button class="tabs--button" onclick="openTab('manufacturer')">Manufacturer</button>
-    <button class="tabs--button" onclick="openTab('processor')">Processor</button>
-    <button class="tabs--button" onclick="openTab('farmer')">Farmer</button>
+    <button id="Factors-button" class="tabs--button" onclick="openTab('Factors');clickTab('Factors-button','tabs--button')">Factors</button>
+    <button id="Retailer-button" class="tabs--button" onclick="openTab('Retailer');clickTab('Retailer-button','tabs--button')">Retailer</button>
+    <button id="Manufacturer-button" class="tabs--button" onclick="openTab('Manufacturer');clickTab('Manufacturer-button','tabs--button')">Manufacturer</button>
+    <button id="Processor-button" class="tabs--button" onclick="openTab('Processor');clickTab('Processor-button','tabs--button')">Processor</button>
+    <button id="Farmer-button" class="tabs--button" onclick="openTab('Farmer');clickTab('Farmer-button','tabs--button')">Farmer</button>
 </div>
 
-<div id="factors" class="tabs--content">
+<div id="Factors" class="tabs--content">
     <h4>Factors</h4>
     <hr/>
     <div class="row">
@@ -100,260 +99,70 @@
         </div>
     </div>
 </div>
-
-<div id="retailer" class="tabs--content">
-    <h4>Retailer</h4>
-    <hr/>
-    <div class="tabs">
-        <button class="tabs--content--options-button" onclick="openOptionsTab('retailerBasic')">Basic</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('retailerYouProvide')">You Provide</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('retailerYouProvideWithHelp')">You Provide with Help</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('retailerTrustedParty')">Trusted party</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('retailerDlt')">DLT</button>
-    </div>
-
-    <div id="retailerBasic" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "Basic").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "Basic").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "Basic").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "Basic").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "Basic").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "Basic").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "Basic").GuaranteedCapacityPenalty</p>
-    </div>
-    <div id="retailerYouProvide" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvide").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvide").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvide").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvide").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvide").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvide").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvide").GuaranteedCapacityPenalty</p>
-    </div>
-    <div id="retailerYouProvideWithHelp" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvideWithHelp").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvideWithHelp").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvideWithHelp").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvideWithHelp").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvideWithHelp").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvideWithHelp").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "YouProvideWithHelp").GuaranteedCapacityPenalty</p>
-    </div>
-    <div id="retailerTrustedParty" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "TrustedParty").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "TrustedParty").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "TrustedParty").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "TrustedParty").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "TrustedParty").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "TrustedParty").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "TrustedParty").GuaranteedCapacityPenalty</p>
-    </div>
-
-    <div id="retailerDlt" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "DLT").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "DLT").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "DLT").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "DLT").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "DLT").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "DLT").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Retailer" && x.Name == "DLT").GuaranteedCapacityPenalty</p>
-    </div>
-
-</div>
-
-<div id="manufacturer" class="tabs--content">
-    <h4>Manufacturer</h4>
-    <hr/>
-    <div class="tabs">
-        <button class="tabs--content--options-button" onclick="openOptionsTab('manufacturerBasic')">Basic</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('manufacturerYouProvide')">You Provide</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('manufacturerYouProvideWithHelp')">You Provide with Help</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('manufacturerTrustedParty')">Trusted party</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('manufacturerDlt')">DLT</button>
-    </div>
-
-    <div id="manufacturerBasic" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "Basic").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "Basic").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "Basic").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "Basic").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "Basic").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "Basic").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "Basic").GuaranteedCapacityPenalty</p>
-    </div>
-    <div id="manufacturerYouProvide" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvide").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvide").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvide").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvide").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvide").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvide").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvide").GuaranteedCapacityPenalty</p>
-    </div>
-    <div id="manufacturerYouProvideWithHelp" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvideWithHelp").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvideWithHelp").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvideWithHelp").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvideWithHelp").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvideWithHelp").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvideWithHelp").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "YouProvideWithHelp").GuaranteedCapacityPenalty</p>
-    </div>
-    <div id="manufacturerTrustedParty" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "TrustedParty").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "TrustedParty").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "TrustedParty").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "TrustedParty").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "TrustedParty").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "TrustedParty").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "TrustedParty").GuaranteedCapacityPenalty</p>
-    </div>
-
-    <div id="manufacturerDlt" class="tabs--content--options-content">
-        <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "DLT").CostOfStartUp</p>
-        <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "DLT").CostOfMaintenance</p>
-        <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "DLT").TransportCostOneTrip</p>
-        <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "DLT").TransportCostPerDay</p>
-        <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "DLT").LeadTime</p>
-        <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "DLT").Flexibility</p>
-        <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Manufacturer" && x.Name == "DLT").GuaranteedCapacityPenalty</p>
-    </div>
-</div>
-
-<div id="processor" class="tabs--content">
-    <h4>Processor</h4>
-    <hr/>
-    <div class="tabs">
-        <button class="tabs--content--options-button" onclick="openOptionsTab('processorBasic')">Basic</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('processorYouProvide')">You Provide</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('processorYouProvideWithHelp')">You Provide with Help</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('processorTrustedParty')">Trusted party</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('processorDlt')">DLT</button>
-    </div>
-
-    <div id="processorBasic" class="tabs--content--options-content">
-            <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "Basic").CostOfStartUp</p>
-            <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "Basic").CostOfMaintenance</p>
-            <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "Basic").TransportCostOneTrip</p>
-            <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "Basic").TransportCostPerDay</p>
-            <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "Basic").LeadTime</p>
-            <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "Basic").Flexibility</p>
-            <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "Basic").GuaranteedCapacityPenalty</p>
+@foreach (var role in roles)
+{
+    <div id="@role.Id" class="tabs--content">
+        <h4>@role.Id</h4>
+        <hr/>
+        <div class="tabs">
+            <button id="@role.Id-button-Basic" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-Basic');clickTab('@role.Id-button-Basic','tabs--content--options-button')">Basic</button>
+            <button id="@role.Id-button-YouProvide" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-YouProvide');clickTab('@role.Id-button-YouProvide','tabs--content--options-button')">You Provide</button>
+            <button id="@role.Id-button-YouProvideWithHelp" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-YouProvideWithHelp');clickTab('@role.Id-button-YouProvideWithHelp','tabs--content--options-button')">You Provide with Help</button>
+            <button id="@role.Id-button-TrustedParty" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-TrustedParty');clickTab('@role.Id-button-TrustedParty','tabs--content--options-button')">Trusted party</button>
+            <button id="@role.Id-button-DLT" class="tabs--content--options-button" onclick="openOptionsTab('@role.Id-DLT');clickTab('@role.Id-button-DLT','tabs--content--options-button')">DLT</button>
         </div>
-        <div id="processorYouProvide" class="tabs--content--options-content">
-            <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvide").CostOfStartUp</p>
-            <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvide").CostOfMaintenance</p>
-            <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvide").TransportCostOneTrip</p>
-            <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvide").TransportCostPerDay</p>
-            <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvide").LeadTime</p>
-            <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvide").Flexibility</p>
-            <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvide").GuaranteedCapacityPenalty</p>
-        </div>
-        <div id="processorYouProvideWithHelp" class="tabs--content--options-content">
-            <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvideWithHelp").CostOfStartUp</p>
-            <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvideWithHelp").CostOfMaintenance</p>
-            <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvideWithHelp").TransportCostOneTrip</p>
-            <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvideWithHelp").TransportCostPerDay</p>
-            <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvideWithHelp").LeadTime</p>
-            <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvideWithHelp").Flexibility</p>
-            <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "YouProvideWithHelp").GuaranteedCapacityPenalty</p>
-        </div>
-        <div id="processorTrustedParty" class="tabs--content--options-content">
-            <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "TrustedParty").CostOfStartUp</p>
-            <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "TrustedParty").CostOfMaintenance</p>
-            <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "TrustedParty").TransportCostOneTrip</p>
-            <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "TrustedParty").TransportCostPerDay</p>
-            <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "TrustedParty").LeadTime</p>
-            <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "TrustedParty").Flexibility</p>
-            <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "TrustedParty").GuaranteedCapacityPenalty</p>
-        </div>
-    
-        <div id="processorDlt" class="tabs--content--options-content">
-            <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "DLT").CostOfStartUp</p>
-            <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "DLT").CostOfMaintenance</p>
-            <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "DLT").TransportCostOneTrip</p>
-            <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "DLT").TransportCostPerDay</p>
-            <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "DLT").LeadTime</p>
-            <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "DLT").Flexibility</p>
-            <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Processor" && x.Name == "DLT").GuaranteedCapacityPenalty</p>
-        </div>
-</div>
 
-<div id="farmer" class="tabs--content">
-    <h4>Farmer</h4>
-    <hr/>
-    <div class="tabs">
-        <button class="tabs--content--options-button" onclick="openOptionsTab('farmerBasic')">Basic</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('farmerYouProvide')">You Provide</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('farmerYouProvideWithHelp')">You Provide with Help</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('farmerTrustedParty')">Trusted party</button>
-        <button class="tabs--content--options-button" onclick="openOptionsTab('farmerDlt')">DLT</button>
+        @foreach (var option in options.Where(x => x.RoleId == role.Id))
+        {
+            <div id="@role.Id-@option.Name" class="tabs--content--options-content">
+                <form asp-action="EditOption">
+                    <input type="hidden" name="roleId" value="@role.Id"/>
+                    <input type="hidden" name="optionName" value="@option.Name"/>
+                    <div>
+                        <label class="control-label">Cost of start up</label>
+                        <input class="form-control" type="number" value="@option.CostOfStartUp" name="costStartup"/>
+                    </div>
+                    <div>
+                        <label class="control-label">Cost of maintenance</label>
+                        <input class="form-control" type="number" value="@option.CostOfMaintenance" name="costMaintenance"/>
+                    </div>
+                    <div>
+                        <label class="control-label">Transport cost one trip</label>
+                        <input class="form-control" type="number" value="@option.TransportCostOneTrip" name="transportOneTrip"/>
+                    </div>
+                    <div>
+                        <label class="control-label">Transport cost per day</label>
+                        <input class="form-control" type="number" value="@option.TransportCostPerDay" name="transportPerDay"/>
+                    </div>
+                    <div>
+                        <label class="control-label">leadtime</label>
+                        <input class="form-control" type="number" value="@option.LeadTime" name="leadTime"/>
+                    </div>
+                    <div>
+                        <label class="control-label">flexibility</label>
+                        <input class="form-control" type="number" value="@option.Flexibility" name="flexibility"/>
+                    </div>
+                    <div>
+                        <label class="control-label">Guaranteed capacity penalty</label>
+                        <input class="form-control" type="number" value="@option.GuaranteedCapacityPenalty" name="penalty"/>
+                    </div>
+                    <input type="submit" value="Save" class="btn btn-primary"/>
+                </form>
+            </div>
+        }
+
     </div>
-
-   <div id="farmerBasic" class="tabs--content--options-content">
-           <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "Basic").CostOfStartUp</p>
-           <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "Basic").CostOfMaintenance</p>
-           <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "Basic").TransportCostOneTrip</p>
-           <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "Basic").TransportCostPerDay</p>
-           <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "Basic").LeadTime</p>
-           <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "Basic").Flexibility</p>
-           <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "Basic").GuaranteedCapacityPenalty</p>
-       </div>
-       <div id="farmerYouProvide" class="tabs--content--options-content">
-           <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvide").CostOfStartUp</p>
-           <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvide").CostOfMaintenance</p>
-           <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvide").TransportCostOneTrip</p>
-           <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvide").TransportCostPerDay</p>
-           <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvide").LeadTime</p>
-           <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvide").Flexibility</p>
-           <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvide").GuaranteedCapacityPenalty</p>
-       </div>
-       <div id="farmerYouProvideWithHelp" class="tabs--content--options-content">
-           <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvideWithHelp").CostOfStartUp</p>
-           <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvideWithHelp").CostOfMaintenance</p>
-           <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvideWithHelp").TransportCostOneTrip</p>
-           <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvideWithHelp").TransportCostPerDay</p>
-           <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvideWithHelp").LeadTime</p>
-           <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvideWithHelp").Flexibility</p>
-           <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "YouProvideWithHelp").GuaranteedCapacityPenalty</p>
-       </div>
-       <div id="farmerTrustedParty" class="tabs--content--options-content">
-           <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "TrustedParty").CostOfStartUp</p>
-           <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "TrustedParty").CostOfMaintenance</p>
-           <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "TrustedParty").TransportCostOneTrip</p>
-           <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "TrustedParty").TransportCostPerDay</p>
-           <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "TrustedParty").LeadTime</p>
-           <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "TrustedParty").Flexibility</p>
-           <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "TrustedParty").GuaranteedCapacityPenalty</p>
-       </div>
-   
-       <div id="farmerDlt" class="tabs--content--options-content">
-           <p>Cost of startup: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "DLT").CostOfStartUp</p>
-           <p>Cost of maintenance: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "DLT").CostOfMaintenance</p>
-           <p>Transport one trip: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "DLT").TransportCostOneTrip</p>
-           <p>transport cost per day: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "DLT").TransportCostPerDay</p>
-           <p>leadtime: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "DLT").LeadTime</p>
-           <p>flexibility: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "DLT").Flexibility</p>
-           <p>Guaranteed capacity penalty: @options.FirstOrDefault(x => x.RoleId == "Farmer" && x.Name == "DLT").GuaranteedCapacityPenalty</p>
-       </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+}
 
 @section Scripts
 {
     <script>
-    
-    
     
     function openTab(tabName) {      
       // Get all elements with class="tabcontent" and hide them
       let tabs = $(".tabs--content")
       
       tabs.css('display', 'none')
-      
     
       // Get all elements with class="tablinks" and remove the class "active"
       tabs.removeClass('active')
@@ -365,19 +174,23 @@
     }
     
     function openOptionsTab(tabName) {      
-          // Get all elements with class="tabcontent" and hide them
-          let tabs = $(".tabs--content--options-content")
-          
-          tabs.css('display', 'none')
-          
+      // Get all elements with class="tabcontent" and hide them
+      let tabs = $(".tabs--content--options-content")
+      
+      tabs.css('display', 'none')
+      
+      // Get all elements with class="tablinks" and remove the class "active"
+      tabs.removeClass('active')
+    
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      let selectedTab = $(`#${tabName}`)
+      selectedTab.css('display', 'block');
+      selectedTab.addClass('active');
+    }
         
-          // Get all elements with class="tablinks" and remove the class "active"
-          tabs.removeClass('active')
-        
-          // Show the current tab, and add an "active" class to the button that opened the tab
-          let selectedTab = $(`#${tabName}`)
-          selectedTab.css('display', 'block');
-          selectedTab.addClass('active');
-        }
+    function clickTab(buttonId, tabClass){
+        $(`.${tabClass}`).css('background-color', '#f1f1f1')
+        $(`#${buttonId}`).css('background-color', '#5ca1ec')
+    }
     </script>
 }
