@@ -75,7 +75,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Option dlt = new Option("DLT", 30000, 350, 1484, 1448,1.025, 200, 600 );
             
             Option basic = new Option("Basic", 75000, 3500, 1855, 1086, 1.708333, 0, 750);
-            Role retailer = new Role("Retailer", 1.7083333, Product.Beer, Factors.RetailProductPrice);
+            Role retailer = new Role("Retailer", 1.7083333, Product.Beer);
 
             retailer.Options.Add(youProvide);
             retailer.Options.Add(youProvideWithHelp);
@@ -101,7 +101,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Option dlt = new Option("DLT", 30000, 1750, 568, 688, 0.825, 500, 750);
             
             Option basic = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
-            Role manufacturer = new Role("Manufacturer", 1.375, Product.Packs, Factors.ManuProductPrice);
+            Role manufacturer = new Role("Manufacturer", 1.375, Product.Packs);
 
             manufacturer.Options.Add(youProvide);
             manufacturer.Options.Add(youProvideWithHelp);
@@ -127,7 +127,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Option dlt = new Option("DLT", 100000, 3500, 1000, 99, 10.09, 250, 525);
             
             Option basic = new Option("Basic", 75000, 3500, 1250, 73, 17.16667, 0, 750);
-            Role processor = new Role("Processor", 17.166667, Product.Barley, Factors.ProcProductPrice);
+            Role processor = new Role("Processor", 17.166667, Product.Barley);
 
             processor.Options.Add(youProvide);
             processor.Options.Add(youProvideWithHelp);
@@ -153,7 +153,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Option dlt = new Option("DLT", 80000, 3500, 3160, 236, 13.4, 200, 600);
             
             Option basic = new Option("Basic", 75000, 3500, 3950, 177, 22.333333, 0, 750);
-            Role farmer = new Role("Farmer", 22.333333, Product.Seeds, Factors.FarmerProductPrice);
+            Role farmer = new Role("Farmer", 22.333333, Product.Seeds);
 
             farmer.Options.Add(youProvide);
             farmer.Options.Add(youProvideWithHelp);
