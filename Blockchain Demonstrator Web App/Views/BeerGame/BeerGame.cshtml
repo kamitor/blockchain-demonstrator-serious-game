@@ -1,11 +1,11 @@
 ﻿@using BlockchainDemonstratorApi.Models.Classes
 @model BlockchainDemonstratorApi.Models.Classes.Player
 
-@{
-    ViewData["Title"] = "BeerGame";
-    int currentDay = (int) ViewData["CurrentDay"];
+@{ ViewData["Title"] = "BeerGame";
+    int currentDay = (int)ViewData["CurrentDay"];
     string gameId = (string)ViewData["GameId"];
-}
+    Payment lastPayment = null;
+    string style = ""; }
 
 
 <head>
@@ -22,113 +22,164 @@
         <h1 class="brand">The <span>Blockchain </span>Game</h1>
         <div class="wrapper animated bounceInLeft">
             <div class="company-info">
-                <h3>Your warehous status</h3>
-                <ul>
-                    <li> will be implemented later</li>
-                    <li>            </li>
-                    <li>            </li>
-                    <li>            </li>
-                    <li>            </li>
-
-                </ul>
-
-                <h3>Your Custome Orders</h3>
-                <ul>
-                    <li> will be implemented later</li>
-                    <li>            </li>
-                    <li>            </li>
-                    <li>            </li>
-                    <li>            </li>
-                </ul>
+                <h3 id="name-@Model.Role.Id">Name: @Model.Name</h3>
+                <h3 id="role-@Model.Role.Id">Role: @Model.Role.Id</h3>
+                <h3 id="balance-@Model.Role.Id">Balance: @Math.Round(Model.Balance, 2)</h3>
+                <h3 id="profit-@Model.Role.Id">Profit: @Math.Round(Model.Profit, 2)</h3>
+                <h3 id="inventory-@Model.Role.Id">Inventory: @Model.Inventory</h3>
+                <h3 id="backorder-@Model.Role.Id">Backorder: @Model.Backorder</h3>
             </div>
             <div class="contact">
-                <div>@Model.Name</div>
                 <form>
-
-                    <article class="inventory-article ui-item">
-                        <div>
-                            <b>incoming delivery</b>
-                        </div>
-                        <table id="incomingDeliveries-@Model.Role.Id" class="order-history">
-                            <thead>
-                                <tr>
-                                    <th>Volume</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var order in Model.OutgoingOrders)
-                                {
-                    @foreach (var delivery in order.Deliveries)
-                    {
-                @if (delivery.ArrivalDay <= currentDay && delivery.ArrivalDay > currentDay - Factors.RoundIncrement)
-                {
-                <tr>
-                    <td class="order-history">@delivery.Volume</td>
-                </tr>}}}
-                            </tbody>
-                        </table>
-                        <div id="inventory-@Model.Role.Id">
-                            <b>inventory:</b> @Model.Inventory
-                        </div>
-                    </article>
-
-                    <article class="name-article ui-item">
-                        <div>@Model.Name</div>
-                        <div>@Model.Role.Id</div>
-                        <div id="currentDay">day: @ViewData["CurrentDay"]</div>
-                        <div id="balance-@Model.Role.Id">
-                            <b>Balance:</b> @Math.Round(Model.Balance, 2)
-                        </div>
-                    </article>
-
-
-                    <article class="backorder-article ui-item">
-                        @foreach (var order in Model.IncomingOrders)
-                        {
-                @if (order.OrderDay == (int)ViewData["CurrentDay"] - Factors.RoundIncrement)
-                {
-                <div id="incomingOrder-@Model.Role.Id">
-                    <b>Incoming order:</b> @order.Volume
-                </div>}}
-                        <div id="backorder-@Model.Role.Id">
-                            <b>backorder:</b> @Model.Backorder
-                        </div>
-                    </article>
-
-
-
-                    <article class="order-history-article ui-item">
-                        <div>
-                            <b>Order History</b>
-                        </div>
-                        <table id="orderHistory-@Model.Role.Id" class="order-history">
+                    <div class="tab">
+                        <input id="place-order-text" type="text" placeholder="Enter volume">
+                        <button id="place-order-button" type="button">Place order</button>
+                    </div>
+                    <div class="tab">
+                        <h3>Incoming order</h3>
+                        <table>
                             <thead>
                                 <tr>
                                     <th>Order number</th>
+                                    <th>Order day</th>
                                     <th>Volume</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OutgoingOrders)
+                            <tbody id="incomingOrders-@Model.Role.Id">
+                                @foreach (var order in Model.IncomingOrders)
                                 {
-                    @if (order.OrderDay > 1)
+                    @if (order.OrderDay == currentDay - Factors.RoundIncrement)
                     {
                 <tr>
-                    <td class="order-history">@order.OrderNumber</td>
-                    <td class="order-history">@order.Volume</td>
+                    <td>@order.OrderNumber</td>
+                    <td>@order.OrderDay</td>
+                    <td>@order.Volume</td>
                 </tr>}}
                             </tbody>
                         </table>
-                    </article>
+                    </div>
+                    <div class="tab">
+                        <h3>Order history:</h3>
+                        <div class="table-scroll">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Order number</th>
+                                        <th>Volume</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderHistory-@Model.Role.Id">
+                                    @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OutgoingOrders)
+                                    {
+                        @if (order.OrderDay >= 1)
+                        {
+                <tr>
+                    <td>@order.OrderNumber</td>
+                    <td>@order.Volume</td>
+                </tr>}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab">
+                        <h3>Incoming deliveries</h3>
+                        <div class="table-scroll">
+                            <table name="incomingDeliveries">
+                                <thead>
+                                    <tr>
+                                        <th>Order number</th>
+                                        <th>Order day</th>
+                                        <th>Volume</th>
+                                        <th>Deliveries</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="incomingDeliveries-@Model.Role.Id">
+                                    @foreach (var order in Model.OutgoingOrders)
+                                    {
+                                        if (order.Deliveries.Any(d => d.ArrivalDay <= currentDay && d.ArrivalDay > currentDay - Factors.RoundIncrement))
+                                        {
+                        <tr>
+                            <td>@order.OrderNumber</td>
+                            <td>@order.OrderDay</td>
+                            <td>@order.Volume</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Volume</th>
+                                            <th>Send day</th>
+                                            <th>Arrival day</th>
+                                            <th>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var delivery in order.Deliveries.OrderBy(d => d.ArrivalDay))
+                                        {
+                    @if (delivery.ArrivalDay <= currentDay && delivery.ArrivalDay > currentDay - Factors.RoundIncrement)
+                    {
+                <tr style="        background-color: #f5fac5;">
+                    <td>@delivery.Volume</td>
+                    <td>@delivery.SendDeliveryDay</td>
+                    <td>@Math.Round(delivery.ArrivalDay, 2)</td>
+                    <td>@delivery.Price</td>
+                </tr> }
+                                        else
+                                        {
+                <tr>
+                    <td>@delivery.Volume</td>
+                    <td>@delivery.SendDeliveryDay</td>
+                    <td>@Math.Round(delivery.ArrivalDay, 2)</td>
+                    <td>@delivery.Price</td>
+                </tr>}}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>}
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
+                    @*<div class="tab">
+                                <h3>Payments:</h3>
+                                <div class="table-scroll">
+                                    <table name="payments">
+                                        <thead>
+                                            <tr>
+                                                <th>Topic</th>
+                                                <th>Amount</th>
+                                                <th>Due day</th>
+                                                <th>From player</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="payments-@Model.Role.Id">
+                                            @foreach (Payment payment in Model.Payments)
+                                            {
+                                                if ((int)payment.DueDay <= currentDay && (int)payment.DueDay > currentDay - Factors.RoundIncrement) style += "background-color:#f5fac5;"; //TODO: Ask Janka about this?
 
+                                                if (lastPayment != null && Math.Ceiling(payment.DueDay / Factors.RoundIncrement + 1 - (1 / (double)Factors.RoundIncrement)) > Math.Ceiling(lastPayment.DueDay / Factors.RoundIncrement + 1 - (1 / (double)Factors.RoundIncrement))) style += "border-top: 2px solid grey;";
 
-
-                    <article class="input-article ui-item">
-                        <input id="place-order-text" type="text" placeholder="Order volume">
-                        <button id="place-order-button" type="button">Place order</button>
-                    </article>
-
+                                <tr style="@style">
+                                    <td>@payment.Topic</td>
+                                    @if (payment.Amount >= 0)
+                                    {
+                    <td style="color:green">@payment.Amount</td>
+         }
+                else
+                {
+        <td style="color:red">@payment.Amount</td>
+        }
+                                    <td>@Math.Round(payment.DueDay, 2)</td>
+                                    <td>@payment.FromPlayer</td>
+                                </tr>
+        lastPayment = payment;
+                                style = "";
+                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>*@
                 </form>
             </div>
         </div>
@@ -137,11 +188,11 @@
 
 
 
-    @section Scripts
+@section Scripts
 {
-        <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
-        <script src="~/js/BeerGame.js"></script>
-        <script>
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/BeerGame.js"></script>
+    <script>
             function getCookie(name) {
                 const value = `; ${document.cookie}`;
                 const parts = value.split(`; ${name}=`);
@@ -151,5 +202,5 @@
                 BeerGame.init("@gameId", "@Model.Id");
                 $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
             })
-        </script>
-    }
+    </script>
+}

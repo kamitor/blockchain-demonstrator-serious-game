@@ -53,31 +53,31 @@ const BeerGame = (() => {
     }
 
     const updateGameTuningBalance = (game) => {
-        $("#balance-Retailer").text("Balance: " + game.retailer.balance);
-        $("#balance-Manufacturer").text("Balance: " + game.manufacturer.balance);
-        $("#balance-Processor").text("Balance: " + game.processor.balance);
-        $("#balance-Farmer").text("Balance: " + game.farmer.balance);
+        $("#balance-Retailer").text("Balance: " + game.Retailer.Balance);
+        $("#balance-Manufacturer").text("Balance: " + game.Manufacturer.Balance);
+        $("#balance-Processor").text("Balance: " + game.Processor.Balance);
+        $("#balance-Farmer").text("Balance: " + game.Farmer.Balance);
     }
 
     const updateGameTuningProfit = (game) => {
-        $("#profit-Retailer").text("Profit: " + game.retailer.profit)
-        $("#profit-Manufacturer").text("Profit: " + game.manufacturer.profit)
-        $("#profit-Processor").text("Profit: " + game.processor.profit)
-        $("#profit-Farmer").text("Profit: " + game.farmer.profit)
+        $("#profit-Retailer").text("Profit: " + game.Retailer.Profit)
+        $("#profit-Manufacturer").text("Profit: " + game.Manufacturer.Profit)
+        $("#profit-Processor").text("Profit: " + game.Processor.Profit)
+        $("#profit-Farmer").text("Profit: " + game.Farmer.Profit)
     }
 
     const updateGameTuningInventory = (game) => {
-        $("#inventory-Retailer").text("Inventory: " + game.retailer.inventory)
-        $("#inventory-Manufacturer").text("Inventory: " + game.manufacturer.inventory)
-        $("#inventory-Processor").text("Inventory: " + game.processor.inventory)
-        $("#inventory-Farmer").text("Inventory: " + game.farmer.inventory)
+        $("#inventory-Retailer").text("Inventory: " + game.Retailer.Inventory)
+        $("#inventory-Manufacturer").text("Inventory: " + game.Manufacturer.Inventory)
+        $("#inventory-Processor").text("Inventory: " + game.Processor.Inventory)
+        $("#inventory-Farmer").text("Inventory: " + game.Farmer.Inventory)
     }
 
     const updateGameTuningBackorder = (game) => {
-        $("#backorder-Retailer").text("Backorder: " + game.retailer.backorder)
-        $("#backorder-Manufacturer").text("Backorder: " + game.manufacturer.backorder)
-        $("#backorder-Processor").text("Backorder: " + game.processor.backorder)
-        $("#backorder-Farmer").text("Backorder: " + game.farmer.backorder)
+        $("#backorder-Retailer").text("Backorder: " + game.Retailer.Backorder)
+        $("#backorder-Manufacturer").text("Backorder: " + game.Manufacturer.Backorder)
+        $("#backorder-Processor").text("Backorder: " + game.Processor.Backorder)
+        $("#backorder-Farmer").text("Backorder: " + game.Farmer.Backorder)
     }
 
     const updateGameTuningIncomingOrder = (game) => {
@@ -90,13 +90,13 @@ const BeerGame = (() => {
 
     const updateGameTuningIncomingOrderBody = (player, game) => {
         $("#incomingOrders-" + player).empty();
-        game[player.toLowerCase()].incomingOrders.forEach(order => {
-            if (order.orderDay == game.currentDay - 7) {
+        game[player].IncomingOrders.forEach(order => {
+            if (order.OrderDay == game.CurrentDay - 7) {
                 $("#incomingOrders-" + player).append($(`
-                    <tr style="background-color: #f5fac5;">
-                        <td>${order.orderNumber}</td>
-                        <td>${order.orderDay}</td>
-                        <td>${order.volume}</td>
+                    <tr>
+                        <td>${order.OrderNumber}</td>
+                        <td>${order.OrderDay}</td>
+                        <td>${order.Volume}</td>
                     </tr>`));
             }
         });
@@ -113,11 +113,11 @@ const BeerGame = (() => {
     const updateGameTuningIncomingDeliveriesBody = (player, game) => {
         $("#incomingDeliveries-" + player).empty();
         let table = "<tr>";
-        game[player.toLowerCase()].outgoingOrders.forEach(order => {
-            if (order.deliveries.some((delivery) => delivery.arrivalDay <= game.currentDay && delivery.arrivalDay > game.currentDay - 7)) {
-                table += `<td>${order.orderNumber}</td>
-                        <td>${order.orderDay}</td>
-                        <td>${order.volume}</td>
+        game[player].OutgoingOrders.forEach(order => {
+            if (order.Deliveries.some((delivery) => delivery.ArrivalDay <= game.CurrentDay && delivery.ArrivalDay > game.CurrentDay - 7)) {
+                table += `<td>${order.OrderNumber}</td>
+                        <td>${order.OrderDay}</td>
+                        <td>${order.Volume}</td>
                         <td>
                             <table>
                                 <thead>
@@ -129,14 +129,14 @@ const BeerGame = (() => {
                                     </tr>
                                 </thead>
                                 <tbody>`;
-                order.deliveries.forEach(delivery => {
+                order.Deliveries.forEach(delivery => {
                     let style = "";
-                    if (delivery.arrivalDay <= game.currentDay && delivery.arrivalDay > game.currentDay - 7) style = `style="background-color: #f5fac5;"`;
+                    if (delivery.ArrivalDay <= game.CurrentDay && delivery.ArrivalDay > game.CurrentDay - 7) style = `style="background-color: #f5fac5;"`;
                     table += `<tr ${style}>
-                            <td>${delivery.volume}</td>
-                            <td>${delivery.sendDeliveryDay}</td>
-                            <td>${roundOff(delivery.arrivalDay)}</td>
-                            <td>${delivery.price}</td>
+                            <td>${delivery.Volume}</td>
+                            <td>${delivery.SendDeliveryDay}</td>
+                            <td>${roundOff(delivery.ArrivalDay)}</td>
+                            <td>${delivery.Price}</td>
                         </tr>`;
                 });
                 table += `</tbody>
@@ -156,9 +156,9 @@ const BeerGame = (() => {
     }
 
     const updateGameTuningOrderHistoryBody = (player, game) => {
-        let map = game[player.toLowerCase()].outgoingOrders.map(o => o.orderNumber);
+        let map = game[player].OutgoingOrders.map(o => o.OrderNumber);
         let orderNumber = Math.max(...map, 1);
-        let volume = game[player.toLowerCase()].outgoingOrders.find(order => order.orderNumber == lastIndex).volume;
+        let volume = game[player].OutgoingOrders.find(order => order.OrderNumber == orderNumber).Volume;
         $("#orderHistory-" + player).append($(`
             <tr>
                 <td>${orderNumber}</td>
@@ -287,7 +287,8 @@ const BeerGame = (() => {
         updateIncomingOrder: updateIncomingOrder,
         updateIncomingDeliveries: updateIncomingDeliveries,
         promptOptions: promptOptions,
-        chooseOption: chooseOption
+        chooseOption: chooseOption,
+        updateGameTuningPage: updateGameTuningPage
     }
 })();
 
@@ -326,7 +327,7 @@ BeerGame.Signal = (() => {
     }
 
     connection.on("UpdateGame", function (game) {
-        BeerGame.updateGame(game);
+        BeerGame.updateGameTuningPage(game);
     })
 
     connection.on("HelloWorld", function () {
