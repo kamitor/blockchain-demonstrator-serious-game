@@ -244,6 +244,9 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<string>("PlayerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Topic")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PlayerId");

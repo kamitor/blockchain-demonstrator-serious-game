@@ -242,8 +242,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 player.Payments.Add(new Payment()
                 {
-                    Amount = player.ChosenOption.CostOfStartUp * -1, DueDay = 1, FromPlayer = false, PlayerId = player.Id,
-                    Id = Guid.NewGuid().ToString()
+                    Amount = player.ChosenOption.CostOfStartUp * -1, 
+                    DueDay = 1, 
+                    FromPlayer = false, 
+                    PlayerId = player.Id,
+                    Topic = "Setup"
                 });
             }
         }
@@ -393,7 +396,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             foreach (Player player in Players)
             {
-                player.Payments.Add(new Payment { Amount = player.ChosenOption.Flexibility, DueDay = CurrentDay, FromPlayer = false, PlayerId = player.Id });
+                player.Payments.Add(new Payment { 
+                    Amount = player.ChosenOption.Flexibility, 
+                    DueDay = CurrentDay, 
+                    FromPlayer = false, 
+                    PlayerId = player.Id,
+                    Topic = "Flexibility"
+                });
             }
         }
     }

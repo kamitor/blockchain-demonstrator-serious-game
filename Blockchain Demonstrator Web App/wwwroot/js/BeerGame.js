@@ -24,25 +24,149 @@ const BeerGame = (() => {
 
     const sendOrders = (gameId) => {
         orderData =
-            {
-                gameId: gameId,
-                retailerOrder: $("#section-Retailer > form > input").val(),
-                manufacturerOrder: $("#section-Manufacturer > form > input").val(),
-                processorOrder: $("#section-Processor > form > input").val(),
-                farmerOrder: $("#section-Farmer > form > input").val(),
-            };
-        console.log(orderData);
+        {
+            gameId: gameId,
+            retailerOrder: $("#order-Retailer").val(),
+            manufacturerOrder: $("#order-Manufacturer").val(),
+            processorOrder: $("#order-Processor").val(),
+            farmerOrder: $("#order-Farmer").val(),
+        };
         $.ajax({
             url: `${configMap.baseUrl}/api/BeerGame/SendOrders`,
             type: "POST",
             data: JSON.stringify(orderData),
             contentType: "application/json",
             dataType: "text"
-        }).then(result => updateGame(result));
+        }).then(result => updateGameTuningPage(result));
+    }
+
+    const updateGameTuningPage = (game) => {
+        gameSerialized = JSON.parse(game);
+        updateGameTuningBalance(gameSerialized);
+        updateGameTuningProfit(gameSerialized);
+        updateGameTuningInventory(gameSerialized);
+        updateGameTuningBackorder(gameSerialized);
+        updateGameTuningIncomingOrder(gameSerialized);
+        updateGameTuningIncomingDeliveries(gameSerialized);
+        updateGameTuningOrderHistory(gameSerialized);
+        //TODO: update payments tomorrow also move functions to new module?
+    }
+
+    const updateGameTuningBalance = (game) => {
+        $("#balance-Retailer").text("Balance: " + game.retailer.balance);
+        $("#balance-Manufacturer").text("Balance: " + game.manufacturer.balance);
+        $("#balance-Processor").text("Balance: " + game.processor.balance);
+        $("#balance-Farmer").text("Balance: " + game.farmer.balance);
+    }
+
+    const updateGameTuningProfit = (game) => {
+        $("#profit-Retailer").text("Profit: " + game.retailer.profit)
+        $("#profit-Manufacturer").text("Profit: " + game.manufacturer.profit)
+        $("#profit-Processor").text("Profit: " + game.processor.profit)
+        $("#profit-Farmer").text("Profit: " + game.farmer.profit)
+    }
+
+    const updateGameTuningInventory = (game) => {
+        $("#inventory-Retailer").text("Inventory: " + game.retailer.inventory)
+        $("#inventory-Manufacturer").text("Inventory: " + game.manufacturer.inventory)
+        $("#inventory-Processor").text("Inventory: " + game.processor.inventory)
+        $("#inventory-Farmer").text("Inventory: " + game.farmer.inventory)
+    }
+
+    const updateGameTuningBackorder = (game) => {
+        $("#backorder-Retailer").text("Backorder: " + game.retailer.backorder)
+        $("#backorder-Manufacturer").text("Backorder: " + game.manufacturer.backorder)
+        $("#backorder-Processor").text("Backorder: " + game.processor.backorder)
+        $("#backorder-Farmer").text("Backorder: " + game.farmer.backorder)
+    }
+
+    const updateGameTuningIncomingOrder = (game) => {
+        updateGameTuningIncomingOrderBody("Retailer", game);
+        updateGameTuningIncomingOrderBody("Manufacturer", game);
+        updateGameTuningIncomingOrderBody("Processor", game);
+        updateGameTuningIncomingOrderBody("Farmer", game);
+
+    }
+
+    const updateGameTuningIncomingOrderBody = (player, game) => {
+        $("#incomingOrders-" + player).empty();
+        game[player.toLowerCase()].incomingOrders.forEach(order => {
+            if (order.orderDay == game.currentDay - 7) {
+                $("#incomingOrders-" + player).append($(`
+                    <tr style="background-color: #f5fac5;">
+                        <td>${order.orderNumber}</td>
+                        <td>${order.orderDay}</td>
+                        <td>${order.volume}</td>
+                    </tr>`));
+            }
+        });
+    }
+
+    const updateGameTuningIncomingDeliveries = (game) => {
+        updateGameTuningIncomingDeliveriesBody("Retailer", game);
+        updateGameTuningIncomingDeliveriesBody("Manufacturer", game);
+        updateGameTuningIncomingDeliveriesBody("Processor", game);
+        updateGameTuningIncomingDeliveriesBody("Farmer", game);
+
+    }
+
+    const updateGameTuningIncomingDeliveriesBody = (player, game) => {
+        $("#incomingDeliveries-" + player).empty();
+        let table = "<tr>";
+        game[player.toLowerCase()].outgoingOrders.forEach(order => {
+            if (order.deliveries.some((delivery) => delivery.arrivalDay <= game.currentDay && delivery.arrivalDay > game.currentDay - 7)) {
+                table += `<td>${order.orderNumber}</td>
+                        <td>${order.orderDay}</td>
+                        <td>${order.volume}</td>
+                        <td>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Volume</th>
+                                        <th>Send day</th>
+                                        <th>Arrival day</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                order.deliveries.forEach(delivery => {
+                    let style = "";
+                    if (delivery.arrivalDay <= game.currentDay && delivery.arrivalDay > game.currentDay - 7) style = `style="background-color: #f5fac5;"`;
+                    table += `<tr ${style}>
+                            <td>${delivery.volume}</td>
+                            <td>${delivery.sendDeliveryDay}</td>
+                            <td>${roundOff(delivery.arrivalDay)}</td>
+                            <td>${delivery.price}</td>
+                        </tr>`;
+                });
+                table += `</tbody>
+                        </table>
+                        </td>
+                        </tr>`;
+                $("#incomingDeliveries-" + player).append($(`${table}`));
+            }
+        });
+    }
+
+    const updateGameTuningOrderHistory = (game) => {
+        updateGameTuningOrderHistoryBody("Retailer", game);
+        updateGameTuningOrderHistoryBody("Manufacturer", game);
+        updateGameTuningOrderHistoryBody("Processor", game);
+        updateGameTuningOrderHistoryBody("Farmer", game);
+    }
+
+    const updateGameTuningOrderHistoryBody = (player, game) => {
+        let map = game[player.toLowerCase()].outgoingOrders.map(o => o.orderNumber);
+        let orderNumber = Math.max(...map, 1);
+        let volume = game[player.toLowerCase()].outgoingOrders.find(order => order.orderNumber == lastIndex).volume;
+        $("#orderHistory-" + player).append($(`
+            <tr>
+                <td>${orderNumber}</td>
+                <td>${volume}</td>
+            </tr>`));
     }
 
     const updateGame = (game) => {
-        console.log("binnen updategame func");
         gameSerialized = JSON.parse(game);
         updateOrderHistory("Retailer", gameSerialized.Retailer.CurrentOrder.OrderNumber, gameSerialized.Retailer.CurrentOrder.Volume);
         updateOrderHistory("Manufacturer", gameSerialized.Manufacturer.CurrentOrder.OrderNumber, gameSerialized.Manufacturer.CurrentOrder.Volume);
@@ -102,7 +226,6 @@ const BeerGame = (() => {
 
     const updateIncomingDeliveries = (id, game) => {
         $(`#incomingDeliveries-${id} > tbody`).empty();
-        console.log(game[id].OutgoingOrders);
         game[id].OutgoingOrders.forEach(order => {
             order.Deliveries.forEach(delivery => {
                 if (delivery.ArrivalDay <= game.CurrentDay && delivery.ArrivalDay > game.CurrentDay - 7) {
@@ -187,7 +310,7 @@ BeerGame.Signal = (() => {
 
     let sendOrder = () => {
         connection.invoke("SendOrder",
-                $('.place-order-text').val(), 
+                $('#place-order-text').val(), 
                 BeerGame.Cookie.getCookie('JoinedGame'), 
                 BeerGame.Cookie.getCookie('PlayerId'))
             .catch(function (err) {

@@ -9,21 +9,40 @@
     <link rel="stylesheet" href="~/css/BeerGame.css" />
 </head>
 <body>
+
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark navbar-height" style="background-color: #4863A0!important;">
-
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                
-                <a href="https://localhost:44313" class="btn btn-outline-primary my-2 my-sm-0 login-color">
-                    Home Page
-                </a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Blockchain_Demonstrator_Web_App</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
 
+                        <li class="nav-item">
+                            <div class="container">
+
+                                <a href="https://localhost:44313" class="btn btn-outline-primary my-2 my-sm-0 login-color"
+                                   style="">Home Page</a>
+
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="container">
+
+                                <a href=" https://localhost:44313/Home/Privacy" class="btn btn-outline-primary my-2 my-sm-0 login-color"
+                                   style="">Privacy</a>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-
         </nav>
-
-
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
