@@ -311,6 +311,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// </summary>
         private void CapacityPenalty()
         {
+            //TODO: move to player class
             if (Retailer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
             {
                 Retailer.AddPenalty(Retailer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);

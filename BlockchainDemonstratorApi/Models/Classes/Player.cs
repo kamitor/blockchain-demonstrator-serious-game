@@ -95,6 +95,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			get
 			{
+				//TODO: Change to new formula
 				//running cost= (volume of inventory* holding cost factor)+ (backorder factor* backorder* holding cost)+ (incoming order* holding cost) 
 				return (Inventory * Factors.HoldingFactor) +
 				       (Factors.HoldingFactor * 2 * Backorder) /*+ (IncomingOrder.Volume * holdingFactor)*/;
@@ -285,6 +286,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		/// <summary>Adds a holding cost payment to the Payments list </summary>
 		/// <param name="currentDay">integer that specifies the current day</param>
+		//TODO: HoldingCost can be zero (adds extra records in database)
 		public void SetHoldingCost(int currentDay)
 		{
 			Payments.Add(new Payment()
