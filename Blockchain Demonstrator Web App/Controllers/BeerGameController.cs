@@ -80,7 +80,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                         Player player = game.Players.Find(x => string.Equals(x.Id, playerId));
                         ViewData["CurrentDay"] = game.CurrentDay;
                         ViewData["GameId"] = game.Id;
-
+                        ViewData["GameReady"] = game.Players.Count == 4;
                         return View(player);
                     }
                 }

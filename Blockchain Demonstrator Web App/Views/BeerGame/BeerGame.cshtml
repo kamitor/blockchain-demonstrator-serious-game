@@ -4,6 +4,8 @@
 @{ ViewData["Title"] = "BeerGame";
     int currentDay = (int)ViewData["CurrentDay"];
     string gameId = (string)ViewData["GameId"];
+    bool gameReady = (bool)ViewData["GameReady"];
+    string containerDisplay = (gameReady) ? "" : "display:none";
     Payment lastPayment = null;
     string style = ""; }
 
@@ -18,7 +20,15 @@
     <link rel="stylesheet" href="~/css/StyleSheet.css">
 </head>
 <body>
-    <div class="container">
+    @if (!gameReady)
+    {
+        <div class="lds">
+            <h1>Waiting for players</h1>
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        </div>
+    }
+    
+    <div class="actor-tab" style="@containerDisplay">
         <h1 class="brand">The <span>Blockchain </span>Game</h1>
         <div class="wrapper animated bounceInLeft">
             <div class="company-info">
@@ -48,13 +58,15 @@
                             <tbody id="incomingOrders-@Model.Role.Id">
                                 @foreach (var order in Model.IncomingOrders)
                                 {
-                    @if (order.OrderDay == currentDay - Factors.RoundIncrement)
-                    {
-                <tr>
-                    <td>@order.OrderNumber</td>
-                    <td>@order.OrderDay</td>
-                    <td>@order.Volume</td>
-                </tr>}}
+                                    @if (order.OrderDay == currentDay - Factors.RoundIncrement)
+                                    {
+                                        <tr>
+                                            <td>@order.OrderNumber</td>
+                                            <td>@order.OrderDay</td>
+                                            <td>@order.Volume</td>
+                                        </tr>
+                                    }
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -71,12 +83,14 @@
                                 <tbody id="orderHistory-@Model.Role.Id">
                                     @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OutgoingOrders)
                                     {
-                        @if (order.OrderDay >= 1)
-                        {
-                <tr>
-                    <td>@order.OrderNumber</td>
-                    <td>@order.Volume</td>
-                </tr>}}
+                                        @if (order.OrderDay >= 1)
+                                        {
+                                            <tr>
+                                                <td>@order.OrderNumber</td>
+                                                <td>@order.Volume</td>
+                                            </tr>
+                                        }
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -98,43 +112,47 @@
                                     {
                                         if (order.Deliveries.Any(d => d.ArrivalDay <= currentDay && d.ArrivalDay > currentDay - Factors.RoundIncrement))
                                         {
-                        <tr>
-                            <td>@order.OrderNumber</td>
-                            <td>@order.OrderDay</td>
-                            <td>@order.Volume</td>
-                            <td>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Volume</th>
-                                            <th>Send day</th>
-                                            <th>Arrival day</th>
-                                            <th>Price</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var delivery in order.Deliveries.OrderBy(d => d.ArrivalDay))
-                                        {
-                    @if (delivery.ArrivalDay <= currentDay && delivery.ArrivalDay > currentDay - Factors.RoundIncrement)
-                    {
-                <tr style="        background-color: #f5fac5;">
-                    <td>@delivery.Volume</td>
-                    <td>@delivery.SendDeliveryDay</td>
-                    <td>@Math.Round(delivery.ArrivalDay, 2)</td>
-                    <td>@delivery.Price</td>
-                </tr> }
-                                        else
-                                        {
-                <tr>
-                    <td>@delivery.Volume</td>
-                    <td>@delivery.SendDeliveryDay</td>
-                    <td>@Math.Round(delivery.ArrivalDay, 2)</td>
-                    <td>@delivery.Price</td>
-                </tr>}}
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>}
+                                            <tr>
+                                                <td>@order.OrderNumber</td>
+                                                <td>@order.OrderDay</td>
+                                                <td>@order.Volume</td>
+                                                <td>
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Volume</th>
+                                                                <th>Send day</th>
+                                                                <th>Arrival day</th>
+                                                                <th>Price</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var delivery in order.Deliveries.OrderBy(d => d.ArrivalDay))
+                                                            {
+                                                                @if (delivery.ArrivalDay <= currentDay && delivery.ArrivalDay > currentDay - Factors.RoundIncrement)
+                                                                {
+                                                                    <tr style="        background-color: #f5fac5;">
+                                                                        <td>@delivery.Volume</td>
+                                                                        <td>@delivery.SendDeliveryDay</td>
+                                                                        <td>@Math.Round(delivery.ArrivalDay, 2)</td>
+                                                                        <td>@delivery.Price</td>
+                                                                    </tr>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <tr>
+                                                                        <td>@delivery.Volume</td>
+                                                                        <td>@delivery.SendDeliveryDay</td>
+                                                                        <td>@Math.Round(delivery.ArrivalDay, 2)</td>
+                                                                        <td>@delivery.Price</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        }
                                     }
                                 </tbody>
                             </table>
@@ -193,14 +211,9 @@
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/BeerGame.js"></script>
     <script>
-            function getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-            }
-            $(document).ready(() => {
-                BeerGame.init("@gameId", "@Model.Id");
-                $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
-            })
+        $(document).ready(() => {
+            BeerGame.init("@gameId", "@Model.Id");
+            $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
+        });
     </script>
 }
