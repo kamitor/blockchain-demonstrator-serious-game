@@ -8,397 +8,385 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
-    public class Game
-    {
-        [Key] 
-        public string Id { get; set; }
-        public Phase CurrentPhase { get; set; }
-        public int CurrentDay { get; set; }
-        private Player _retailer;
+	public class Game
+	{
+		[Key]
+		public string Id { get; set; }
 
-        public virtual Player Retailer
-        {
-            get { return _retailer; }
-            set
-            {
-                if (value != null)
-                {
-                    if (value.Role.Id != "Retailer")
-                        throw new ArgumentException("Given role id does not match the expected role Retailer");
-                    _retailer = value;
-                }
-            }
-        }
+		public Phase CurrentPhase { get; set; }
+		public int CurrentDay { get; set; }
+		private Player _retailer;
 
-        private Player _manufacturer;
+		public virtual Player Retailer
+		{
+			get { return _retailer; }
+			set
+			{
+				if (value != null)
+				{
+					if (value.Role.Id != "Retailer")
+						throw new ArgumentException("Given role id does not match the expected role Retailer");
+					_retailer = value;
+				}
+			}
+		}
 
-        public virtual Player Manufacturer
-        {
-            get { return _manufacturer; }
-            set
-            {
-                if (value != null)
-                {
-                    if (value.Role.Id != "Manufacturer")
-                        throw new ArgumentException("Given role id does not match the expected role Manufacturer");
-                    _manufacturer = value;
-                }
-            }
-        }
+		private Player _manufacturer;
 
-        private Player _processor;
+		public virtual Player Manufacturer
+		{
+			get { return _manufacturer; }
+			set
+			{
+				if (value != null)
+				{
+					if (value.Role.Id != "Manufacturer")
+						throw new ArgumentException("Given role id does not match the expected role Manufacturer");
+					_manufacturer = value;
+				}
+			}
+		}
 
-        public virtual Player Processor
-        {
-            get { return _processor; }
-            set
-            {
-                if (value != null)
-                {
-                    if (value.Role.Id != "Processor")
-                        throw new ArgumentException("Given role id does not match the expected role Processor");
-                    _processor = value;
-                }
-            }
-        }
+		private Player _processor;
 
-        private Player _farmer;
+		public virtual Player Processor
+		{
+			get { return _processor; }
+			set
+			{
+				if (value != null)
+				{
+					if (value.Role.Id != "Processor")
+						throw new ArgumentException("Given role id does not match the expected role Processor");
+					_processor = value;
+				}
+			}
+		}
 
-        public virtual Player Farmer
-        {
-            get { return _farmer; }
-            set
-            {
-                if (value != null)
-                {
-                    if (value.Role.Id != "Farmer")
-                        throw new ArgumentException("Given role id does not match the expected role Farmer");
-                    _farmer = value;
-                }
-            }
-        }
+		private Player _farmer;
 
-        //TODO: has bug where it is initialized twice, once during getting from database and second when serialized in web controller
-        [NotMapped]
-        public virtual List<Player> Players {
-            get
-            {
-                List<Player> list = new List<Player>();
+		public virtual Player Farmer
+		{
+			get { return _farmer; }
+			set
+			{
+				if (value != null)
+				{
+					if (value.Role.Id != "Farmer")
+						throw new ArgumentException("Given role id does not match the expected role Farmer");
+					_farmer = value;
+				}
+			}
+		}
 
-                if (Retailer != null) list.Add(Retailer);
-                if (Manufacturer != null) list.Add(Manufacturer);
-                if (Processor != null) list.Add(Processor);
-                if (Farmer != null) list.Add(Farmer);
-                
-                return list;
-            } 
-        }
-        public bool GameStarted { get; set; }
+		//TODO: has bug where it is initialized twice, once during getting from database and second when serialized in web controller
+		[NotMapped]
+		public virtual List<Player> Players
+		{
+			get
+			{
+				List<Player> list = new List<Player>();
 
-        public Game(string id)
-        {
-            Id = id;
-            CurrentPhase = Phase.Phase1;
-            CurrentDay = 1;
-            GameStarted = false;
-        }
-        
-        /// <summary>
-        /// Makes game Progress to next round
-        /// </summary>
-        public void Progress()
-        {
-            if (!GameStarted)
-            {
-                SetInitialCapital();
-                SetSetupPayment();
-                SetSetupDeliveries();
-                SetSetupOrders();
-                GameStarted = true;
-                UpdateBalance();
-            }
-            else
-            {
-                ProcessDeliveries();
-                SendDeliveries();
-                
-                CapacityPenalty();
-                SetHoldingCosts();
-                AddFlexibilityReward();
-                UpdateBalance();
+				if (Retailer != null) list.Add(Retailer);
+				if (Manufacturer != null) list.Add(Manufacturer);
+				if (Processor != null) list.Add(Processor);
+				if (Farmer != null) list.Add(Farmer);
 
-                SendOrders();
-                CurrentDay += Factors.RoundIncrement;
-            }
-        }
+				return list;
+			}
+		}
 
-        #region Setup
-        
-        /// <summary>
-        /// Adds default order to each actor
-        /// </summary>
-        /// <remarks>Only needs to be used at the start of each game</remarks>
-        private void SetSetupOrders() //Reworked to new order system
-        {
-            Order orderC = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume };
-            Retailer.IncomingOrders.Add(orderC);
+		public bool GameStarted { get; set; }
 
-            Order orderR = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume };
-            Retailer.OutgoingOrders.Add(orderR);
-            Manufacturer.IncomingOrders.Add(orderR);
+		public Game(string id)
+		{
+			Id = id;
+			CurrentPhase = Phase.Phase1;
+			CurrentDay = 1;
+			GameStarted = false;
+		}
 
-            Order orderM = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume };
-            Manufacturer.OutgoingOrders.Add(orderM);
-            Processor.IncomingOrders.Add(orderM);
+		/// <summary>
+		/// Makes game Progress to next round
+		/// </summary>
+		public void Progress()
+		{
+			ProcessDeliveries();
+			SendDeliveries();
 
-            Order orderP = new Order() { OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume };
-            Processor.OutgoingOrders.Add(orderP);
-            Farmer.IncomingOrders.Add(orderP);
-        }
+			CapacityPenalty();
+			SetHoldingCosts();
+			AddFlexibilityReward();
+			UpdateBalance();
 
-        /**
+			SendOrders();
+			CurrentDay += Factors.RoundIncrement;
+		}
+
+		/// <summary>
+		/// Method sets the base variables for each player
+		/// </summary>
+		public void SetupGame()
+		{
+			SetInitialCapital();
+			SetSetupPayment();
+			SetSetupDeliveries();
+			SetSetupOrders();
+			GameStarted = true;
+			UpdateBalance();
+		}
+
+		#region Setup
+
+		/// <summary>
+		/// Adds default order to each actor
+		/// </summary>
+		/// <remarks>Only needs to be used at the start of each game</remarks>
+		private void SetSetupOrders() //Reworked to new order system
+		{
+			Order orderC = new Order() {OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume};
+			Retailer.IncomingOrders.Add(orderC);
+
+			Order orderR = new Order() {OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume};
+			Retailer.OutgoingOrders.Add(orderR);
+			Manufacturer.IncomingOrders.Add(orderR);
+
+			Order orderM = new Order() {OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume};
+			Manufacturer.OutgoingOrders.Add(orderM);
+			Processor.IncomingOrders.Add(orderM);
+
+			Order orderP = new Order() {OrderDay = 1 - Factors.RoundIncrement, Volume = Factors.SetupOrderVolume};
+			Processor.OutgoingOrders.Add(orderP);
+			Farmer.IncomingOrders.Add(orderP);
+		}
+
+		/**
          * <summary>Adds default deliveries to each actor</summary>
          * <remarks>Only needs to be used at the start of each game</remarks>
          */
-        private void SetSetupDeliveries() //Reworked to new order system
-        {
-            for (int i = 0; i < (int)Math.Ceiling(Manufacturer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
-            {
-                Order order = new Order() { Volume = Factors.SetupDeliveryVolume };
-                order.Deliveries.Add(new Delivery() {
-                    Volume = Factors.SetupDeliveryVolume, 
-                    SendDeliveryDay = Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Manufacturer.Role.LeadTime)), 
-                    ArrivalDay = Factors.RoundIncrement * i + 1, 
-                    Price = Factors.ManuProductPrice * Factors.SetupDeliveryVolume
-                });
-                Retailer.OutgoingOrders.Add(order);
-            }
+		private void SetSetupDeliveries() //Reworked to new order system
+		{
+			for (int i = 0; i < (int) Math.Ceiling(Manufacturer.Role.LeadTime / (double) Factors.RoundIncrement); i++)
+			{
+				Order order = new Order() {Volume = Factors.SetupDeliveryVolume};
+				order.Deliveries.Add(new Delivery()
+				{
+					Volume = Factors.SetupDeliveryVolume,
+					SendDeliveryDay =
+						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Manufacturer.Role.LeadTime)),
+					ArrivalDay = Factors.RoundIncrement * i + 1,
+					Price = Factors.ManuProductPrice * Factors.SetupDeliveryVolume
+				});
+				Retailer.OutgoingOrders.Add(order);
+			}
 
-            for (int i = 0; i < (int)Math.Ceiling(Processor.Role.LeadTime / (double)Factors.RoundIncrement); i++)
-            {
-                Order order = new Order() { Volume = Factors.SetupDeliveryVolume };
-                order.Deliveries.Add(new Delivery()
-                {
-                    Volume = Factors.SetupDeliveryVolume,
-                    SendDeliveryDay = Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Processor.Role.LeadTime)),
-                    ArrivalDay = Factors.RoundIncrement * i + 1,
-                    Price = Factors.ProcProductPrice * Factors.SetupDeliveryVolume
-                });
-                Manufacturer.OutgoingOrders.Add(order);
-            }
+			for (int i = 0; i < (int) Math.Ceiling(Processor.Role.LeadTime / (double) Factors.RoundIncrement); i++)
+			{
+				Order order = new Order() {Volume = Factors.SetupDeliveryVolume};
+				order.Deliveries.Add(new Delivery()
+				{
+					Volume = Factors.SetupDeliveryVolume,
+					SendDeliveryDay =
+						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Processor.Role.LeadTime)),
+					ArrivalDay = Factors.RoundIncrement * i + 1,
+					Price = Factors.ProcProductPrice * Factors.SetupDeliveryVolume
+				});
+				Manufacturer.OutgoingOrders.Add(order);
+			}
 
-            for (int i = 0; i < (int)Math.Ceiling(Farmer.Role.LeadTime / (double)Factors.RoundIncrement); i++)
-            {
-                Order order = new Order() { Volume = Factors.SetupDeliveryVolume };
-                order.Deliveries.Add(new Delivery()
-                {
-                    Volume = Factors.SetupDeliveryVolume,
-                    SendDeliveryDay = Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Farmer.Role.LeadTime)),
-                    ArrivalDay = Factors.RoundIncrement * i + 1,
-                    Price = Factors.FarmerProductPrice * Factors.SetupDeliveryVolume
-                });
-                Processor.OutgoingOrders.Add(order);
-            }
+			for (int i = 0; i < (int) Math.Ceiling(Farmer.Role.LeadTime / (double) Factors.RoundIncrement); i++)
+			{
+				Order order = new Order() {Volume = Factors.SetupDeliveryVolume};
+				order.Deliveries.Add(new Delivery()
+				{
+					Volume = Factors.SetupDeliveryVolume,
+					SendDeliveryDay =
+						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Farmer.Role.LeadTime)),
+					ArrivalDay = Factors.RoundIncrement * i + 1,
+					Price = Factors.FarmerProductPrice * Factors.SetupDeliveryVolume
+				});
+				Processor.OutgoingOrders.Add(order);
+			}
 
-            for (int i = 0; i < (int)Math.Ceiling(1 / (double)Factors.RoundIncrement); i++)
-            {
-                Order order = new Order() { Volume = Factors.SetupDeliveryVolume };
-                order.Deliveries.Add(new Delivery()
-                {
-                    Volume = Factors.SetupDeliveryVolume,
-                    SendDeliveryDay = Factors.RoundIncrement * i,
-                    ArrivalDay = Factors.RoundIncrement * i + 1,
-                    Price = Factors.HarvesterProductPrice * Factors.SetupDeliveryVolume
-                });
-                Farmer.OutgoingOrders.Add(order);
-            }
-        }
+			for (int i = 0; i < (int) Math.Ceiling(1 / (double) Factors.RoundIncrement); i++)
+			{
+				Order order = new Order() {Volume = Factors.SetupDeliveryVolume};
+				order.Deliveries.Add(new Delivery()
+				{
+					Volume = Factors.SetupDeliveryVolume,
+					SendDeliveryDay = Factors.RoundIncrement * i,
+					ArrivalDay = Factors.RoundIncrement * i + 1,
+					Price = Factors.HarvesterProductPrice * Factors.SetupDeliveryVolume
+				});
+				Farmer.OutgoingOrders.Add(order);
+			}
+		}
 
-        /**
+		/**
          * <summary>Adds 250000 to each players balance</summary>
          * <remarks>Only needed at the start of each game</remarks>
          */
-        private void SetInitialCapital()
-        {
-            foreach (Player player in Players)
-            {
-                player.Balance = Factors.InitialCapital;
-            }
-        }
+		private void SetInitialCapital()
+		{
+			foreach (Player player in Players)
+			{
+				player.Balance = Factors.InitialCapital;
+			}
+		}
 
-        /// <summary>
-        /// Adds a standard payment for the setup costs to each actors payment list
-        /// </summary>
-        /// <remarks>Only needs to be called once, at the start of each phase</remarks>
-        //TODO: make sure this method is called when new phase starts
-        private void SetSetupPayment()
-        {
-            /*Retailer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Retailer.Id, Id = Guid.NewGuid().ToString()});
-            Manufacturer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Manufacturer.Id, Id = Guid.NewGuid().ToString()});
-            Processor.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Processor.Id, Id = Guid.NewGuid().ToString()});
-            Farmer.Payments.Add(new Payment(){Amount = Factors.SetupCost, DueDay = 1, ToPlayer = false, PlayerId = Farmer.Id, Id = Guid.NewGuid().ToString()});*/
+		/// <summary>
+		/// Adds a standard payment for the setup costs to each actors payment list
+		/// </summary>
+		/// <remarks>Only needs to be called once, at the start of each phase</remarks>
+		//TODO: make sure this method is called when new phase starts
+		private void SetSetupPayment()
+		{
+			foreach (Player player in Players)
+			{
+				player.Payments.Add(new Payment()
+				{
+					Amount = player.ChosenOption.CostOfStartUp * -1,
+					DueDay = 1,
+					FromPlayer = false,
+					PlayerId = player.Id,
+					Topic = "Setup"
+				});
+			}
+		}
 
-            foreach (Player player in Players)
-            {
-                player.Payments.Add(new Payment()
-                {
-                    Amount = player.ChosenOption.CostOfStartUp * -1, 
-                    DueDay = 1, 
-                    FromPlayer = false, 
-                    PlayerId = player.Id,
-                    Topic = "Setup"
-                });
-            }
-        }
-        #endregion
-        
-        /// <summary>Sets IncomingOrder for every actor</summary>
-        private void SendOrders()
-        {
-            AddingCurrentDay();
-            AddingOrderNumber();
-            AddOrder();
-        }
-        
-        /// <summary>Adds current day to each actors current order</summary>
-        public void AddingCurrentDay()
-        {
-            // Adding current day
-            Retailer.CurrentOrder.OrderDay = CurrentDay;
-            Manufacturer.CurrentOrder.OrderDay = CurrentDay;
-            Processor.CurrentOrder.OrderDay = CurrentDay;
-            Farmer.CurrentOrder.OrderDay = CurrentDay;
-        }
-        
-        /// <summary>
-        /// Adds order number to each actors current order
-        /// </summary>
-        public void AddingOrderNumber()
-        {
-            // Adding order number
-            foreach (Player player in Players)
-            {
-                player.CurrentOrder.OrderNumber = player.OutgoingOrders.Count + 1;
-            }
-        }
+		#endregion
 
-        /// <summary>
-        /// Adds current order to each actors supplier
-        /// </summary>
-        public void AddOrder()
-        {
-            // Making new order
-            Retailer.IncomingOrders.Add(new Order() {
-                OrderNumber = Convert.ToInt32(Math.Ceiling((double)(CurrentDay / Factors.RoundIncrement))),
-                OrderDay = CurrentDay, 
-                Volume = new Random().Next(Factors.RetailerOrderVolumeRandomMinimum, Factors.RetailerOrderVolumeRandomMaximum + 1)
-            });
+		/// <summary>Sets IncomingOrder for every actor</summary>
+		private void SendOrders()
+		{
+			AddingCurrentDay();
+			AddingOrderNumber();
+			AddOrder();
+		}
 
-            Retailer.OutgoingOrders.Add(Retailer.CurrentOrder);
-            Manufacturer.IncomingOrders.Add(Retailer.CurrentOrder);
+		/// <summary>Adds current day to each actors current order</summary>
+		public void AddingCurrentDay()
+		{
+			// Adding current day
+			Retailer.CurrentOrder.OrderDay = CurrentDay;
+			Manufacturer.CurrentOrder.OrderDay = CurrentDay;
+			Processor.CurrentOrder.OrderDay = CurrentDay;
+			Farmer.CurrentOrder.OrderDay = CurrentDay;
+		}
 
-            Manufacturer.OutgoingOrders.Add(Manufacturer.CurrentOrder);
-            Processor.IncomingOrders.Add(Manufacturer.CurrentOrder);
+		/// <summary>
+		/// Adds order number to each actors current order
+		/// </summary>
+		public void AddingOrderNumber()
+		{
+			// Adding order number
+			foreach (Player player in Players)
+			{
+				player.CurrentOrder.OrderNumber = player.OutgoingOrders.Count + 1;
+			}
+		}
 
-            Processor.OutgoingOrders.Add(Processor.CurrentOrder);
-            Farmer.IncomingOrders.Add(Processor.CurrentOrder);
+		/// <summary>
+		/// Adds current order to each actors supplier
+		/// </summary>
+		public void AddOrder()
+		{
+			// Making new order
+			Retailer.IncomingOrders.Add(new Order()
+			{
+				OrderNumber = Convert.ToInt32(Math.Ceiling((double)CurrentDay / Factors.RoundIncrement)),
+				OrderDay = CurrentDay,
+				Volume = new Random().Next(Factors.RetailerOrderVolumeRandomMinimum,
+					Factors.RetailerOrderVolumeRandomMaximum + 1)
+			});
 
-            Farmer.OutgoingOrders.Add(Farmer.CurrentOrder);
-        }
+			Retailer.OutgoingOrders.Add(Retailer.CurrentOrder);
+			Manufacturer.IncomingOrders.Add(Retailer.CurrentOrder);
 
-        /// <summary>
-        /// Adds a penalty for each actor if it's needed
-        /// </summary>
-        private void CapacityPenalty()
-        {
-            //TODO: move to player class
-            if (Retailer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
-            {
-                Retailer.AddPenalty(Retailer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
-            }
-            
-            if (Manufacturer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
-            {
-                Manufacturer.AddPenalty(Manufacturer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
-            }
-            
-            if (Processor.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
-            {
-                Processor.AddPenalty(Processor.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
-            }
-            
-            if (Farmer.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
-            {
-                Farmer.AddPenalty(Farmer.ChosenOption.GuaranteedCapacityPenalty, CurrentDay);
-            }
-        }
+			Manufacturer.OutgoingOrders.Add(Manufacturer.CurrentOrder);
+			Processor.IncomingOrders.Add(Manufacturer.CurrentOrder);
 
-        ///<summary>
-        ///Processes and sends through incomingOrders
-        ///</summary>
-        private void SendDeliveries() //Reworked to new order system
-        {
-            Retailer.GetOutgoingDeliveries(CurrentDay);
-            Manufacturer.GetOutgoingDeliveries(CurrentDay);
-            Processor.GetOutgoingDeliveries(CurrentDay);
-            Farmer.GetOutgoingDeliveries(CurrentDay);
-            Farmer.CurrentOrder.Deliveries = new List<Delivery>() {
-                    new Delivery()
-                    {
-                        Volume = Farmer.CurrentOrder.Volume,
-                        SendDeliveryDay = CurrentDay,
-                        ArrivalDay = CurrentDay + Factors.RoundIncrement + new Random().Next(0,4),
-                        Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume
-                    }
-            };
-        }
+			Processor.OutgoingOrders.Add(Processor.CurrentOrder);
+			Farmer.IncomingOrders.Add(Processor.CurrentOrder);
 
-        ///<summary>
-        ///Causes each actor to process their deliveries
-        ///</summary>
-        private void ProcessDeliveries()
-        {
-            /*Retailer.IncreaseInventory(CurrentDay);
-            Manufacturer.IncreaseInventory(CurrentDay);
-            Processor.IncreaseInventory(CurrentDay);
-            Farmer.IncreaseInventory(CurrentDay);*/
+			Farmer.OutgoingOrders.Add(Farmer.CurrentOrder);
+		}
 
-            foreach (Player player in Players)
-            {
-                player.ProcessDeliveries(CurrentDay);
-            }
-        }
+		/// <summary>
+		/// Adds a penalty for each actor if it's needed
+		/// </summary>
+		private void CapacityPenalty()
+		{
+			foreach (Player player in Players)
+			{
+				if (player.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
+				{
+					player.AddPenalty(CurrentDay);
+				}
+			}
+		}
 
-        
+		///<summary>
+		///Processes and sends through incomingOrders
+		///</summary>
+		private void SendDeliveries() //Reworked to new order system
+		{
+			Retailer.GetOutgoingDeliveries(CurrentDay);
+			Manufacturer.GetOutgoingDeliveries(CurrentDay);
+			Processor.GetOutgoingDeliveries(CurrentDay);
+			Farmer.GetOutgoingDeliveries(CurrentDay);
+			Farmer.CurrentOrder.Deliveries = new List<Delivery>()
+			{
+				new Delivery()
+				{
+					Volume = Farmer.CurrentOrder.Volume,
+					SendDeliveryDay = CurrentDay,
+					ArrivalDay = CurrentDay + Factors.RoundIncrement + new Random().Next(0, 4),
+					Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume
+				}
+			};
+		}
 
-        /// <summary>
-        /// Calls the UpdateBalance method for each player
-        /// </summary>
-        private void UpdateBalance()
-        {
-            foreach (Player player in Players)
-            {
-                player.UpdateBalance(CurrentDay);
-            }
-        }
+		///<summary>
+		///Causes each actor to process their deliveries
+		///</summary>
+		private void ProcessDeliveries()
+		{
+			foreach (Player player in Players)
+			{
+				player.ProcessDeliveries(CurrentDay);
+			}
+		}
 
-        /// <summary>
-        /// Adds holding cost to each players Payments list
-        /// </summary>
-        private void SetHoldingCosts()
-        {
-            foreach (Player player in Players)
-            {
-                player.SetHoldingCost(CurrentDay);
-            }
-        }
 
-        private void AddFlexibilityReward()
-        {
-            foreach (Player player in Players)
-            {
-                player.AddFlexibility(CurrentDay);
-            }
-        }
-    }
+		/// <summary>
+		/// Calls the UpdateBalance method for each player
+		/// </summary>
+		private void UpdateBalance()
+		{
+			foreach (Player player in Players)
+			{
+				player.UpdateBalance(CurrentDay);
+			}
+		}
+
+		/// <summary>
+		/// Adds holding cost to each players Payments list
+		/// </summary>
+		private void SetHoldingCosts()
+		{
+			foreach (Player player in Players)
+			{
+				player.SetHoldingCost(CurrentDay);
+			}
+		}
+
+		private void AddFlexibilityReward()
+		{
+			foreach (Player player in Players)
+			{
+				player.AddFlexibility(CurrentDay);
+			}
+		}
+	}
 }

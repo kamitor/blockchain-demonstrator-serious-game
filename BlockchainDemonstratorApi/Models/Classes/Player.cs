@@ -270,13 +270,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// <summary>
 		/// Adds a payment to the Payments list 
 		/// </summary>
-		/// <param name="amount">The amount that needs to be paid, has to be a positive number</param>
 		/// <param name="currentDay">The current day</param>
-		public void AddPenalty(double amount, int currentDay)
+		public void AddPenalty(int currentDay)
 		{
 			Payments.Add(new Payment()
 			{
-				Amount = amount * -1,
+				Amount = ChosenOption.GuaranteedCapacityPenalty * -1,
 				DueDay = currentDay,
 				FromPlayer = false,
 				PlayerId = this.Id,
@@ -289,14 +288,17 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		//TODO: HoldingCost can be zero (adds extra records in database)
 		public void SetHoldingCost(int currentDay)
 		{
-			Payments.Add(new Payment()
+			if (HoldingCosts > 0)
 			{
-				Amount = HoldingCosts * -1,
-				DueDay = currentDay,
-				FromPlayer = false,
-				PlayerId = this.Id,
-				Topic = "Holding cost"
-			});
+				Payments.Add(new Payment()
+				{
+					Amount = HoldingCosts * -1,
+					DueDay = currentDay,
+					FromPlayer = false,
+					PlayerId = this.Id,
+					Topic = "Holding cost"
+				});
+			}
 		}
 
 		/// <summary>Updates player balance</summary>
