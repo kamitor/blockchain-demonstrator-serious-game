@@ -26,16 +26,35 @@ namespace BlockchainDemonstratorApi.Controllers
         [HttpPost("CreateGame")]
         public ActionResult CreateGame()
         {
-            Game game = new Game(); //TODO: Make try catch
+            Game game = new Game(GetUniqueId());
             _context.Games.Add(game);
             _context.SaveChanges();
             return Ok();
         }
 
+        /// <summary>Creates a unique id using six numbers</summary>
+        /// <returns>Unique id as string</returns>
+        /// <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>
+        private string GetUniqueId()
+        {
+            List<string> usedIds = _context.Games.Select(g => g.Id).ToList();
+
+            Random r = new Random();
+            while (true)
+            {
+                int id = r.Next(100000, 1000000);
+
+                if (!usedIds.Contains(id.ToString()))
+                {
+                    return id.ToString();
+                }
+            }
+        } 
+
         [HttpPost("JoinGame")]
         public ActionResult JoinGame([FromBody] dynamic data)
         {
-            if (data.gameId == null || data.role == null || data.name == null) return BadRequest();
+            if (data.gameId.Value == "" || data.role.Value == "" || data.name.Value == "") return BadRequest();
             string gameId = (string) data.gameId;
             RoleType role = (RoleType) data.role;
             string name = (string) data.name;
@@ -51,6 +70,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 {
                     Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Retailer");
+                    player.ChosenOption = _context.Options.FirstOrDefault(o => o.Name == "Basic" && o.RoleId == "Retailer");
                     game.Retailer = player;
                     joined = true;
                 }
@@ -58,6 +78,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 {
                     Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Manufacturer");
+                    player.ChosenOption = _context.Options.FirstOrDefault(o => o.Name == "Basic" && o.RoleId == "Manufacturer");
                     game.Manufacturer = player;
                     joined = true;
                 }
@@ -65,6 +86,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 {
                     Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Processor");
+                    player.ChosenOption = _context.Options.FirstOrDefault(o => o.Name == "Basic" && o.RoleId == "Processor");
                     game.Processor = player;
                     joined = true;
                 }
@@ -72,6 +94,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 {
                     Player player = new Player(name, playerId);
                     player.Role = _context.Roles.FirstOrDefault(r => r.Id == "Farmer");
+                    player.ChosenOption = _context.Options.FirstOrDefault(o => o.Name == "Basic" && o.RoleId == "Farmer");
                     game.Farmer = player;
                     joined = true;
                 }
@@ -92,8 +115,10 @@ namespace BlockchainDemonstratorApi.Controllers
         }
 
         [HttpPost("ChooseOption")]
-        public void ChooseOption([FromBody] dynamic data)
+        public ActionResult ChooseOption([FromBody] dynamic data)
         {
+            if (data.option.Value == "" || data.playerId.Value == "") return BadRequest();
+
             string option = (string) data.option;
             string playerId = (string) data.playerId;
 
@@ -102,6 +127,7 @@ namespace BlockchainDemonstratorApi.Controllers
 
             _context.Players.Update(player);
             _context.SaveChanges();
+            return Ok();
         }
 
         [HttpPost("LeaveGame")]
@@ -126,14 +152,14 @@ namespace BlockchainDemonstratorApi.Controllers
         [HttpPost("GetGame")]
         public ActionResult<Game> GetGame([FromBody] string gameId)
         {
-            //string gameId = (string) data.gameId;
-            var game = GetGameFromContext(gameId);
+            if (gameId == "") return BadRequest();
+
+            var game = _context.Games.FirstOrDefault(game => game.Id == gameId);
 
             if (game == null)
             {
                 return NotFound();
             }
-            game.Players = new List<Player>();
             return game;
         }
 
@@ -141,7 +167,8 @@ namespace BlockchainDemonstratorApi.Controllers
         [HttpPost("SendOrders")]
         public ActionResult<Game> SendOrders([FromBody] dynamic data) //TODO: make singular later
         {
-            if (data.gameId == null) return NotFound();
+            if (data.gameId.Value == "") return BadRequest();
+
             string gameId = data.gameId;
             var game = GetGameFromContext(gameId);
 
@@ -237,27 +264,32 @@ namespace BlockchainDemonstratorApi.Controllers
 
         private Game GetGameFromContext(string gameId)
         {
-            Game game = _context.Games.FirstOrDefault(game => game.Id == gameId); //Seperated into chunks to reduce load time
+            Game game = _context.Games.FirstOrDefault(game => game.Id == gameId);
+            /*Seperated into chunks to reduce load time
             game.Retailer = _context.Games
                 .Include(g => g.Retailer).ThenInclude(p => p.Role)
                 .Include(g => g.Retailer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Retailer).ThenInclude(p => p.IncomingOrders)
-                .Include(g => g.Retailer).ThenInclude(p => p.OutgoingOrders).FirstOrDefault(game => game.Id == gameId).Retailer;
+                .Include(g => g.Retailer).ThenInclude(p => p.IncomingOrders).ThenInclude(o => o.Deliveries)
+                .Include(g => g.Retailer).ThenInclude(p => p.OutgoingOrders).ThenInclude(o => o.Deliveries)
+                .FirstOrDefault(game => game.Id == gameId).Retailer;
             game.Manufacturer = _context.Games
                 .Include(g => g.Manufacturer).ThenInclude(p => p.Role)
                 .Include(g => g.Manufacturer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingOrders)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.OutgoingOrders).FirstOrDefault(game => game.Id == gameId).Manufacturer;
+                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingOrders).ThenInclude(o => o.Deliveries)
+                .Include(g => g.Manufacturer).ThenInclude(p => p.OutgoingOrders).ThenInclude(o => o.Deliveries)
+                .FirstOrDefault(game => game.Id == gameId).Manufacturer;
             game.Processor = _context.Games
                 .Include(g => g.Processor).ThenInclude(p => p.Role)
                 .Include(g => g.Processor).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Processor).ThenInclude(p => p.IncomingOrders)
-                .Include(g => g.Processor).ThenInclude(p => p.OutgoingOrders).FirstOrDefault(game => game.Id == gameId).Processor;
+                .Include(g => g.Processor).ThenInclude(p => p.IncomingOrders).ThenInclude(o => o.Deliveries)
+                .Include(g => g.Processor).ThenInclude(p => p.OutgoingOrders).ThenInclude(o => o.Deliveries)
+                .FirstOrDefault(game => game.Id == gameId).Processor;
             game.Farmer = _context.Games
                 .Include(g => g.Farmer).ThenInclude(p => p.Role)
                 .Include(g => g.Farmer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrders)
-                .Include(g => g.Farmer).ThenInclude(p => p.OutgoingOrders).FirstOrDefault(game => game.Id == gameId).Farmer;
+                .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrders).ThenInclude(o => o.Deliveries)
+                .Include(g => g.Farmer).ThenInclude(p => p.OutgoingOrders).ThenInclude(o => o.Deliveries)
+                .FirstOrDefault(game => game.Id == gameId).Farmer;*/
             return game;
         }
     }

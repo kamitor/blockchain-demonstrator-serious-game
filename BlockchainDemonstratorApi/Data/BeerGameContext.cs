@@ -36,5 +36,12 @@ namespace BlockchainDemonstratorApi.Data
                .HasOne(o => o.HistoryOfPlayer)
                .WithMany(p => p.OrderHistory);
         }*/
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+
+            base.OnConfiguring(optionsBuilder);
+        }
     }
 }

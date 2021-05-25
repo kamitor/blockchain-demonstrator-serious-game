@@ -13,7 +13,7 @@ namespace BlockchainDemonstratorNUnitTest
         [SetUp]
         public void Setup()
         {
-            _game = new Game();
+            _game = new Game("123456");
         }
 
         [Test]

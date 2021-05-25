@@ -9,358 +9,315 @@ using Newtonsoft.Json;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
-    public class Player
-    {
-        [Key] 
-        public string Id { get; set; }
-        
-        [Required] 
-        public string Name { get; set; }
-        
-        public Role Role { get; set; }
+	public class Player
+	{
+		[Key]
+		public string Id { get; set; }
 
-        public double Profit
-        {
-            get { return Balance - (Factors.InitialCapital - Factors.SetupCost); }
-        }
+		[Required]
+		public string Name { get; set; }
 
-        public int Inventory { get; set; } = 20;
+		public virtual Role Role { get; set; }
 
-        public double Margin { get; set; }
+		public double Profit
+		{
+			get { return Balance - (Factors.InitialCapital - Factors.SetupCost); }
+		}
 
-        private Option _chosenOption;
-        //TODO: add migration
-        public Option ChosenOption {
-            get
-            {
-                if (_chosenOption != null)
-                {
-                    return _chosenOption;
-                }
-                else
-                {
-                    return new Option("Basic", 0, 0, 0, 0, 0, 0);
-                }
-            }
-            set
-            {
-                _chosenOption = value;
-            } 
-        }
-    
-        public double MarginCalculator(int currentDay)
-        {
-            return Margin = Payments
-                .Where(p => p.FromPlayer && p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement)
-                .Sum(p => p.Amount);
-        }
+		public int Inventory { get; set; } = Factors.DefaultInventory;
 
-        public int Backorder
-        {
-            get
-            {
-                if (IncomingOrders.Count == 0) return 0;
-                int max = IncomingOrders.Max(o => o.OrderDay);
-                return IncomingOrders.Where(o => o.OrderDay != max).Sum(o => o.Volume);
-            }
-        }
+		public double Margin { get; set; }
 
-        public Order CurrentOrder { get; set; }
+		private Option _chosenOption;
 
-        private List<Order> _outgoingOrders;
+		public virtual Option ChosenOption
+		{
+			get { return _chosenOption; }
+			set { _chosenOption = value; }
+		}
 
-        /// <summary>
-        /// The orders from the player itself
-        /// </summary>
-        [ForeignKey("OutgoingOrderForPlayerId")]
-        public List<Order> OutgoingOrders
-        {
-            get { return _outgoingOrders; }
-            set { _outgoingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
-        }
+		public double MarginCalculator(int currentDay)
+		{
+			return Margin = Payments
+				.Where(p => p.FromPlayer && p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement)
+				.Sum(p => p.Amount);
+		}
 
-        private List<Order> _incomingOrders;
+		public int Backorder
+		{
+			get
+			{
+				 int backorder = 0;
+				 foreach (Order incomingOrder in IncomingOrders)
+				 {
+					 backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
+				 }
 
-        /// <summary>
-        /// Order sent from your customer
-        /// </summary>
-        [ForeignKey("IncomingOrderForPlayerId")]
-        public List<Order> IncomingOrders
-        {
-            get { return _incomingOrders; }
-            set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
-        }
+				 return backorder;
+			}
+		}
 
-        [ForeignKey("PlayerId")] 
-        public List<Payment> Payments { get; set; }
-        public double Balance { get; set; }
+		public virtual Order CurrentOrder { get; set; }
 
-        [NotMapped]
-        public double HoldingCosts
-        {
-            get
-            {
-                //running cost= (volume of inventory* holding cost factor)+ (backorder factor* backorder* holding cost)+ (incoming order* holding cost) 
-                return (Inventory * Factors.HoldingFactor) +
-                       (Factors.HoldingFactor * 2 * Backorder) /*+ (IncomingOrder.Volume * holdingFactor)*/;
-            }
-        }
+		private List<Order> _outgoingOrders;
 
-        public Player(string name)
-        {
-            Id = Guid.NewGuid().ToString();
-            Name = name;
-            IncomingOrders = new List<Order>();
-            OutgoingOrders = new List<Order>();
-            Payments = new List<Payment>();
-        }
+		/// <summary>
+		/// The orders from the player itself
+		/// </summary>
+		[ForeignKey("OutgoingOrderForPlayerId")]
+		public virtual List<Order> OutgoingOrders
+		{
+			get { return _outgoingOrders; }
+			set { _outgoingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
+		}
 
-        [JsonConstructor]
-        public Player(string name, string playerId)
-        {
-            Id = playerId;
-            Name = name;
-            IncomingOrders = new List<Order>();
-            OutgoingOrders = new List<Order>();
-            Payments = new List<Payment>();
-        }
+		private List<Order> _incomingOrders;
 
-        /// <summary>Gets list of outgoing deliveries</summary>
-        /// <returns>List of Order objects with available stock</returns>
-        /// <param name="currentDay">integer that specifies the current day</param>
-        public void GetOutgoingDeliveries(int currentDay)
-        {
-            for (int i = 0; i < IncomingOrders.Count; i++)
-            {
-                int pendingVolume = IncomingOrders[i].Volume - IncomingOrders[i].Deliveries.Sum(d => d.Volume);
-                if (pendingVolume <= Inventory)
-                {
-                    Inventory -= pendingVolume;
-                    int price;
-                    //TODO: implement a better version
-                    switch (Role.Id)
-                    {
-                        case "Retailer":
-                            price = pendingVolume * Factors.RetailProductPrice;
-                            break;
-                        case "Manufacturer":
-                            price = pendingVolume * Factors.ManuProductPrice;
-                            break;
-                        case "Processor":
-                            price = pendingVolume * Factors.ProcProductPrice;
-                            break;
-                        case "Farmer":
-                            price = pendingVolume * Factors.FarmerProductPrice;
-                            break;
-                        default:
-                            price = 0;
-                            break;
-                    }
+		/// <summary>
+		/// Order sent from your customer
+		/// </summary>
+		[ForeignKey("IncomingOrderForPlayerId")]
+		public virtual List<Order> IncomingOrders
+		{
+			get { return _incomingOrders; }
+			set { _incomingOrders = value.OrderBy(o => o.OrderDay).ToList(); }
+		}
 
-                    Delivery delivery = new Delivery()
-                    {
-                        Volume = pendingVolume,
-                        SendDeliveryDay = currentDay,
-                        ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + new Random().Next(0, 4),
-                        Price = price
-                    };
-                    IncomingOrders[i].Deliveries.Add(delivery);
+		private List<Payment> _payments;
 
-                    GetPaidForDelivery(delivery);
-                    AddTransportCost(currentDay, delivery);
+		[ForeignKey("PlayerId")]
+		public virtual List<Payment> Payments
+		{
+			get { return _payments; }
+			set { _payments = value.OrderBy(o => o.DueDay).ThenBy(o => o.Topic).ToList(); }
+		}
 
-                    IncomingOrders.RemoveAt(i);
-                    i--;
-                }
-                else if (Inventory > 0)
-                {
-                    int price;
-                    //TODO: implement a better version
-                    switch (Role.Id)
-                    {
-                        case "Retailer":
-                            price = Inventory * Factors.RetailProductPrice;
-                            break;
-                        case "Manufacturer":
-                            price = Inventory * Factors.ManuProductPrice;
-                            break;
-                        case "Processor":
-                            price = Inventory * Factors.ProcProductPrice;
-                            break;
-                        case "Farmer":
-                            price = Inventory * Factors.FarmerProductPrice;
-                            break;
-                        default:
-                            price = 0;
-                            break;
-                    }
+		public double Balance { get; set; }
 
-                    Delivery delivery = new Delivery()
-                    {
-                        Volume = Inventory,
-                        SendDeliveryDay = currentDay,
-                        ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + new Random().Next(0, 4),
-                        Price = price
-                    };
-                    IncomingOrders[i].Deliveries.Add(delivery);
+		[NotMapped]
+		public double HoldingCosts
+		{
+			get
+			{
+				//TODO: Change to new formula
+				//running cost= (volume of inventory* holding cost factor)+ (backorder factor* backorder* holding cost)+ (incoming order* holding cost) 
+				return (Inventory * Factors.HoldingFactor) +
+				       (Factors.HoldingFactor * 2 * Backorder) /*+ (IncomingOrder.Volume * holdingFactor)*/;
+			}
+		}
 
-                    GetPaidForDelivery(delivery);
-                    AddTransportCost(currentDay, delivery);
+		public Player(string name)
+		{
+			Id = Guid.NewGuid().ToString();
+			Name = name;
+			IncomingOrders = new List<Order>();
+			OutgoingOrders = new List<Order>();
+			Payments = new List<Payment>();
+		}
 
-                    Inventory = 0;
-                }
-            }
-        }
+		[JsonConstructor]
+		public Player(string name, string playerId)
+		{
+			Id = playerId;
+			Name = name;
+			IncomingOrders = new List<Order>();
+			OutgoingOrders = new List<Order>();
+			Payments = new List<Payment>();
+		}
 
-        /// <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>
-        /// <remarks>Also adds a payment object to the Payments list for each received delivery</remarks>
-        /// <param name="currentDay">integer that specifies the current day</param>
-        public void ProcessDeliveries(int currentDay) //Reworked to new order system
-        {
-            foreach (Order order in OutgoingOrders)
-            {
-                foreach (Delivery delivery in order.Deliveries)
-                {
-                    if (Math.Floor(delivery.ArrivalDay) <= currentDay &&
-                        Math.Floor(delivery.ArrivalDay) > currentDay - Factors.RoundIncrement &&
-                        delivery.Processed == false)
-                    {
-                        Inventory += delivery.Volume;
-                        delivery.Processed = true;
-                        Payments.Add(new Payment()
-                        {
-                            Amount = delivery.Price * -1,
-                            DueDay = delivery.ArrivalDay + Factors.RoundIncrement,
-                            FromPlayer = true
-                        });
-                    }
-                }
-            }
-        }
-        
-        /// <summary>Gets all outgoing payments for received deliveries</summary>
-        /// <returns>List with payment objects that is used to pay suppliers</returns>
-        /// <remarks>
-        /// Because of the ProcessDeliveries method Payment objects will be added to the Payments list. For all these
-        /// items the FromPlayer bool is set to true. And the payment amount is a negative double. In this method we
-        /// search for these Payment Items, then flip their amount from negative to positive. And lastly return a list
-        /// of Payment objects
-        /// </remarks>
-        /// <param name="currentDay">integer that specifies the current day</param>
-        /// <param name="playerId">string that specifies the player id</param>
-        //TODO: test if you get double payments in db
-        public List<Payment> GetOutgoingPayments(int currentDay, string playerId)
-        {
-            List<Payment> payments = new List<Payment>();
+		/// <summary>Gets list of outgoing deliveries</summary>
+		/// <returns>List of Order objects with available stock</returns>
+		/// <param name="currentDay">integer that specifies the current day</param>
+		public void GetOutgoingDeliveries(int currentDay)
+		{
+			for (int i = 0; i < IncomingOrders.Count; i++)
+			{
+				int leadTimeRand = new Random().Next(Factors.OrderLeadTimeRandomMinimum,
+					Factors.OrderLeadTimeRandomMaximum + 1);
 
-            for (int i = 0; i < Payments.Count; i++)
-            {
-                if (Payments[i].FromPlayer && (int) Payments[i].DueDay <= currentDay &&
-                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
-                {
-                    payments.Add(new Payment()
-                    {
-                        Amount = Payments[i].Amount * -1,
-                        DueDay = Payments[i].DueDay + Factors.RoundIncrement,
-                        FromPlayer = true,
-                        PlayerId = playerId,
-                        Id = Guid.NewGuid().ToString()
-                    });
-                }
-            }
+				int pendingVolume = IncomingOrders[i].Volume - IncomingOrders[i].Deliveries.Sum(d => d.Volume);
+				if (pendingVolume <= Inventory)
+				{
+					Delivery delivery = new Delivery()
+					{
+						Volume = pendingVolume,
+						SendDeliveryDay = currentDay,
+						ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + leadTimeRand,
+						Price = pendingVolume * Role.ProductPrice
+					};
+					IncomingOrders[i].Deliveries.Add(delivery);
 
-            return payments;
-        }
+					GetPaidForDelivery(delivery);
+					AddTransportCost(currentDay, leadTimeRand);
+					AddMaintenanceCost(currentDay, leadTimeRand);
 
-        /// <summary>
-        /// Adds payment object to Payments for a completed delivery
-        /// </summary>
-        /// <param name="delivery">Delivery object for which the player has to get paid</param>
-        public void GetPaidForDelivery(Delivery delivery)
-        {
-            Payments.Add(new Payment()
-            {
-                Amount = delivery.Price, Id = Guid.NewGuid().ToString(),
-                DueDay = delivery.ArrivalDay + (2 * Factors.RoundIncrement), FromPlayer = true, PlayerId = this.Id
-            });
-        }
+					IncomingOrders.RemoveAt(i);
+					Inventory -= pendingVolume;
+					i--;
+				}
+				else if (Inventory > 0)
+				{
+					Delivery delivery = new Delivery()
+					{
+						Volume = Inventory,
+						SendDeliveryDay = currentDay,
+						ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + leadTimeRand,
+						Price = Inventory * Role.ProductPrice
+					};
+					IncomingOrders[i].Deliveries.Add(delivery);
+					
 
-        /// <summary>Adds payment objects to the Payments list which are classified as transportation costs</summary>
-        /// <param name="currentDay">double that specifies the current day</param>
-        /// <param name="delivery">Delivery object that has been sent to the customer</param>
-        public void AddTransportCost(double currentDay, Delivery delivery)
-        {
-            double transportDays = (delivery.ArrivalDay - currentDay);
+					GetPaidForDelivery(delivery);
+					AddTransportCost(currentDay, leadTimeRand);
+					AddMaintenanceCost(currentDay, leadTimeRand);
 
-            if (Role.Id == "Farmer")
-            {
-                Payments.Add(new Payment()
-                {
-                    Amount = transportDays * Factors.FarmerTransport * -1, DueDay = currentDay, FromPlayer = false,
-                    PlayerId = this.Id, Id = Guid.NewGuid().ToString()
-                });
-            }
-            else if (Role.Id == "Processor")
-            {
-                Payments.Add(new Payment()
-                {
-                    Amount = transportDays * Factors.ProcTransport * -1, DueDay = currentDay, FromPlayer = false,
-                    PlayerId = this.Id, Id = Guid.NewGuid().ToString()
-                });
-            }
-            else if (Role.Id == "Manufacturer")
-            {
-                Payments.Add(new Payment()
-                {
-                    Amount = transportDays * Factors.ManuTransport * -1, DueDay = currentDay, FromPlayer = false,
-                    PlayerId = this.Id, Id = Guid.NewGuid().ToString()
-                });
-            }
-            else
-            {
-                Payments.Add(new Payment()
-                {
-                    Amount = transportDays * Factors.RetailTransport * -1, DueDay = currentDay, FromPlayer = false,
-                    PlayerId = this.Id, Id = Guid.NewGuid().ToString()
-                });
-            }
-        }
+					Inventory = 0;
+				}
+			}
+		}
 
-        public void AddPenalty(double amount, int currentDay)
-        {
-            Payments.Add(new Payment()
-            {
-                Amount = amount,
-                DueDay = currentDay,
-                FromPlayer = false, 
-                PlayerId = this.Id,
-                Id = Guid.NewGuid().ToString()
-            });
-        }
-  
-        /// <summary>Adds a holding cost payment to the Payments list </summary>
-        /// <param name="currentDay">integer that specifies the current day</param>
-        public void SetHoldingCost(int currentDay)
-        {
-            Payments.Add(new Payment()
-            {
-                Amount = HoldingCosts * -1, DueDay = currentDay, FromPlayer = false, PlayerId = this.Id,
-                Id = Guid.NewGuid().ToString()
-            });
-        }
-        
-        /// <summary>Updates player balance</summary>
-        /// <param name="currentDay">integer that specifies the current day</param>
-        public void UpdateBalance(int currentDay)
-        {
-            for (int i = 0; i < Payments.Count; i++)
-            {
-                if ((int) Payments[i].DueDay <= currentDay &&
-                    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
-                {
-                    Balance += Payments[i].Amount;
-                }
-            }
-        }
-    }
+		/// <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>
+		/// <remarks>Also adds a payment object to the Payments list for each received delivery</remarks>
+		/// <param name="currentDay">integer that specifies the current day</param>
+		public void ProcessDeliveries(int currentDay) //Reworked to new order system
+		{
+			foreach (Order order in OutgoingOrders)
+			{
+				foreach (Delivery delivery in order.Deliveries)
+				{
+					if (Math.Floor(delivery.ArrivalDay) <= currentDay &&
+					    Math.Floor(delivery.ArrivalDay) > currentDay - Factors.RoundIncrement &&
+					    delivery.Processed == false)
+					{
+						Inventory += delivery.Volume;
+						delivery.Processed = true;
+						Payments.Add(new Payment()
+						{
+							Amount = delivery.Price * -1,
+							DueDay = delivery.ArrivalDay + Factors.RoundIncrement,
+							FromPlayer = true,
+							Topic = "Order"
+						});
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Adds payment object to Payments for a completed delivery
+		/// </summary>
+		/// <param name="delivery">Delivery object for which this player has to get paid</param>
+		public void GetPaidForDelivery(Delivery delivery)
+		{
+			Payments.Add(new Payment()
+			{
+				Amount = delivery.Price,
+				DueDay = delivery.ArrivalDay + (2 * Factors.RoundIncrement),
+				FromPlayer = true,
+				PlayerId = this.Id,
+				Topic = "Delivery"
+			});
+		}
+
+		/// <summary>Adds payment objects to the Payments list which are classified as transportation costs</summary>
+		/// <param name="currentDay">double that specifies the current day</param>
+		/// <param name="leadTimeChange">Specifies the amount the lead time has changed</param>
+		public void AddTransportCost(double currentDay, double leadTimeChange)
+		{
+			Payments.Add(new Payment()
+			{
+				Amount = (ChosenOption.TransportCostOneTrip + (ChosenOption.TransportCostPerDay * leadTimeChange)) * -1,
+				DueDay = currentDay, FromPlayer = false,
+				PlayerId = this.Id,
+				Topic = "Transport"
+			});
+		}
+
+		/// <summary>
+		/// Adds the maintenance cost to the players Payments list
+		/// </summary>
+		/// <param name="currentDay">double that specifies the current day</param>
+		/// <param name="leadTimeChange">the amount the lead time has changed for the current outgoing delivery</param>
+		public void AddMaintenanceCost(double currentDay, double leadTimeChange)
+		{
+			if (leadTimeChange > 0)
+			{
+				Payments.Add(new Payment()
+				{
+					Amount = -1 * leadTimeChange * ChosenOption.CostOfMaintenance,
+					DueDay = currentDay, FromPlayer = false, PlayerId = this.Id, Topic = "Maintenance"
+				});
+			}
+		}
+
+		/// <summary>
+		/// Adds the flexibility payment to the player if the amount paid is more than 0
+		/// </summary>
+		/// <remarks>
+		/// this method should be called each round
+		/// </remarks>
+		/// <param name="currentDay">double that specifies the current day</param>
+		public void AddFlexibility(double currentDay)
+		{
+			if (ChosenOption.Flexibility > 0)
+			{
+				Payments.Add(new Payment
+				{
+					Amount = ChosenOption.Flexibility,
+					DueDay = currentDay,
+					FromPlayer = false,
+					PlayerId = this.Id,
+					Topic = "Flexibility"
+				});
+			}
+		}
+
+		/// <summary>
+		/// Adds a payment to the Payments list 
+		/// </summary>
+		/// <param name="currentDay">The current day</param>
+		public void AddPenalty(int currentDay)
+		{
+			Payments.Add(new Payment()
+			{
+				Amount = ChosenOption.GuaranteedCapacityPenalty * -1,
+				DueDay = currentDay,
+				FromPlayer = false,
+				PlayerId = this.Id,
+				Topic = "Penalty"
+			});
+		}
+
+		/// <summary>Adds a holding cost payment to the Payments list </summary>
+		/// <param name="currentDay">integer that specifies the current day</param>
+		//TODO: HoldingCost can be zero (adds extra records in database)
+		public void SetHoldingCost(int currentDay)
+		{
+			if (HoldingCosts > 0)
+			{
+				Payments.Add(new Payment()
+				{
+					Amount = HoldingCosts * -1,
+					DueDay = currentDay,
+					FromPlayer = false,
+					PlayerId = this.Id,
+					Topic = "Holding cost"
+				});
+			}
+		}
+
+		/// <summary>Updates player balance</summary>
+		/// <param name="currentDay">integer that specifies the current day</param>
+		public void UpdateBalance(int currentDay)
+		{
+			for (int i = 0; i < Payments.Count; i++)
+			{
+				if ((int) Payments[i].DueDay <= currentDay &&
+				    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
+				{
+					Balance += Payments[i].Amount;
+				}
+			}
+		}
+	}
 }

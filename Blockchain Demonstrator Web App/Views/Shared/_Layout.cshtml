@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/css/BeerGame.css" />
 </head>
 <body>
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -19,17 +20,29 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <div class="container">
+
+                                <a href="https://localhost:44313" class="btn btn-outline-primary my-2 my-sm-0 login-color"
+                                   style="">Home Page</a>
+
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <div class="container">
+
+                                <a href=" https://localhost:44313/Home/Privacy" class="btn btn-outline-primary my-2 my-sm-0 login-color"
+                                   style="">Privacy</a>
+
+                            </div>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

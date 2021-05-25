@@ -16,5 +16,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
         public double DueDay { get; set; }
         public bool FromPlayer { get; set; }
+        public string Topic { get; set; }
     }
 }

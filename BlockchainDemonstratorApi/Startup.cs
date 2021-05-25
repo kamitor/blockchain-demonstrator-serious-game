@@ -13,7 +13,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using BlockchainDemonstratorApi.Data;
+using BlockchainDemonstratorApi.Hubs;
 using BlockchainDemonstratorApi.Models.Classes;
+using Newtonsoft.Json.Serialization;
 
 namespace BlockchainDemonstratorApi
 {
@@ -31,8 +33,11 @@ namespace BlockchainDemonstratorApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson(options => 
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            });
 
             services.AddDbContext<BeerGameContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("BeerGameContext")));
@@ -42,10 +47,12 @@ namespace BlockchainDemonstratorApi
                 options.AddPolicy(name: BlockchainDemonstratorWebApp,
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:44313").AllowAnyHeader().AllowAnyMethod(); //TODO: use static URL
+                        builder.WithOrigins("https://localhost:44313").AllowAnyHeader()
+                            .AllowAnyMethod().AllowCredentials(); //TODO: use static URL
                     });
             });
-            //services.AddSingleton<IGameRepository>()
+            
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,20 +62,21 @@ namespace BlockchainDemonstratorApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseCors(BlockchainDemonstratorWebApp);
 
             SeedData.Initialize(beerGameContext);
-
-            app.UseCors(BlockchainDemonstratorWebApp);
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<GameHub>("/GameHub");
             });
         }
     }

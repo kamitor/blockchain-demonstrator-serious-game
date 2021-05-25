@@ -29,6 +29,7 @@ namespace Blockchain_Demonstrator_Web_App
         {
             services.AddControllersWithViews();
             //services.AddSingleton<IConfiguration>(Configuration);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +61,7 @@ namespace Blockchain_Demonstrator_Web_App
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                
             });
         }
     }

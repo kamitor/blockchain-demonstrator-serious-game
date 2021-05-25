@@ -11,6 +11,8 @@
 
 @section Scripts
 {
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/BeerGame.js"></script>
     <script>
     
        function getCookie(name) {
@@ -23,5 +25,7 @@
            $("#join-game-form--textinput").val(getCookie("JoinedGame"));
            $("#join-game-form").css("display", "block")     
        }
+       
+       BeerGame.init(getCookie('JoinedGame'), getCookie('PlayerId'))
     </script>
 }
