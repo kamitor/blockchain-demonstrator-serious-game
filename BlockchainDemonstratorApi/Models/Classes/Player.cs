@@ -47,9 +47,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			get
 			{
-				if (IncomingOrders.Count == 0) return 0;
-				int max = IncomingOrders.Max(o => o.OrderDay);
-				return IncomingOrders.Where(o => o.OrderDay != max).Sum(o => o.Volume);
+				 int backorder = 0;
+				 foreach (Order incomingOrder in IncomingOrders)
+				 {
+					 backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
+				 }
+
+				 return backorder;
 			}
 		}
 
@@ -161,6 +165,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 						Price = Inventory * Role.ProductPrice
 					};
 					IncomingOrders[i].Deliveries.Add(delivery);
+					
 
 					GetPaidForDelivery(delivery);
 					AddTransportCost(currentDay, leadTimeRand);

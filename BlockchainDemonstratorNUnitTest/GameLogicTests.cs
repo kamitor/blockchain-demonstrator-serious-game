@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.VisualStudio.TestPlatform.CrossPlatEngine;
 using NuGet.Frameworks;
 
 namespace BlockchainDemonstratorNUnitTest
@@ -22,18 +23,22 @@ namespace BlockchainDemonstratorNUnitTest
 
             Player retailer = new Player("RetailerTest");
             retailer.Role = new Role("Retailer", 1.7083333, Product.Beer);
+            retailer.ChosenOption = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
             _game.Retailer = retailer;
 
             Player manufacturer = new Player("ManufacturerTest");
             manufacturer.Role = new Role("Manufacturer", 1.375, Product.Packs);
+            manufacturer.ChosenOption = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
             _game.Manufacturer = manufacturer;
 
             Player processor = new Player("ProcessorTest");
             processor.Role = new Role("Processor", 17.166667, Product.Barley);
+            processor.ChosenOption = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
             _game.Processor = processor;
 
             Player farmer = new Player("FarmerTest");
             farmer.Role = new Role("Farmer", 22.333333, Product.Seeds);
+            farmer.ChosenOption = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
             _game.Farmer = farmer;
 
             _game.Retailer.CurrentOrder = new Order { Volume = 10 };
@@ -60,6 +65,7 @@ namespace BlockchainDemonstratorNUnitTest
         [Test]
         public void ProgressInventoriesTest()
         {
+            _game.Progress();
             _game.Progress();
 
             if (_game.Retailer.Inventory >= 5 && _game.Retailer.Inventory <= 15 &&
@@ -172,7 +178,8 @@ namespace BlockchainDemonstratorNUnitTest
         public void OrderFailedToDeliverFullVolume_ExcessAddedToBackorder() //TODO: Probably no longer works because of order rework
         {
             _game.Manufacturer.Inventory = 10;
-            _game.Manufacturer.IncomingOrders.Add(new Order() {Volume = 20});
+            _game.Manufacturer.IncomingOrders.Add(new Order() {Volume = 20, OrderDay = -1});
+            
 
             _game.Manufacturer.GetOutgoingDeliveries(1);
 
