@@ -49,7 +49,7 @@ const BeerGame = (() => {
         updateGameTuningIncomingOrder(gameSerialized);
         updateGameTuningIncomingDeliveries(gameSerialized);
         updateGameTuningOrderHistory(gameSerialized);
-        //TODO: update payments tomorrow also move functions to new module?
+        updateGameTuningPayments(gameSerialized);
     }
 
     const updateGameTuningBalance = (game) => {
@@ -165,6 +165,44 @@ const BeerGame = (() => {
                 <td>${volume}</td>
             </tr>`));
     }
+
+    updateGameTuningPayments = (game) => {
+        updateGameTuningPaymentsBody("Retailer", game);
+        updateGameTuningPaymentsBody("Manufacturer", game);
+        updateGameTuningPaymentsBody("RetailProcessorer", game);
+        updateGameTuningPaymentsBody("Farmer", game);
+    }
+
+    updateGameTuningPaymentsBody = (player, game) => {
+        $("#payments-" + player).empty();
+        let style = "";
+        let lastPayment = null;
+        game[player].Payments.sort((a, b) => {
+            if (a.DueDay > b.DueDay) return 1;
+            else if (a.DueDay < b.DueDay) return -1;
+
+            if (a.Topic.toLowerCase() > b.Topic.toLowerCase()) return 1;
+            if (a.Topic.toLowerCase() < b.Topic.toLowerCase()) return -1;
+            return 0;
+        });
+        game[player].Payments.forEach(payment => {
+            if (payment.DueDay <= game.CurrentDay && payment.DueDay > game.CurrentDay - 7) style = "background-color:#f5fac5;";
+            if (lastPayment != null
+                && Math.ceil(payment.DueDay / 7 + 1 - (1 / 7))
+                > Math.ceil(lastPayment.DueDay / 7 + 1 - (1 / 7))) {
+                style += "border-top: 3px solid grey;";
+            }
+            $("#payments-" + player).append(`<tr style="${style}">
+                                                <td>${payment.Topic}</td>
+                                                <td style="${(payment.Amount >= 0) ? "color:green" : "color:red"}">${payment.Amount}</td>
+                                                <td>${roundOff(payment.DueDay)}</td>
+                                                <td>${payment.FromPlayer}</td>
+                                            </tr>`);
+            lastPayment = payment;
+            style = "";
+        });
+    }
+
 
     const updateGame = (game) => {
         gameSerialized = JSON.parse(game);
