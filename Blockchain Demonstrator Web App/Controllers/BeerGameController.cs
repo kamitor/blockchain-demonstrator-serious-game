@@ -127,6 +127,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return View();
         }
 
+        public IActionResult Graphs()
+        {
+            return View();
+        }
 
         public void SetCookie(string key, string value, int? expireTime)
         {

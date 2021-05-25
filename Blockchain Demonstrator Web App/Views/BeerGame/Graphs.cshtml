@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewData["Title"] = "Graphs";
+}
+
+
+<h1>Graphs</h1>
+
+
+
+<body>
+
+    <canvas id="myChart" width="800" height="400"></canvas>
+
+
+
+
+
+
+    @section Scripts{
+        <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+        <script src="~/js/BeerGame.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
+
+        <script>
+
+
+            BeerGame.init("846011");
+
+            async function getData() {
+
+                BeerGame.getGame()
+                    .then(result => {
+                        let game = JSON.parse(result);
+                        console.log(game);
+
+
+                    })
+
+
+
+
+
+            }
+
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day2', 'day3', 'day4', 'day5', 'day6'],
+                    datasets: [{
+                        label: 'Orders',
+                        data: [12, 19, 3, 5, 2, 3, 19, 3, 5, 2, 3],
+                        fill: true,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+
+    }
+</body>
+</html>
