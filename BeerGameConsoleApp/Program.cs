@@ -30,8 +30,7 @@ namespace BeerGameConsoleApp
             pl.AddTransportCost(1, 2);
             
             pl.AddTransportCost(1, 3);
-            
-           
+
         }
     }
 }

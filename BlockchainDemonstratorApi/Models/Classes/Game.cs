@@ -396,13 +396,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             foreach (Player player in Players)
             {
-                player.Payments.Add(new Payment { 
-                    Amount = player.ChosenOption.Flexibility, 
-                    DueDay = CurrentDay, 
-                    FromPlayer = false, 
-                    PlayerId = player.Id,
-                    Topic = "Flexibility"
-                });
+                player.AddFlexibility(CurrentDay);
             }
         }
     }

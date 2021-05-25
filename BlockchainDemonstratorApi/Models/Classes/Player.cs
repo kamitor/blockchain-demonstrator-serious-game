@@ -141,6 +141,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
                     GetPaidForDelivery(delivery);
                     AddTransportCost(currentDay, leadTimeRand);
+                    AddMaintenanceCost(currentDay, leadTimeRand);
 
                     IncomingOrders.RemoveAt(i);
                     Inventory -= pendingVolume;
@@ -159,6 +160,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
                     GetPaidForDelivery(delivery);
                     AddTransportCost(currentDay, leadTimeRand);
+                    AddMaintenanceCost(currentDay, leadTimeRand);
 
                     Inventory = 0;
                 }
@@ -213,13 +215,54 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// <param name="leadTimeChange">Specifies the amount the lead time has changed</param>
         public void AddTransportCost(double currentDay, double leadTimeChange)
         {
-            Payments.Add(new Payment()
+            if (leadTimeChange > 0)
             {
-                Amount = (ChosenOption.TransportCostOneTrip + (ChosenOption.TransportCostPerDay * leadTimeChange)) * -1,
-                DueDay = currentDay, FromPlayer = false,
-                PlayerId = this.Id,
-                Topic = "Transport"
-            });
+                Payments.Add(new Payment()
+                {
+                    Amount = (ChosenOption.TransportCostOneTrip + (ChosenOption.TransportCostPerDay * leadTimeChange)) * -1,
+                    DueDay = currentDay, FromPlayer = false,
+                    PlayerId = this.Id,
+                    Topic = "Transport"
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds the maintenance cost to the players Payments list
+        /// </summary>
+        /// <param name="currentDay">double that specifies the current day</param>
+        /// <param name="leadTimeChange">the amount the lead time has changed for the current outgoing delivery</param>
+        public void AddMaintenanceCost(double currentDay, double leadTimeChange)
+        {
+            if (leadTimeChange > 0)
+            {
+                Payments.Add(new Payment()
+                {
+                    Amount = leadTimeChange * ChosenOption.CostOfMaintenance,
+                    DueDay = currentDay, FromPlayer = false, PlayerId = this.Id, Topic = "Maintenance"
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds the flexibility payment to the player if the amount paid is more than 0
+        /// </summary>
+        /// <remarks>
+        /// this method should be called each round
+        /// </remarks>
+        /// <param name="currentDay">double that specifies the current day</param>
+        public void AddFlexibility(double currentDay)
+        {
+            if (ChosenOption.Flexibility > 0)
+            {
+                Payments.Add(new Payment { 
+                    Amount = ChosenOption.Flexibility, 
+                    DueDay = currentDay, 
+                    FromPlayer = false, 
+                    PlayerId = this.Id,
+                    Topic = "Flexibility"
+                });
+            }
         }
 
         /// <summary>

@@ -18,8 +18,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int SetupOrderVolume { get; set; } = 5;
         public static int SetupDeliveryVolume { get; set; } = 5;
         #endregion
-
+        
         #region Transport factors
+        //TODO: these are not used
         public static int RetailTransport { get; set; } = 1086;
         public static int ManuTransport { get; set; } = 516;
         public static int ProcTransport { get; set; } = 73;
