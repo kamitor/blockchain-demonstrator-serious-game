@@ -45,7 +45,7 @@ tr:nth-child(even) {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content:center;
+    justify-content: center;
 }
 
 .ui-item {
