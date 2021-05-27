@@ -335,13 +335,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			Manufacturer.GetOutgoingDeliveries(CurrentDay);
 			Processor.GetOutgoingDeliveries(CurrentDay);
 			Farmer.GetOutgoingDeliveries(CurrentDay);
+			//TODO(Mees): this fixes the delivery problem for the farmer but it is an ugly solution imo
 			Farmer.CurrentOrder.Deliveries = new List<Delivery>()
 			{
 				new Delivery()
 				{
 					Volume = Farmer.CurrentOrder.Volume,
 					SendDeliveryDay = CurrentDay,
-					ArrivalDay = CurrentDay + Factors.RoundIncrement + new Random().Next(0, 4),
+					ArrivalDay = CurrentDay + Factors.RoundIncrement * 2 + new Random().Next(0, 4),
 					Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume
 				}
 			};

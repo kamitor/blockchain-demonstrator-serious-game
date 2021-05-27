@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using Microsoft.VisualStudio.TestPlatform.CrossPlatEngine;
 using NuGet.Frameworks;
@@ -47,8 +48,9 @@ namespace BlockchainDemonstratorNUnitTest
             _game.Farmer.CurrentOrder = new Order { Volume = 13 };
         }
 
+        //TODO: fix test or delete
         /*[Test]
-        public void ProgressIncomingOrdersTests() //TODO: rewrite later
+        public void ProgressIncomingOrdersTests()
         {
             _game.Progress();
 
@@ -68,14 +70,13 @@ namespace BlockchainDemonstratorNUnitTest
             _game.Progress();
             _game.Progress();
 
-            if (_game.Retailer.Inventory >= 5 && _game.Retailer.Inventory <= 15 &&
-                _game.Manufacturer.Inventory == 10 &&
-                _game.Processor.Inventory == 9 &&
-                _game.Farmer.Inventory == 8)
+            Assert.Multiple(() =>
             {
-                Assert.Pass();
-            }
-            Assert.Fail();
+                Assert.IsTrue(_game.Retailer.Inventory >= 5 && _game.Retailer.Inventory <= 15);
+                Assert.AreEqual(10, _game.Manufacturer.Inventory);
+                Assert.AreEqual(9, _game.Processor.Inventory);
+                Assert.AreEqual(8, _game.Farmer.Inventory);
+            });
         }
 
         [Test]
@@ -93,6 +94,7 @@ namespace BlockchainDemonstratorNUnitTest
             Assert.Fail();
         }
 
+        //TODO: fix test use repeat function
         [Test]
         public void ProgressProcessDeliveries() //TODO: Does not always work even though 5*10 = 50 days is more than maximum possible leadtime
         {
@@ -160,6 +162,7 @@ namespace BlockchainDemonstratorNUnitTest
             Assert.IsTrue(result);
         }
 
+        //TODO: fix test or delete
         [Test]
         public void OrderLeadtimeRandomlyIncreases() //TODO: No longer works because GetOutgoingDeliveries() is a void
         {
@@ -188,6 +191,7 @@ namespace BlockchainDemonstratorNUnitTest
             Assert.AreEqual(10, result);
         }
 
+        //TODO: fix test or delete
         [Test]
         public void OrderPriceSubtractedFromBalance_expectTrue() //No longer works because order does not have price
         {
@@ -198,6 +202,7 @@ namespace BlockchainDemonstratorNUnitTest
             Assert.AreEqual(-2000, _game.Manufacturer.Balance);*/
         }
         
+        //TODO: fix test or delete
         [Test]
         public void OrderPriceAddedToBalance_expectTrue() //No longer works because order does not have price
         {

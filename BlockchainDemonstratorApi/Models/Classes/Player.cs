@@ -125,6 +125,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			Payments = new List<Payment>();
 		}
 
+		//TODO: doc blocks are incorrect
 		/// <summary>Gets list of outgoing deliveries</summary>
 		/// <returns>List of Order objects with available stock</returns>
 		/// <param name="currentDay">integer that specifies the current day</param>
