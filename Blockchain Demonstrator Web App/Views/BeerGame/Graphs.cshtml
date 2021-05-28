@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Graphs";
 }
 
@@ -7,22 +6,15 @@
 <h1>Graphs</h1>
 
 
-
-<body>
-
-    <canvas id="myChart" width="800" height="400"></canvas>
+<canvas id="myChart" width="800" height="400"></canvas>
 
 
+@section Scripts{
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/BeerGame.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
 
-
-
-
-    @section Scripts{
-        <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
-        <script src="~/js/BeerGame.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
-
-        <script>
+    <script>
 
 
            // BeerGame.init("846011");
@@ -79,6 +71,4 @@
             });
         </script>
 
-    }
-</body>
-</html>
+}
