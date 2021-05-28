@@ -48,7 +48,9 @@ namespace BlockchainDemonstratorApi
                     builder =>
                     {
                         builder.WithOrigins("https://localhost:44313").AllowAnyHeader()
-                            .AllowAnyMethod().AllowCredentials(); //TODO: use static URL
+                            .AllowAnyMethod().AllowCredentials();
+                        builder.WithOrigins("https://localhost:5001").AllowAnyHeader()
+                            .AllowAnyMethod().AllowCredentials();
                     });
             });
             

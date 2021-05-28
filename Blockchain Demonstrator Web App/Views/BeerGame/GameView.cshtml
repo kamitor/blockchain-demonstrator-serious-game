@@ -208,7 +208,7 @@
     <script src="~/js/BeerGame.js"></script>
     <script>
         $("document").ready(() => {
-            BeerGame.init("@Model.Id", "");
+            BeerGame.init("@Model.Id", "", "@ViewData["RestApiUrl"]");
             $("#btnPrevious").on("click", () => {
                 $(".actor-display").each((index, element) => {
                     if ($(element).css("display") == "flex" && index > 0) {

@@ -26,6 +26,7 @@
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/BeerGame.js"></script>
     <script>
+        BeerGame.init("", "", "@ViewData["RestApiUrl"]");
         $("#game-pin-button").on("click", () => {
             let role = $("#select-role-dropdown").val();
             let name = $("#select-role-text").val();

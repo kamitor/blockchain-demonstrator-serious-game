@@ -17,6 +17,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
     {
         public IActionResult Index()
         {
+            ViewData["RestApiUrl"] = Config.RestApiUrl;
             return View();
         }
         
@@ -36,6 +37,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     if (responseString != null) 
                     {
                         Game game = JsonConvert.DeserializeObject<Game>(responseString);
+                        ViewData["RestApiUrl"] = Config.RestApiUrl;
                         /*if (game.Retailer != null) game.Retailer.OrderHistory = GetOrdersFromPlayer(game.Retailer.Id);
                         if (game.Manufacturer != null) game.Manufacturer.OrderHistory = GetOrdersFromPlayer(game.Manufacturer.Id);
                         if (game.Processor != null) game.Processor.OrderHistory = GetOrdersFromPlayer(game.Processor.Id);
@@ -81,6 +83,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                         ViewData["CurrentDay"] = game.CurrentDay;
                         ViewData["GameId"] = game.Id;
                         ViewData["GameReady"] = game.Players.Count == 4;
+                        ViewData["RestApiUrl"] = Config.RestApiUrl;
                         return View(player);
                     }
                 }
@@ -119,6 +122,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 
         public IActionResult GamePinView()
         {
+            ViewData["RestApiUrl"] = Config.RestApiUrl;
             return View();
         }
 

@@ -1,15 +1,16 @@
 const BeerGame = (() => {
 
     const configMap = {
-        baseUrl: "https://localhost:44393",
+        baseUrl: "",
         gameId: "",
         playerId: ""
     }
 
-    const init = (gameId, playerId) => {
+    const init = (gameId, playerId, baseUrl) => {
         configMap.gameId = gameId;
         configMap.playerId = playerId;
-        BeerGame.Signal.init();
+        configMap.baseUrl = baseUrl;
+        BeerGame.Signal.init(baseUrl);
     }
 
     const getGame = () => {
@@ -255,19 +256,43 @@ const BeerGame = (() => {
 })();
 
 BeerGame.Signal = (() => {
-
-    var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:44393/GameHub").build();
-    $("place-order-button").disabled = true;
     
-    connection.start().then(function () {
-        $("place-order-button").disabled = false;
-        if (BeerGame.Cookie.getCookie("JoinedGame") != null) joinGroup();
-    }).catch(function (err) {
-        return console.error(err.toString());
-    });
+    const configMap = {
+        baseUrl: ""
+    }
 
-    let init = () => {
-        
+    var connection; 
+    $("place-order-button").disabled = true;
+
+    let init = (baseUrl) => {
+        configMap.baseUrl = baseUrl;
+
+        connection = new signalR.HubConnectionBuilder().withUrl(`${configMap.baseUrl}/GameHub`).build();
+
+        connection.start().then(function () {
+            $("place-order-button").disabled = false;
+            if (BeerGame.Cookie.getCookie("JoinedGame") != null) joinGroup();
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        connection.on("ShowGame", function (game) {
+            $(".lds").hide();
+            $(".actor-tab").show();
+            BeerGame.updateGameTuningPage(game);
+        })
+
+        connection.on("UpdateGame", function (game) {
+            BeerGame.updateGameTuningPage(game);
+        })
+
+        connection.on("HelloWorld", function () {
+            console.log("Hello from Hub");
+        })
+
+        connection.on("PromptOptions", function () {
+            BeerGame.promptOptions();
+        })
     }
 
     let sendOrder = () => {
@@ -289,24 +314,6 @@ BeerGame.Signal = (() => {
     let joinGame = (gameId, role, name, playerId) => {
         return connection.invoke("JoinGame", gameId, role, name, playerId);
     }
-
-    connection.on("ShowGame", function (game) {
-        $(".lds").hide();
-        $(".actor-tab").show();
-        BeerGame.updateGameTuningPage(game);
-    })
-
-    connection.on("UpdateGame", function (game) {
-        BeerGame.updateGameTuningPage(game);
-    })
-
-    connection.on("HelloWorld", function () {
-        console.log("Hello from Hub");
-    })
-
-    connection.on("PromptOptions", function () {
-        BeerGame.promptOptions();
-    })
 
     return {
         init: init,

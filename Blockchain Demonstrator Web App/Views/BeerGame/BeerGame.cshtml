@@ -212,7 +212,7 @@
     <script src="~/js/BeerGame.js"></script>
     <script>
         $(document).ready(() => {
-            BeerGame.init("@gameId", "@Model.Id");
+            BeerGame.init("@gameId", "@Model.Id", "@ViewData["RestApiUrl"]");
             $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
         });
     </script>
