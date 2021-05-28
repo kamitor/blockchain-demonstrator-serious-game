@@ -290,9 +290,10 @@ BeerGame.Signal = (() => {
         return connection.invoke("JoinGame", gameId, role, name, playerId);
     }
 
-    connection.on("ShowGame", function () {
+    connection.on("ShowGame", function (game) {
         $(".lds").hide();
         $(".actor-tab").show();
+        BeerGame.updateGameTuningPage(game);
     })
 
     connection.on("UpdateGame", function (game) {

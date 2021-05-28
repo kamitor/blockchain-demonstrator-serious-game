@@ -33,9 +33,9 @@ namespace BlockchainDemonstratorApi.Hubs
             if (game.Manufacturer == null) game.Manufacturer = new Player("Mtest");
             if (game.Processor == null) game.Processor = new Player("Ptest");*/
             
-            game.Retailer.CurrentOrder = new Order() {Volume = 12};
+            /*game.Retailer.CurrentOrder = new Order() {Volume = 12};
             game.Manufacturer.CurrentOrder = new Order() {Volume = 12};
-            game.Processor.CurrentOrder = new Order() {Volume = 12};
+            game.Processor.CurrentOrder = new Order() {Volume = 12};*/
             
             if (player != null)
                 player.CurrentOrder = new Order(){Volume = Convert.ToInt32(volume)};
@@ -101,14 +101,15 @@ namespace BlockchainDemonstratorApi.Hubs
 
                 if (joined)
                 {
+                    if(game.Players.Count == 4)
+                    {
+                        game.SetupGame();
+                        await Clients.Group(gameId).SendAsync("ShowGame", game);
+                    }
                     _context.Games.Update(game);
                     _context.SaveChanges();
                 }
 
-                if(game.Players.Count == 4)
-                {
-                    await Clients.Group(gameId).SendAsync("ShowGame");
-                }
             }
         }
 

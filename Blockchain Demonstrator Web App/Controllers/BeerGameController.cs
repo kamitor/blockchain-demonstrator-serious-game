@@ -85,7 +85,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     }
                 }
             }
-            return View();
+            return BadRequest();
         }
 
         public IActionResult CreateGame()
