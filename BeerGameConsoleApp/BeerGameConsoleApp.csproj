@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Blockchain Demonstrator Web App\Blockchain Demonstrator Web App.csproj" />
+      <ProjectReference Include="..\BlockchainDemonstratorWebApp\BlockchainDemonstratorWebApp.csproj" />
     </ItemGroup>
 
 </Project>
