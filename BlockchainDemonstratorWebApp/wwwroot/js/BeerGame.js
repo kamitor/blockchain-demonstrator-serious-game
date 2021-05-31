@@ -10,7 +10,7 @@ const BeerGame = (() => {
         configMap.gameId = gameId;
         configMap.playerId = playerId;
         configMap.baseUrl = baseUrl;
-        BeerGame.Signal.init(baseUrl);
+        BeerGame.Signal.init(baseUrl, gameId, playerId);
     }
 
     const getGame = () => {
@@ -108,7 +108,6 @@ const BeerGame = (() => {
         updateGameTuningIncomingDeliveriesBody("Manufacturer", game);
         updateGameTuningIncomingDeliveriesBody("Processor", game);
         updateGameTuningIncomingDeliveriesBody("Farmer", game);
-
     }
 
     const updateGameTuningIncomingDeliveriesBody = (player, game) => {
@@ -157,14 +156,21 @@ const BeerGame = (() => {
     }
 
     const updateGameTuningOrderHistoryBody = (player, game) => {
-        let map = game[player].OutgoingOrders.map(o => o.OrderNumber);
-        let orderNumber = Math.max(...map, 1);
-        let volume = game[player].OutgoingOrders.find(order => order.OrderNumber == orderNumber).Volume;
-        $("#orderHistory-" + player).append($(`
+        $("#orderHistory-" + player).empty();
+        game[player].OutgoingOrders.sort((a, b) => {
+            if (a.OrderDay > b.OrderDay) return 1;
+            else if (a.OrderDay < b.OrderDay) return -1;
+            return 0;
+        });
+        game[player].OutgoingOrders.forEach(order => {
+            if (order.OrderNumber != 0) {
+                $("#orderHistory-" + player).append($(`
             <tr>
-                <td>${orderNumber}</td>
-                <td>${volume}</td>
+                <td>${order.OrderNumber}</td>
+                <td>${order.Volume}</td>
             </tr>`));
+            }
+        });
     }
 
     updateGameTuningPayments = (game) => {
@@ -224,24 +230,11 @@ const BeerGame = (() => {
         $("body").append(`
             <section class='option-prompt'>
                 <p class='option-prompt--text'>Choose your supply chain setup</p>
-                <button class='option-prompt--button' type='button' onclick='BeerGame.chooseOption("YouProvide")'>You provide</button>
-                <button class='option-prompt--button' type='button' onclick='BeerGame.chooseOption("YouProvideWithHelp")'>You provide with help</button>
-                <button class='option-prompt--button' type='button' onclick='BeerGame.chooseOption("TrustedParty")'>Trusted party</button>
-                <button class='option-prompt--button' type='button' onclick='BeerGame.chooseOption("DLT")'>DLT</button>
+                <button class='option-prompt--button' type='button' onclick='BeerGame.Signal.chooseOption("YouProvide")'>You provide</button>
+                <button class='option-prompt--button' type='button' onclick='BeerGame.Signal.chooseOption("YouProvideWithHelp")'>You provide with help</button>
+                <button class='option-prompt--button' type='button' onclick='BeerGame.Signal.chooseOption("TrustedParty")'>Trusted party</button>
+                <button class='option-prompt--button' type='button' onclick='BeerGame.Signal.chooseOption("DLT")'>DLT</button>
             </section>`);
-    }
-
-    const chooseOption = (option) => {
-        $(".option-prompt").remove();
-        $.ajax({
-            url: `${configMap.baseUrl}/api/BeerGame/ChooseOption`,
-            type: "POST",
-            data: JSON.stringify({option: option, playerId: configMap.playerId}),
-            contentType: "application/json",
-            dataType: "text"
-        }).then(result => {
-            //TODO: update game with new setup chosen
-        });
     }
 
     return {
@@ -250,7 +243,6 @@ const BeerGame = (() => {
         joinGame: joinGame,
         sendOrders: sendOrders,
         promptOptions: promptOptions,
-        chooseOption: chooseOption,
         updateGameTuningPage: updateGameTuningPage
     }
 })();
@@ -258,14 +250,18 @@ const BeerGame = (() => {
 BeerGame.Signal = (() => {
     
     const configMap = {
-        baseUrl: ""
+        baseUrl: "",
+        gameId: "",
+        playerId: ""
     }
 
     var connection; 
     $("place-order-button").disabled = true;
 
-    let init = (baseUrl) => {
+    let init = (baseUrl, gameId, playerId) => {
         configMap.baseUrl = baseUrl;
+        configMap.gameId = gameId;
+        configMap.playerId = playerId;
 
         connection = new signalR.HubConnectionBuilder().withUrl(`${configMap.baseUrl}/GameHub`).build();
 
@@ -315,10 +311,16 @@ BeerGame.Signal = (() => {
         return connection.invoke("JoinGame", gameId, role, name, playerId);
     }
 
+    let chooseOption = (option) => {
+        $(".option-prompt").remove();
+        connection.invoke("Chooseoption", configMap.playerId, option);
+    }
+
     return {
         init: init,
         sendOrder: sendOrder,
-        joinGame: joinGame
+        joinGame: joinGame,
+        chooseOption: chooseOption
     }
 })();
 

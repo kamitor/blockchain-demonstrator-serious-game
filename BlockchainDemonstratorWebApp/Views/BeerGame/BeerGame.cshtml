@@ -6,8 +6,7 @@
     string gameId = (string)ViewData["GameId"];
     bool gameReady = (bool)ViewData["GameReady"];
     string containerDisplay = (gameReady) ? "" : "display:none";
-    Payment lastPayment = null;
-    string style = ""; }
+}
 
 
 <head>
@@ -215,6 +214,7 @@
         $(document).ready(() => {
             BeerGame.init("@gameId", "@Model.Id", "@ViewData["RestApiUrl"]");
             $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
+            if (@currentDay == 7 * 8 + 1 && "@Model.ChosenOption.Name" == "Basic") BeerGame.promptOptions();
         });
     </script>
 }

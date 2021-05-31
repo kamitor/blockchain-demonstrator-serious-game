@@ -124,7 +124,14 @@ namespace BlockchainDemonstratorApi.Controllers
 
             var player = _context.Players.Include(x => x.Role).FirstOrDefault(x => x.Id == playerId);
             player.ChosenOption = _context.Options.FirstOrDefault(x => x.RoleId == player.Role.Id && x.Name == option);
-
+            player.Payments.Add(new Payment
+            {
+                Amount = player.ChosenOption.CostOfStartUp * -1,
+                DueDay = Factors.RoundIncrement * 8 + 1,
+                FromPlayer = false,
+                PlayerId = player.Id,
+                Topic = "Setup " + player.ChosenOption.Name
+            });
             _context.Players.Update(player);
             _context.SaveChanges();
             return Ok();

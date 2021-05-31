@@ -123,5 +123,26 @@ namespace BlockchainDemonstratorApi.Hubs
         {
             await Clients.Group(gameId).SendAsync("PromptOptions");
         }
+
+        public async Task ChooseOption(string playerId, string option)
+        {
+            var player = _context.Players.FirstOrDefault(x => x.Id == playerId);
+            player.ChosenOption = _context.Options.FirstOrDefault(x => x.RoleId == player.Role.Id && x.Name == option);
+            player.Payments.Add(new Payment
+            {
+                Amount = player.ChosenOption.CostOfStartUp * -1,
+                DueDay = Factors.RoundIncrement * 8 + 1,
+                FromPlayer = false,
+                PlayerId = player.Id,
+                Topic = "Setup " + player.ChosenOption.Name
+            });
+            _context.Players.Update(player);
+            _context.SaveChanges();
+            string gameId = _context.Games.FirstOrDefault(g => g.Retailer.Id == playerId ||
+                                                            g.Manufacturer.Id == playerId ||
+                                                            g.Processor.Id == playerId ||
+                                                            g.Farmer.Id == playerId).Id;
+            await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(_context.Games.FirstOrDefault(x => x.Id.Equals(gameId))));
+        }
     }
 }
