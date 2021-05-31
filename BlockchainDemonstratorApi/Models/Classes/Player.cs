@@ -48,11 +48,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			get
 			{
 				 int backorder = 0;
+				 int maxOrderDay = 0;
+				 if(IncomingOrders.Count != 0) maxOrderDay = IncomingOrders.Max(o => o.OrderDay);
 				 foreach (Order incomingOrder in IncomingOrders)
 				 {
-					 backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
+					 if(incomingOrder.OrderDay != maxOrderDay) backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
 				 }
-
 				 return backorder;
 			}
 		}

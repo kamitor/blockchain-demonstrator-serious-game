@@ -43,8 +43,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         #endregion
 
         #region Order factors
-        public static int OrderLeadTimeRandomMinimum { get; set; } = 0;
-        public static int OrderLeadTimeRandomMaximum { get; set; } = 3;
+        public static int OrderLeadTimeRandomMinimum { get; set; } = 5;
+        public static int OrderLeadTimeRandomMaximum { get; set; } = 7;
         #endregion
 
         #region Database properties
