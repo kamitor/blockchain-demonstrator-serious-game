@@ -106,10 +106,38 @@ ul {
                 outline: 0;
                 transition: background-color 2s ease-out;
             }
+:root {
+    --purple: #7f00ff;
+    --pink: #e100ff;
+}
 
 .tab {
     padding: 5px;
     box-shadow: 0 0 20px 0 rgba(72,94,116,0.7);
+}
+
+.gradient {
+    background: white;
+    position: absolute;
+    border-radius: 10px;
+    border: 0px;
+}
+
+.gradient-shadow {
+    position: absolute;
+    z-index: -1;
+    height: 41px;
+    width: 143.8px;
+    left: -5px;
+    bottom: -8px;
+    opacity: 0.8;
+    border-radius: 10px;
+    background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
+    -webkit-filter: blur(7px);
+    -moz-filter: blur(7px);
+    -o-filter: blur(7px);
+    -ms-filter: blur(7px);
+    filter: blur(7px);
 }
 
 .bottomBar {
