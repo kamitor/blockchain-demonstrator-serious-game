@@ -291,7 +291,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// </summary>
 		public void AddOrder()
 		{
-			// Making new order
 			Retailer.IncomingOrders.Add(new Order()
 			{
 				OrderNumber = Convert.ToInt32(Math.Ceiling((double)CurrentDay / Factors.RoundIncrement)),
