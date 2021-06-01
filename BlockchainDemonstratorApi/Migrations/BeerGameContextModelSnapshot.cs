@@ -145,9 +145,6 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("CurrentDay")
                         .HasColumnType("int");
 
-                    b.Property<int>("CurrentPhase")
-                        .HasColumnType("int");
-
                     b.Property<string>("FarmerId")
                         .HasColumnType("nvarchar(450)");
 
