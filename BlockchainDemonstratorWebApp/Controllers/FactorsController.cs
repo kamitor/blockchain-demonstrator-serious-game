@@ -24,6 +24,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 		{
 			using (var client = new HttpClient())
 			{
+				//ello
 				var response = client.GetAsync(Config.RestApiUrl + "/api/Factors/").Result;
 				if (response.IsSuccessStatusCode)
 				{
