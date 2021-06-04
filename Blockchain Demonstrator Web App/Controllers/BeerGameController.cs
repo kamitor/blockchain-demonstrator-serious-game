@@ -132,6 +132,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return View();
         }
 
+        public IActionResult NewGameView()
+        {
+            return View();
+        }
         public void SetCookie(string key, string value, int? expireTime)
         {
             CookieOptions option = new CookieOptions();
