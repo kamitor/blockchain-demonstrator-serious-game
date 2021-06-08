@@ -31,10 +31,8 @@ jobs:
     runs-on: self-hosted
     
     steps:
-      
       - name: build webapp image
         run: sudo docker build -t webapp:latest .
-      - name: change dir to api
-        run: cd /BlockchainDemonstratorApi/
       - name: build Api image
+        working-directory: ./BlockchainDemonstratorApi
         run: sudo docker build -t api:latest .
