@@ -33,13 +33,6 @@ jobs:
     steps:
       - name: build webapp image
         run: sudo docker build -t webapp:latest .
-        
-      - name: api change db setting
-        uses: deef0000dragon1/json-edit-action/@v1
-        env:
-          KEY: ConnectionStrings.BeerGameContext
-          VALUE: Server=172.17.0.2;Database=BeerGameContext;Trusted_Connection=True;MultipleActiveResultSets=true;User id=${{ secrets.DB_USER_ID }};Password=${{ secrets.DB_USER_PASSWORD }};Integrated Security=false
-          FILE: /BeerGame/BlockchainDemonstratorApi/appsetting.json
           
       - name: build Api image
         working-directory: ./BlockchainDemonstratorApi
