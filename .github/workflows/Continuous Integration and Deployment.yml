@@ -32,9 +32,9 @@ jobs:
     
     steps:
       
-      - name: hello
-        run: echo "hello world"
-      - name: build image
-        run: sudo docker build -t 435e854d883b4445a033b47375c2e4/beergame:webapp .
-      - name: push image
-        run: sudo docker push 435e854d883b4445a033b47375c2e4/beergame:webapp
+      - name: build webapp image
+        run: sudo docker build -t webapp:latest .
+      - name: change dir to api
+        run: cd /BlockchainDemonstratorApi/
+      - name: build Api image
+        run: sudo docker build -t api:latest .
