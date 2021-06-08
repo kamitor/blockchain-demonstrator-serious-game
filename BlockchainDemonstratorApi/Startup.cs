@@ -65,7 +65,15 @@ namespace BlockchainDemonstratorApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+            else
+            {
+                string file = File.ReadAllText("appsettings.json");
+                dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(file);
+                json["ConnectionStrings"]["BeerGameContext"] = "Server=172.17.0.2;Database=BeerGameContext;Trusted_Connection=True;MultipleActiveResultSets=true;User id=sa;Password=B33rgam3;Integrated Security=false";
+                string output = Newtonsoft.Json.JsonConvert.SerializeObject(json, Newtonsoft.Json.Formatting.Indented);
+                File.WriteAllText("appsettings.json", output);
+            }
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
