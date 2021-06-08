@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v2
@@ -28,28 +28,13 @@ jobs:
   docker:
 
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     
     steps:
-        
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-         buildkitd-flags: --debug
-        
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-           username: ${{ secrets.DOCKERHUB_USERNAME }}
-           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2.5.0
-        with:
-          push: true
-          context: .
-          tags: user/app:latest
-      
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: hello
+        run: echo "hello world"
+      - name: build image
+        run: sudo docker build -t 435e854d883b4445a033b47375c2e4/beergame:webapp .
+      - name: push image
+        run: sudo docker push 435e854d883b4445a033b47375c2e4/beergame:webapp

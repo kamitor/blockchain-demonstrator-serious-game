@@ -20,4 +20,5 @@ RUN dotnet publish "BlockchainDemonstratorWebApp.csproj" -c Release -o /app/publ
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "BlockchainDemonstratorWebApp.dll"]
