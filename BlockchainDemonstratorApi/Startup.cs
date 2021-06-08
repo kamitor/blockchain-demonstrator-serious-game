@@ -15,6 +15,7 @@ using BlockchainDemonstratorApi.Data;
 using BlockchainDemonstratorApi.Hubs;
 using BlockchainDemonstratorApi.Models.Classes;
 using Newtonsoft.Json.Serialization;
+using System.IO;
 
 namespace BlockchainDemonstratorApi
 {
