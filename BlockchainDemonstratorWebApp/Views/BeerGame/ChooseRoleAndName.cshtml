@@ -1,42 +1,44 @@
-﻿@model string
-
-@{
-    ViewData["Title"] = "Join a BeerGame";
-
+﻿@{
+    ViewData["Title"] = "Choose name and role";
+    string playerId = @Guid.NewGuid().ToString();
 }
 
-<h2>@ViewData["Title"]</h2>
-<article class="game-pin">
-    <form id="joingame-form" asp-action="BeerGame">
-        <input id="game-pin-text" class="game-pin--item" type="text" placeholder="Game PIN" name="gameId">
-        <input class="game-pin-id-input" style="display: none" name="playerId">
-        <input id="select-role-text" type="text">
-        <select id="select-role-dropdown">
-            <option value="Farmer">Farmer</option>
-            <option value="Processor">Processor</option>
-            <option value="Manufacturer">Manufacturer</option>
-            <option value="Retailer">Retailer</option>
-        </select>
-        <input id="game-pin-button" class="game-pin--item" type="button" value="Join Game">
-    </form>
-</article>
+<head>
+    <link rel="stylesheet" href="~/css/StyleSheet.css" />
+</head>
+
+<form id="choiceForm" class="choiceForm box"  asp-action="BeerGame">
+    <div>
+        <h1>What's your name?</h1>
+        <input id="name" type="text" />
+    </div>
+    <div>
+        <h2>Choose your role</h2>
+        <input name="gameId" id="#gameId" type="hidden" value="@ViewData["GameId"]" />
+        <input name="playerId" id="#playerId" type="hidden" value="@playerId"/>
+        <input type="button" onclick="chooseRole('Retailer')" value="Retailer"/>
+        <input type="button" onclick="chooseRole('Manufacturer')" value="Manufacturer"/>
+        <input type="button" onclick="chooseRole('Processor')" value="Processor"/>
+        <input type="button" onclick="chooseRole('Farmer')" value="Farmer"/>
+    </div>
+</form>
 
 @section Scripts
 {
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/BeerGame.js"></script>
     <script>
-        BeerGame.init("", "", "@ViewData["RestApiUrl"]");
-        $("#game-pin-button").on("click", () => {
-            let role = $("#select-role-dropdown").val();
-            let name = $("#select-role-text").val();
-            let playerId = "@Guid.NewGuid().ToString()"
-            let gameId = $("#game-pin-text").val();
-            BeerGame.Signal.joinGame(gameId, role, name, playerId).then(() => {
-                $(".game-pin-id-input").val(playerId);
-                $("#joingame-form").submit();
-            } );
+        let chooseRole;
+        $("document").ready(() => {
+            $("input[type=button]").prop("disabled", true);
+            BeerGame.init("@ViewData["GameId"]", "", "@ViewData["RestApiUrl"]");
+            BeerGame.Signal.startAvailableRolesInterval();
+            chooseRole = (role) => {
+                let name = $("#name").val();
+                BeerGame.Signal.joinGame("@ViewData["GameId"]", role, name, "@playerId").then(() => {
+                    $("#choiceForm").submit();
+                } );
+            }
         });
-
     </script>
 }

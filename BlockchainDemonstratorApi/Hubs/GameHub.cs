@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BlockchainDemonstratorApi.Data;
@@ -139,6 +140,17 @@ namespace BlockchainDemonstratorApi.Hubs
                                                             g.Processor.Id == playerId ||
                                                             g.Farmer.Id == playerId).Id;
             await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(_context.Games.FirstOrDefault(x => x.Id.Equals(gameId))));
+        }
+
+        public List<string> CheckAvailableRoles(string gameId)
+        {
+            List<string> availableRoles = new List<string>();
+            var game = _context.Games.FirstOrDefault(g => g.Id == gameId);
+            if(game.Retailer == null) availableRoles.Add("Retailer"); 
+            if(game.Manufacturer == null) availableRoles.Add("Manufacturer"); 
+            if(game.Processor == null) availableRoles.Add("Processor"); 
+            if(game.Farmer == null) availableRoles.Add("Farmer");
+            return availableRoles;
         }
     }
 }

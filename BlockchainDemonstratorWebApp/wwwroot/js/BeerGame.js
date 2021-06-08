@@ -252,7 +252,9 @@ BeerGame.Signal = (() => {
     const configMap = {
         baseUrl: "",
         gameId: "",
-        playerId: ""
+        playerId: "",
+        ready: false,
+        interval: null
     }
 
     var connection; 
@@ -266,9 +268,10 @@ BeerGame.Signal = (() => {
         connection = new signalR.HubConnectionBuilder().withUrl(`${configMap.baseUrl}/GameHub`).build();
 
         connection.start().then(function () {
+            configMap.ready = true;
             $("place-order-button").disabled = false;
             if (BeerGame.Cookie.getCookie("JoinedGame") != null) joinGroup();
-        }).catch(function (err) {
+            }).catch(function (err) {
             return console.error(err.toString());
         });
 
@@ -313,14 +316,46 @@ BeerGame.Signal = (() => {
 
     let chooseOption = (option) => {
         $(".option-prompt").remove();
-        connection.invoke("Chooseoption", configMap.playerId, option);
+        connection.invoke("ChooseOption", configMap.playerId, option);
     }
+
+    let checkAvailableRoles = () => {
+        if (configMap.ready) {
+            connection.invoke("CheckAvailableRoles", configMap.gameId).then((result) => {
+                if ($("#name").val() != "") {
+                    if (result.includes("Retailer")) $("input[value=Retailer]").prop("disabled", false);
+                    else $("input[value=Retailer]").prop("disabled", true);
+
+                    if (result.includes("Manufacturer")) $("input[value=Manufacturer]").prop("disabled", false);
+                    else $("input[value=Manufacturer]").prop("disabled", true);
+
+                    if (result.includes("Processor")) $("input[value=Processor]").prop("disabled", false);
+                    else $("input[value=Processor]").prop("disabled", true);
+
+                    if (result.includes("Farmer")) $("input[value=Farmer]").prop("disabled", false);
+                    else $("input[value=Farmer]").prop("disabled", true);
+                }
+                else {
+                    $("input[type=button]").prop("disabled", true);
+                }
+            });
+            
+        }
+    }
+
+    let checkFull = (gameId) => {
+        return connection.invoke("CheckAvailableRoles", gameId);
+    }
+
+    let startAvailableRolesInterval = () => { configMap.interval =  setInterval(checkAvailableRoles, 1000); }
 
     return {
         init: init,
         sendOrder: sendOrder,
         joinGame: joinGame,
-        chooseOption: chooseOption
+        chooseOption: chooseOption,
+        startAvailableRolesInterval: startAvailableRolesInterval,
+        checkFull: checkFull
     }
 })();
 

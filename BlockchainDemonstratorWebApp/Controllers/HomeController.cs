@@ -20,13 +20,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 
         public IActionResult Index()
         {
+            ViewData["RestApiUrl"] = Config.RestApiUrl;
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

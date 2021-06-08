@@ -123,7 +123,8 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         public IActionResult ChooseRoleAndName(string gameId)
         {
             ViewData["RestApiUrl"] = Config.RestApiUrl;
-            return View(gameId);
+            ViewData["GameId"] = gameId;
+            return View();
         }
 
         public IActionResult GameMaster()

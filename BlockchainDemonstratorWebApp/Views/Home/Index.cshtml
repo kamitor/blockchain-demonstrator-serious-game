@@ -1,16 +1,36 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<head>
+    <link rel="stylesheet" href="~/css/StyleSheet.css" />
+</head>
 
 <div class="text-center">
     <h1 class="gradient-font">Beer game</h1>
-
-    <head>
-        <link rel="stylesheet" href="~/css/StyleSheet.css" />
-    </head>
-    <form class="game-id-box" asp-controller="BeerGame" asp-action="ChooseRoleAndName">
+    <form id="gameIdBox" class="game-id-box" asp-controller="BeerGame" asp-action="ChooseRoleAndName">
         <input name="gameId" class="input-id" type="text" placeholder="Insert game id..." />
-        <input class="input-button gradient" type="submit" value="Join game" />
+        <input class="input-button gradient" type="button" value="Join game" onclick="joinGame()"/>
         <div class="gradient-shadow"></div>
     </form>
 </div>
+
+@section Scripts
+{
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/BeerGame.js"></script>
+    <script>
+        $("document").ready(() => {
+            BeerGame.init("", "", "@ViewData["RestApiUrl"]");
+        });
+        let joinGame = () => {
+            let gameId = $("input[name=gameId]").val();
+
+            BeerGame.Signal.checkFull(gameId).then((result) => {
+                if (result.length != 0) $("#gameIdBox").submit();
+                else {
+                    //TODO: make small popup that warns that the game is full
+                }
+            });
+        }
+    </script>
+}
