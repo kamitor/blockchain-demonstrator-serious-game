@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
-    public class GameMaster
+    public class Admin
     {
         [Key]
         public string Id { get; set; }
         [Required]
-        public virtual Game Game { get; set; }
+        public string Username { get; set; }
+        [Required]
+        public string Password { get; set; }
     }
 }

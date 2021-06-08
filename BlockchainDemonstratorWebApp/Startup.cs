@@ -44,7 +44,7 @@ namespace Blockchain_Demonstrator_Web_App
             else
             {
                 Config.WebApplicationUrl = "http://localhost:5000";
-                Config.RestApiUrl = "http://localhost:5002";
+                Config.RestApiUrl = "http://127.0.0.1:5002";
                 
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.

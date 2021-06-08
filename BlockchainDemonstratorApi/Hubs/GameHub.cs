@@ -27,16 +27,7 @@ namespace BlockchainDemonstratorApi.Hubs
             if (game == null) return;
 
             Player player = game.Players.FirstOrDefault(x => x.Id.Equals(playerId));
-            
-            //TODO: for testing purposes
-            /*if (game.Retailer == null) game.Retailer = new Player("Rtest");
-            if (game.Manufacturer == null) game.Manufacturer = new Player("Mtest");
-            if (game.Processor == null) game.Processor = new Player("Ptest");*/
-            
-            /*game.Retailer.CurrentOrder = new Order() {Volume = 12};
-            game.Manufacturer.CurrentOrder = new Order() {Volume = 12};
-            game.Processor.CurrentOrder = new Order() {Volume = 12};*/
-            
+
             if (player != null)
                 player.CurrentOrder = new Order(){Volume = Convert.ToInt32(volume)};
             
@@ -45,6 +36,11 @@ namespace BlockchainDemonstratorApi.Hubs
                 game.Progress();
                 await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(game));
                 if (game.CurrentDay == Factors.RoundIncrement * 8 + 1) await PromptOptions(gameId);
+                
+                foreach (Player gamePlayer in game.Players)
+                {
+                    gamePlayer.CurrentOrder = null;
+                }
             }
             
             _context.Games.Update(game);
@@ -122,6 +118,27 @@ namespace BlockchainDemonstratorApi.Hubs
         public async Task PromptOptions(string gameId)
         {
             await Clients.Group(gameId).SendAsync("PromptOptions");
+        }
+
+        public async Task ChooseOption(string playerId, string option)
+        {
+            var player = _context.Players.FirstOrDefault(x => x.Id == playerId);
+            player.ChosenOption = _context.Options.FirstOrDefault(x => x.RoleId == player.Role.Id && x.Name == option);
+            player.Payments.Add(new Payment
+            {
+                Amount = player.ChosenOption.CostOfStartUp * -1,
+                DueDay = Factors.RoundIncrement * 8 + 1,
+                FromPlayer = false,
+                PlayerId = player.Id,
+                Topic = "Setup " + player.ChosenOption.Name
+            });
+            _context.Players.Update(player);
+            _context.SaveChanges();
+            string gameId = _context.Games.FirstOrDefault(g => g.Retailer.Id == playerId ||
+                                                            g.Manufacturer.Id == playerId ||
+                                                            g.Processor.Id == playerId ||
+                                                            g.Farmer.Id == playerId).Id;
+            await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(_context.Games.FirstOrDefault(x => x.Id.Equals(gameId))));
         }
     }
 }

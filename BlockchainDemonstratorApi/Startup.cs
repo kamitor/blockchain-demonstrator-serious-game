@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BlockchainDemonstratorApi.Models.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -49,7 +48,7 @@ namespace BlockchainDemonstratorApi
                     {
                         builder.WithOrigins("https://localhost:44313").AllowAnyHeader()
                             .AllowAnyMethod().AllowCredentials();
-                        builder.WithOrigins("https://localhost:5001").AllowAnyHeader()
+                        builder.WithOrigins("https://142.93.130.201:5003").AllowAnyHeader()
                             .AllowAnyMethod().AllowCredentials();
                     });
             });

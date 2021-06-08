@@ -13,7 +13,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		[Key]
 		public string Id { get; set; }
 
-		public Phase CurrentPhase { get; set; }
 		public int CurrentDay { get; set; }
 		private Player _retailer;
 
@@ -101,7 +100,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		public Game(string id)
 		{
 			Id = id;
-			CurrentPhase = Phase.Phase1;
 			CurrentDay = 1;
 			GameStarted = false;
 		}
@@ -259,13 +257,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// <summary>Sets IncomingOrder for every actor</summary>
 		private void SendOrders()
 		{
-			AddingCurrentDay();
-			AddingOrderNumber();
+			AddCurrentDay();
+			AddOrderNumber();
 			AddOrder();
 		}
 
 		/// <summary>Adds current day to each actors current order</summary>
-		public void AddingCurrentDay()
+		private  void AddCurrentDay()
 		{
 			// Adding current day
 			Retailer.CurrentOrder.OrderDay = CurrentDay;
@@ -277,7 +275,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// <summary>
 		/// Adds order number to each actors current order
 		/// </summary>
-		public void AddingOrderNumber()
+		private void AddOrderNumber()
 		{
 			// Adding order number
 			foreach (Player player in Players)
@@ -291,7 +289,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// </summary>
 		public void AddOrder()
 		{
-			// Making new order
 			Retailer.IncomingOrders.Add(new Order()
 			{
 				OrderNumber = Convert.ToInt32(Math.Ceiling((double)CurrentDay / Factors.RoundIncrement)),

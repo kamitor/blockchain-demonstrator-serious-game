@@ -18,6 +18,24 @@ namespace BlockchainDemonstratorApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Admin", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Admins");
+                });
+
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Delivery", b =>
                 {
                     b.Property<string>("Id")
@@ -127,9 +145,6 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("CurrentDay")
                         .HasColumnType("int");
 
-                    b.Property<int>("CurrentPhase")
-                        .HasColumnType("int");
-
                     b.Property<string>("FarmerId")
                         .HasColumnType("nvarchar(450)");
 
@@ -156,6 +171,22 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.HasIndex("RetailerId");
 
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.GameMaster", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("GameId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("GameMasters");
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Option", b =>
@@ -303,9 +334,6 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("Product")
                         .HasColumnType("int");
 
-                    b.Property<double>("ProductPrice")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
@@ -337,6 +365,15 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", "Retailer")
                         .WithMany()
                         .HasForeignKey("RetailerId");
+                });
+
+            modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.GameMaster", b =>
+                {
+                    b.HasOne("BlockchainDemonstratorApi.Models.Classes.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BlockchainDemonstratorApi.Models.Classes.Option", b =>
