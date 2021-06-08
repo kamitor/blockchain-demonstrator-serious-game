@@ -34,6 +34,10 @@ jobs:
       - name: build webapp image
         run: sudo docker build -t webapp:latest .
           
+      - name: update appsettings.json
+        working-directory: ./BlockchainDemonstratorApi
+        run: echo "`jq '.ConnectionStrings.BeerGameContext ="Server=172.17.0.2;Database=BeerGameContext;Trusted_Connection=True;MultipleActiveResultSets=true;User id=${{ secrets.DB_USER_ID }};Password=${{ secrets.DB_USER_PASSWORD }};Integrated Security=false"' appsettings.json`" > appsettings.json
+        
       - name: build Api image
         working-directory: ./BlockchainDemonstratorApi
         run: sudo docker build -t api:latest .
