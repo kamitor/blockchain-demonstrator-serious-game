@@ -120,10 +120,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return BadRequest();
         }
 
-        public IActionResult GamePinView()
+        public IActionResult ChooseRoleAndName(string gameId)
         {
             ViewData["RestApiUrl"] = Config.RestApiUrl;
-            return View();
+            return View(gameId);
         }
 
         public IActionResult GameMaster()

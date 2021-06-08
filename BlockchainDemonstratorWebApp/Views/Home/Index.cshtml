@@ -3,14 +3,14 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to the Blockchain game</h1>
+    <h1 class="gradient-font">Beer game</h1>
 
-    <p> <a href="https://localhost:44313/BeerGame/CreateGame">Create game method</a></p>
-    <p> <a href="https://localhost:44313/BeerGame/GamePinView">Join game page</a></p>
-    <p> <a href="https://localhost:44313/BeerGame/BeerGame">Player game page</a></p>
-    <p> <a href="https://localhost:44313/Factors">Game tuning page</a></p>
-    <p> <a href="https://localhost:44313/BeerGame">Game tuning game page</a></p>
-    <p> <a href="https://localhost:44313/Factors/Edit/DefaultFactors">Edit Factors</a></p>
-    <p> <a href="https://localhost:44313/BeerGame/Gamemaster">Gamemaster</a></p>
-    <p> <a href="https://localhost:44313/factors">Factors</a></p>
+    <head>
+        <link rel="stylesheet" href="~/css/StyleSheet.css" />
+    </head>
+    <form class="game-id-box" asp-controller="BeerGame" asp-action="ChooseRoleAndName">
+        <input name="gameId" class="input-id" type="text" placeholder="Insert game id..." />
+        <input class="input-button gradient" type="submit" value="Join game" />
+        <div class="gradient-shadow"></div>
+    </form>
 </div>
