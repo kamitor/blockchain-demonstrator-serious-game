@@ -299,14 +299,26 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<string>("CurrentOrderId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("GrossProfitHistoryJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Inventory")
                         .HasColumnType("int");
+
+                    b.Property<string>("InventoryHistoryJson")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Margin")
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrderWorthHistoryJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OverallProfitHistoryJson")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")

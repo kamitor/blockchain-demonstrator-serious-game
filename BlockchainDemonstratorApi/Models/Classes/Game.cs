@@ -109,6 +109,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// </summary>
 		public void Progress()
 		{
+			SaveHistory();
 			ProcessDeliveries();
 			SendDeliveries();
 
@@ -119,6 +120,46 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 			SendOrders();
 			CurrentDay += Factors.RoundIncrement;
+		}
+
+        private void SaveHistory()
+        {
+			SaveInventoryHistory();
+			SaveOrderWorthHistory();
+			SaveOverallProfitHistory();
+			SaveGrossProfitHistory();
+        }
+
+        private void SaveInventoryHistory()
+        {
+            foreach(Player player in Players)
+            {
+				player.InventoryHistory.Add(player.Inventory);
+            }
+        }
+
+		private void SaveOrderWorthHistory()
+		{
+			foreach (Player player in Players)
+			{
+				player.OrderWorthHistory.Add(player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)));
+			}
+		}
+
+		private void SaveOverallProfitHistory()
+		{
+			foreach (Player player in Players)
+			{
+				player.OverallProfitHistory.Add(player.Profit);
+			}
+		}
+
+		private void SaveGrossProfitHistory()
+		{
+			foreach (Player player in Players)
+			{
+				player.GrossProfitHistory.Add(player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) - player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount));
+			}
 		}
 
 		/// <summary>

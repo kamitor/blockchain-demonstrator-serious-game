@@ -41,8 +41,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int FarmerProductPrice { get; set; } = 2050;
         public static int HarvesterProductPrice { get; set; } = 2000;
         #endregion
-
-        #region Order factors
+        //TODO: Change to three static numbers it chooses randomly between, 0 45% 7 35% 14 20%
+        #region Order factors 
         public static int OrderLeadTimeRandomMinimum { get; set; } = 5;
         public static int OrderLeadTimeRandomMaximum { get; set; } = 7;
         #endregion

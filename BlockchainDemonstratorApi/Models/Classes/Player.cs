@@ -106,6 +106,38 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			}
 		}
 
+		public string InventoryHistoryJson { get; set; }
+		[NotMapped]
+		public List<int> InventoryHistory
+        {
+            get { return (InventoryHistoryJson == null) ? null : JsonConvert.DeserializeObject<List<int>>(InventoryHistoryJson); }
+            set { InventoryHistoryJson = JsonConvert.SerializeObject(value); }
+        }
+
+		public string OrderWorthHistoryJson { get; set; }
+		[NotMapped]
+		public List<double> OrderWorthHistory
+		{
+			get { return (OrderWorthHistoryJson == null) ? null : JsonConvert.DeserializeObject<List<double>>(OrderWorthHistoryJson); }
+			set { OrderWorthHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
+		public string OverallProfitHistoryJson { get; set; }
+		[NotMapped]
+		public List<double> OverallProfitHistory
+		{
+			get { return (OverallProfitHistory == null) ? null : JsonConvert.DeserializeObject<List<double>>(OverallProfitHistoryJson); }
+			set { OverallProfitHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
+		public string GrossProfitHistoryJson { get; set; }
+		[NotMapped]
+		public List<double> GrossProfitHistory
+		{
+			get { return (GrossProfitHistoryJson == null) ? null : JsonConvert.DeserializeObject<List<double>>(GrossProfitHistoryJson); }
+			set { GrossProfitHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
 		public Player(string name)
 		{
 			Id = Guid.NewGuid().ToString();
