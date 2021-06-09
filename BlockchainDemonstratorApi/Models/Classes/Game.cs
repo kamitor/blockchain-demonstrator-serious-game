@@ -134,7 +134,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
         {
             foreach(Player player in Players)
             {
-				player.InventoryHistory.Add(player.Inventory);
+				List<int> newInventory = new List<int>() { player.Inventory };
+				player.InventoryHistory = player.InventoryHistory.Concat(newInventory).ToList();
             }
         }
 
@@ -142,7 +143,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			foreach (Player player in Players)
 			{
-				player.OrderWorthHistory.Add(player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)));
+				List<double> newOrderWorth = new List<double>() { player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) };
+				player.OrderWorthHistory = player.OrderWorthHistory.Concat(newOrderWorth).ToList();
 			}
 		}
 
@@ -150,7 +152,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			foreach (Player player in Players)
 			{
-				player.OverallProfitHistory.Add(player.Profit);
+				List<double> newOverallProfit = new List<double>() { player.Profit };
+				player.OverallProfitHistory = player.OverallProfitHistory.Concat(newOverallProfit).ToList();
 			}
 		}
 
@@ -158,7 +161,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			foreach (Player player in Players)
 			{
-				player.GrossProfitHistory.Add(player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) - player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount));
+				List<double> newGrossProfit = new List<double>() { player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) - player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount) };
+				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
 			}
 		}
 

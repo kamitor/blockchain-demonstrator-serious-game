@@ -110,7 +110,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		[NotMapped]
 		public List<int> InventoryHistory
         {
-            get { return (InventoryHistoryJson == null) ? null : JsonConvert.DeserializeObject<List<int>>(InventoryHistoryJson); }
+            get { return (InventoryHistoryJson == null) ? new List<int>() : JsonConvert.DeserializeObject<List<int>>(InventoryHistoryJson); }
             set { InventoryHistoryJson = JsonConvert.SerializeObject(value); }
         }
 
@@ -118,7 +118,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		[NotMapped]
 		public List<double> OrderWorthHistory
 		{
-			get { return (OrderWorthHistoryJson == null) ? null : JsonConvert.DeserializeObject<List<double>>(OrderWorthHistoryJson); }
+			get { return (OrderWorthHistoryJson == null) ? new List<double>() : JsonConvert.DeserializeObject<List<double>>(OrderWorthHistoryJson); }
 			set { OrderWorthHistoryJson = JsonConvert.SerializeObject(value); }
 		}
 
@@ -126,7 +126,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		[NotMapped]
 		public List<double> OverallProfitHistory
 		{
-			get { return (OverallProfitHistory == null) ? null : JsonConvert.DeserializeObject<List<double>>(OverallProfitHistoryJson); }
+			get { return (OverallProfitHistoryJson == null) ? new List<double>() : JsonConvert.DeserializeObject<List<double>>(OverallProfitHistoryJson); }
 			set { OverallProfitHistoryJson = JsonConvert.SerializeObject(value); }
 		}
 
@@ -134,7 +134,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		[NotMapped]
 		public List<double> GrossProfitHistory
 		{
-			get { return (GrossProfitHistoryJson == null) ? null : JsonConvert.DeserializeObject<List<double>>(GrossProfitHistoryJson); }
+			get { return (GrossProfitHistoryJson == null) ? new List<double>() : JsonConvert.DeserializeObject<List<double>>(GrossProfitHistoryJson); }
 			set { GrossProfitHistoryJson = JsonConvert.SerializeObject(value); }
 		}
 
