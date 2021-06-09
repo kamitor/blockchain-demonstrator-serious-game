@@ -12,7 +12,7 @@ COPY ["BlockchainDemonstratorApi/BlockchainDemonstratorApi.csproj", "BlockchainD
 RUN dotnet restore "BlockchainDemonstratorWebApp/BlockchainDemonstratorWebApp.csproj"
 COPY . .
 WORKDIR "/src/BlockchainDemonstratorWebApp"
-RUN dotnet build "BlockchainDemonstratorWebApp.csproj" -c Release -o /app/build
+RUN dotnet build "BlockchainDemonstratorWebApp.csproj" --rm -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "BlockchainDemonstratorWebApp.csproj" -c Release -o /app/publish
