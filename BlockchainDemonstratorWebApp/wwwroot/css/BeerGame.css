@@ -56,16 +56,22 @@ tr:nth-child(even) {
 }
 
 .option-prompt {
-    position: fixed;
-    top: 25%;
+    top: 100px;
     left: 25%;
     height: 25%;
     width: 50%;
-    border: 3px solid black;
     display: flex;
     justify-content: space-around;
     background-color: white;
     flex-wrap: wrap;
+    flex-direction:column;
+}
+
+.option-prompt-div {
+    display: flex;
+    flex-direction: row;
+    padding-top: 10px;
+    align-items: center;
 }
 
 .option-prompt--text {
@@ -75,6 +81,11 @@ tr:nth-child(even) {
 }
 
 .option-prompt--button {
-    width: 20%;
-    height: 25%;
+    min-width: 210px;
+    padding: 5px;
+    text-align:center;
+    border:none;
+    outline:none;
+    border-radius:10px;
+    color:white;
 }

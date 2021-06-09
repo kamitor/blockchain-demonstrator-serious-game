@@ -109,6 +109,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// </summary>
 		public void Progress()
 		{
+			SaveHistory();
 			ProcessDeliveries();
 			SendDeliveries();
 
@@ -119,6 +120,50 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 			SendOrders();
 			CurrentDay += Factors.RoundIncrement;
+		}
+
+        private void SaveHistory()
+        {
+			SaveInventoryHistory();
+			SaveOrderWorthHistory();
+			SaveOverallProfitHistory();
+			SaveGrossProfitHistory();
+        }
+
+        private void SaveInventoryHistory()
+        {
+            foreach(Player player in Players)
+            {
+				List<int> newInventory = new List<int>() { player.Inventory };
+				player.InventoryHistory = player.InventoryHistory.Concat(newInventory).ToList();
+            }
+        }
+
+		private void SaveOrderWorthHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<double> newOrderWorth = new List<double>() { player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) };
+				player.OrderWorthHistory = player.OrderWorthHistory.Concat(newOrderWorth).ToList();
+			}
+		}
+
+		private void SaveOverallProfitHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<double> newOverallProfit = new List<double>() { player.Profit };
+				player.OverallProfitHistory = player.OverallProfitHistory.Concat(newOverallProfit).ToList();
+			}
+		}
+
+		private void SaveGrossProfitHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<double> newGrossProfit = new List<double>() { player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) - player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount) };
+				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
+			}
 		}
 
 		/// <summary>

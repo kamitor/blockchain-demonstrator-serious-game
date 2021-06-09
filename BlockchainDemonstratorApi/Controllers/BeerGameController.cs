@@ -190,6 +190,16 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
+        // POST: api/BeerGame/CheckInGame
+        [HttpPost("CheckInGame")]
+        public ActionResult<string> CheckInGame([FromBody] string playerId)
+        {
+            if (playerId == null) return BadRequest();
+            return _context.Games.AsEnumerable()
+                .FirstOrDefault(g => g.Players
+                     .Any(p => p.Id.Equals(playerId))).Id;
+        }
+
         // PUT: api/BeerGame/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

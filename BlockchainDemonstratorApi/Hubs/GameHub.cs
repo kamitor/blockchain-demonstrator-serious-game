@@ -31,10 +31,6 @@ namespace BlockchainDemonstratorApi.Hubs
 
             if (player != null)
                 player.CurrentOrder = new Order(){Volume = Convert.ToInt32(volume)};
-
-            game.Farmer.CurrentOrder = new Order() {Volume = new Random().Next(10, 16)};
-            game.Processor.CurrentOrder = new Order() {Volume = new Random().Next(10, 16)};
-            game.Manufacturer.CurrentOrder = new Order() {Volume = new Random().Next(10, 16)};
             
             if (game.Players.All(x => x.CurrentOrder != null))
             {
@@ -150,6 +146,7 @@ namespace BlockchainDemonstratorApi.Hubs
         {
             List<string> availableRoles = new List<string>();
             var game = _context.Games.FirstOrDefault(g => g.Id == gameId);
+            if (game == null) return new List<string>();
             if(game.Retailer == null) availableRoles.Add("Retailer"); 
             if(game.Manufacturer == null) availableRoles.Add("Manufacturer"); 
             if(game.Processor == null) availableRoles.Add("Processor"); 

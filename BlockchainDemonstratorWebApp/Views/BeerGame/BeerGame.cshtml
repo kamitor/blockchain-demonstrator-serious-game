@@ -158,46 +158,6 @@
                             </table>
                         </div>
                     </div>
-
-                    @*<div class="tab">
-                                <h3>Payments:</h3>
-                                <div class="table-scroll">
-                                    <table name="payments">
-                                        <thead>
-                                            <tr>
-                                                <th>Topic</th>
-                                                <th>Amount</th>
-                                                <th>Due day</th>
-                                                <th>From player</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="payments-@Model.Role.Id">
-                                            @foreach (Payment payment in Model.Payments)
-                                            {
-                                                if ((int)payment.DueDay <= currentDay && (int)payment.DueDay > currentDay - Factors.RoundIncrement) style += "background-color:#f5fac5;"; //TODO: Ask Janka about this?
-
-                                                if (lastPayment != null && Math.Ceiling(payment.DueDay / Factors.RoundIncrement + 1 - (1 / (double)Factors.RoundIncrement)) > Math.Ceiling(lastPayment.DueDay / Factors.RoundIncrement + 1 - (1 / (double)Factors.RoundIncrement))) style += "border-top: 2px solid grey;";
-
-                                <tr style="@style">
-                                    <td>@payment.Topic</td>
-                                    @if (payment.Amount >= 0)
-                                    {
-                    <td style="color:green">@payment.Amount</td>
-         }
-                else
-                {
-        <td style="color:red">@payment.Amount</td>
-        }
-                                    <td>@Math.Round(payment.DueDay, 2)</td>
-                                    <td>@payment.FromPlayer</td>
-                                </tr>
-        lastPayment = payment;
-                                style = "";
-                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>*@
                 </form>
             </div>
         </div>

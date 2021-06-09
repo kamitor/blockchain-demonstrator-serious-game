@@ -1,12 +1,95 @@
-﻿@{
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@model Game
+
+@{
     ViewData["Title"] = "Graphs";
+    Player player = (Player)ViewData["Player"];
+
+    string inventoryHistoryLabel = "[";
+    for (int i = 0; i < player.InventoryHistory.Count; i++)
+    {
+        inventoryHistoryLabel += "'Round " + (i + 1) + "'";
+        if (player.InventoryHistory.Count - 1 > i) inventoryHistoryLabel += ", ";
+        else inventoryHistoryLabel += "]";
+    }
+
+    string inventoryHistoryData = "[";
+    for (int i = 0; i < player.InventoryHistory.Count; i++)
+    {
+        inventoryHistoryData += "'" + player.InventoryHistory[i] + "'";
+        if (player.InventoryHistory.Count - 1 > i) inventoryHistoryData += ", ";
+        else inventoryHistoryData += "]";
+    }
+
+    string orderWorthHistoryLabel = "[";
+    for (int i = 0; i < player.OrderWorthHistory.Count; i++)
+    {
+        orderWorthHistoryLabel += "'Round " + (i + 1) + "'";
+        if (player.OrderWorthHistory.Count - 1 > i) orderWorthHistoryLabel += ", ";
+        else orderWorthHistoryLabel += "]";
+    }
+
+    string orderWorthHistoryData = "[";
+    for (int i = 0; i < player.OrderWorthHistory.Count; i++)
+    {
+        orderWorthHistoryData += "'" + player.OrderWorthHistory[i] + "'";
+        if (player.OrderWorthHistory.Count - 1 > i) orderWorthHistoryData += ", ";
+        else orderWorthHistoryData += "]";
+    }
+
+    string overallProfitHistoryLabel = "[";
+    for (int i = 0; i < player.OverallProfitHistory.Count; i++)
+    {
+        overallProfitHistoryLabel += "'Round " + (i + 1) + "'";
+        if (player.OverallProfitHistory.Count - 1 > i) overallProfitHistoryLabel += ", ";
+        else overallProfitHistoryLabel += "]";
+    }
+
+    string overallProfitHistoryData = "[";
+    for (int i = 0; i < player.OverallProfitHistory.Count; i++)
+    {
+        overallProfitHistoryData += "'" + player.OverallProfitHistory[i] + "'";
+        if (player.OverallProfitHistory.Count - 1 > i) overallProfitHistoryData += ", ";
+        else overallProfitHistoryData += "]";
+    }
+
+    string grossProfitHistoryLabel = "[";
+    for (int i = 0; i < player.GrossProfitHistory.Count; i++)
+    {
+        grossProfitHistoryLabel += "'Round " + (i + 1) + "'";
+        if (player.GrossProfitHistory.Count - 1 > i) grossProfitHistoryLabel += ", ";
+        else grossProfitHistoryLabel += "]";
+    }
+
+    string grossProfitHistoryData = "[";
+    for (int i = 0; i < player.GrossProfitHistory.Count; i++)
+    {
+        grossProfitHistoryData += "'" + player.GrossProfitHistory[i] + "'";
+        if (player.GrossProfitHistory.Count - 1 > i) grossProfitHistoryData += ", ";
+        else grossProfitHistoryData += "]";
+    }
+
+    string endText = (player.Profit > 0) ? "Well Done " : "Better luck next time ";
 }
 
+<head>
+    <link rel="stylesheet" href="~/css/StyleSheet.css" />
+</head>
 
-<h1>Graphs</h1>
+<div class="endGrid">
+    <div class="endText box">
+        <h1 style="display:inline-block">@endText<span class="gradient-font">@player.Name</span>!</h1>
+        <h2 style="display:inline-block">You made a profit of €<span class="gradient-font"> @player.Profit</span></h2>
+        <h2 style="display:inline-block">Your team made a total profit of €<span class="gradient-font"> @Model.Players.Sum(p => p.Profit)</span></h2>
+    </div>
+    <div class="endStatistics box">
+        <canvas id="inventoryChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
+        <canvas id="orderWorthChart" style="max-width:350px;max-height:350px;display:inline-block;"></canvas>
+        <canvas id="overallProfitChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
+        <canvas id="grossProfitChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
+    </div>
+</div>
 
-
-<canvas id="myChart" width="800" height="400"></canvas>
 
 
 @section Scripts{
@@ -15,60 +98,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
 
     <script>
-
-
-           // BeerGame.init("846011");
-           // async function getData() {
-           //
-           //     BeerGame.getGame()
-           //         .then(result => {
-           //             let game = JSON.parse(result);
-           //             console.log(game);
-           //
-           //
-           //         })
-           // }
-
-
-            const api_url = "https://localhost:44393/api/BeerGame";
-
-            async function getData() {
-
-                const response = await fetch(api_url);
-                const data = await response.json();
-
-                const { balance , profit } = data;
-              
-                console.log(balance);
-                console.log(profit);
-            }
-
-            getData();
-
-
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day2', 'day3', 'day4', 'day5', 'day6'],
-                    datasets: [{
-                        label: 'Orders',
-                        data: [12, 19, 3, 5, 2, 3, 19, 3, 5, 2, 3],
-                        fill: true,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        </script>
+        BeerGame.init("", "", "");
+        BeerGame.drawChart(@Html.Raw(inventoryHistoryLabel), @Html.Raw(inventoryHistoryData), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
+        BeerGame.drawChart(@Html.Raw(orderWorthHistoryLabel), @Html.Raw(orderWorthHistoryData), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
+        BeerGame.drawChart(@Html.Raw(overallProfitHistoryLabel), @Html.Raw(overallProfitHistoryData), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
+        BeerGame.drawChart(@Html.Raw(grossProfitHistoryLabel), @Html.Raw(grossProfitHistoryData), "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
+    </script>
 
 }

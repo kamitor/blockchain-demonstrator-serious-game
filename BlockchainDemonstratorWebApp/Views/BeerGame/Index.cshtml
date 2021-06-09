@@ -7,6 +7,7 @@
     <h4>Seems like you are already part of an ongoing game. Would you like to join this game?</h4>
     <input id="join-game-form--textinput" type="text" name="gameId" style="display: none">
     <input type="submit" value="Join game">
+    <input type="button" onclick="(function () { $('#join-game-form').hide() })()" value="Cancel"/>
 </form>
 
 @section Scripts
