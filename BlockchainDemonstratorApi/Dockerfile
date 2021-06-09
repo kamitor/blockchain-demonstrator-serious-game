@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["BlockchainDemonstratorApi/BlockchainDemonstratorApi.csproj", "BlockchainDemonstratorApi/"]
+COPY ["./", "BlockchainDemonstratorApi/"]
 RUN dotnet restore "BlockchainDemonstratorApi/BlockchainDemonstratorApi.csproj"
 COPY . .
 WORKDIR "/src/BlockchainDemonstratorApi"
