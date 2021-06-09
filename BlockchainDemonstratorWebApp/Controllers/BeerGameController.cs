@@ -136,6 +136,27 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return View();
         }
 
+        public IActionResult GameIdsView()
+        {
+            using (var client = new HttpClient())
+            {
+                var response = client.GetAsync(Config.RestApiUrl + "/api/BeerGame").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null)
+                    {
+                        List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseString);
+
+                        return View(games);
+                    }
+                }
+            }
+            return BadRequest();
+        }
+
         public void SetCookie(string key, string value, int? expireTime)
         {
             CookieOptions option = new CookieOptions();
