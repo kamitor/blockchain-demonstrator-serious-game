@@ -84,6 +84,14 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                         ViewData["GameId"] = game.Id;
                         ViewData["GameReady"] = game.Players.Count == 4;
                         ViewData["RestApiUrl"] = Config.RestApiUrl;
+                        ViewData["ThirdPhaseNotReady"] = false;
+                        ViewData["Players"] = new List<Player>();
+                        if (game.Players.Any(p => p.ChosenOption == null) && game.CurrentDay == Factors.RoundIncrement * 16 + 1){
+                            ViewData["ThirdPhaseNotReady"] = true;
+                            Dictionary<string, string> chosenOptionsPlayers = new Dictionary<string, string>();
+                            ViewData["Players"] = game.Players;
+                            //TODO: use dictionary in cshtml page
+                        }
                         return View(player);
                     }
                 }

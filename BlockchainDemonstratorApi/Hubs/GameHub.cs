@@ -32,12 +32,24 @@ namespace BlockchainDemonstratorApi.Hubs
             if (player != null)
                 player.CurrentOrder = new Order(){Volume = Convert.ToInt32(volume)};
             
+            game.Manufacturer.CurrentOrder = new Order() { Volume = 15 };
+            game.Processor.CurrentOrder = new Order() { Volume = 15 };
+            game.Farmer.CurrentOrder = new Order() { Volume = 15 };
+
             if (game.Players.All(x => x.CurrentOrder != null))
             {
                 game.Progress();
                 await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(game));
                 if (game.CurrentDay == Factors.RoundIncrement * 8 + 1) await PromptOptions(gameId);
-                
+                if (game.CurrentDay == Factors.RoundIncrement * 16 + 1)
+                {
+                    foreach(Player gamePlayer in game.Players)
+                    {
+                        gamePlayer.ChosenOption = null;
+                    }
+                    await PromptOptions(gameId);
+                }
+
                 foreach (Player gamePlayer in game.Players)
                 {
                     gamePlayer.CurrentOrder = null;
@@ -121,25 +133,55 @@ namespace BlockchainDemonstratorApi.Hubs
             await Clients.Group(gameId).SendAsync("PromptOptions");
         }
 
-        public async Task ChooseOption(string playerId, string option)
+        public async Task<bool> ChooseOption(string playerId, string option)
         {
             var player = _context.Players.FirstOrDefault(x => x.Id == playerId);
+            Game game = _context.Games.FirstOrDefault(g => g.Retailer.Id == playerId ||
+                                                           g.Manufacturer.Id == playerId ||
+                                                           g.Processor.Id == playerId ||
+                                                           g.Farmer.Id == playerId);
+            bool thirdPhase = game.CurrentDay == Factors.RoundIncrement * 16 + 1;
             player.ChosenOption = _context.Options.FirstOrDefault(x => x.RoleId == player.Role.Id && x.Name == option);
-            player.Payments.Add(new Payment
+            player.ChosenOption.Name += ""; //Do not remove this line, otherwise this function will no longer work
+            if (!thirdPhase)
             {
-                Amount = player.ChosenOption.CostOfStartUp * -1,
-                DueDay = Factors.RoundIncrement * 8 + 1,
-                FromPlayer = false,
-                PlayerId = player.Id,
-                Topic = "Setup " + player.ChosenOption.Name
-            });
+                player.Payments.Add(new Payment
+                {
+                    Amount = player.ChosenOption.CostOfStartUp * -1,
+                    DueDay = Factors.RoundIncrement * 8 + 1,
+                    FromPlayer = false,
+                    PlayerId = player.Id,
+                    Topic = "Setup " + player.ChosenOption.Name
+                });
+
+                await Clients.Group(game.Id).SendAsync("UpdateGame", JsonConvert.SerializeObject(_context.Games.FirstOrDefault(x => x.Id.Equals(game.Id))));
+            }
+            else
+            {
+                await Clients.Group(game.Id).SendAsync("UpdatePromptOptions", JsonConvert.SerializeObject(player));
+                if (game.Players.All(p => p.ChosenOption != null))
+                {
+                    string mostChosenOption = CalculateMostChosen(game.Players);
+                    foreach (Player playerGame in game.Players)
+                    {
+                        player.ChosenOption = _context.Options.FirstOrDefault(x => x.RoleId == player.Role.Id && x.Name == mostChosenOption);
+                        player.ChosenOption.Name += "";
+                        playerGame.Payments.Add(new Payment
+                        {
+                            Amount = playerGame.ChosenOption.CostOfStartUp * -1,
+                            DueDay = Factors.RoundIncrement * 16 + 1,
+                            FromPlayer = false,
+                            PlayerId = playerGame.Id,
+                            Topic = "Setup " + playerGame.ChosenOption.Name
+                        });
+                    }
+                    await Clients.Group(game.Id).SendAsync("ClosePromptOptions", mostChosenOption);
+                }
+            }
+
             _context.Players.Update(player);
             _context.SaveChanges();
-            string gameId = _context.Games.FirstOrDefault(g => g.Retailer.Id == playerId ||
-                                                            g.Manufacturer.Id == playerId ||
-                                                            g.Processor.Id == playerId ||
-                                                            g.Farmer.Id == playerId).Id;
-            await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(_context.Games.FirstOrDefault(x => x.Id.Equals(gameId))));
+            return !thirdPhase;
         }
 
         public List<string> CheckAvailableRoles(string gameId)
@@ -152,6 +194,19 @@ namespace BlockchainDemonstratorApi.Hubs
             if(game.Processor == null) availableRoles.Add("Processor"); 
             if(game.Farmer == null) availableRoles.Add("Farmer");
             return availableRoles;
+        }
+
+        private string CalculateMostChosen(List<Player> players)
+        {
+            Dictionary<string, int> options = new Dictionary<string, int>()
+                        { { "YouProvide", 0 },{ "YouProvideWithHelp", 0 },{ "TrustedParty", 0 },{ "DLT", 0 }  };
+            foreach (Player player in players)
+            {
+                options[player.ChosenOption.Name] += 1;
+            }
+            int maxChosen = options.Max(kp => kp.Value);
+            List<string> mostChosen = options.Where(kp => kp.Value == maxChosen).Select(kp => kp.Key).ToList();
+            return mostChosen[new Random().Next(0, mostChosen.Count)];
         }
     }
 }

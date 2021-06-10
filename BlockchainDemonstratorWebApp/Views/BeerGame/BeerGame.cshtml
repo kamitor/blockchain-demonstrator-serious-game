@@ -1,4 +1,5 @@
 ﻿@using BlockchainDemonstratorApi.Models.Classes
+@using Newtonsoft.Json;
 @model BlockchainDemonstratorApi.Models.Classes.Player
 
 @{ ViewData["Title"] = "BeerGame";
@@ -6,6 +7,8 @@
     string gameId = (string)ViewData["GameId"];
     bool gameReady = (bool)ViewData["GameReady"];
     string containerDisplay = (gameReady) ? "" : "display:none";
+    bool thirdPhaseNotReady = (bool)ViewData["ThirdPhaseNotReady"];
+    List<Player> players = (List<Player>)ViewData["Players"];
 }
 
 
@@ -174,7 +177,13 @@
         $(document).ready(() => {
             BeerGame.init("@gameId", "@Model.Id", "@ViewData["RestApiUrl"]");
             $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
-            if (@currentDay == 7 * 8 + 1 && "@Model.ChosenOption.Name" == "Basic") BeerGame.promptOptions();
+            if (@if(thirdPhaseNotReady){@Html.Raw("true");} || @currentDay == 7 * 8 + 1 && "@if(Model.ChosenOption != null){@Html.Raw(Model.ChosenOption.Name);}else{@Html.Raw("null");}" == "Basic") {
+                BeerGame.promptOptions();
+                @foreach(Player player in players)
+                {
+                    if (player.ChosenOption != null) @Html.Raw($"BeerGame.updatePromptOption('{JsonConvert.SerializeObject(player)}');\n");
+                }
+            }
         });
     </script>
 }

@@ -230,24 +230,34 @@ const BeerGame = (() => {
         $(".actor-tab").hide();
         $("body").append(`
             <section class='option-prompt box'>
-                <h3 class='option-prompt--text'>Choose your supply chain setup</h3>
-                <div class="option-prompt-div">
+                <h3 class='option-prompt--text'>Choose your supplychain setup</h3>
+                <div id="YouProvide" class="option-prompt-div">
                     <button class='option-prompt--button gradient' type='button' onclick='BeerGame.Signal.chooseOption("YouProvide")'><h5>You provide</h5></button>
                     <h6 style="display:inline-block;padding-left:10px">Description alksdkjlasd jlkadjlkasdjkla djlk asdjklas djkl;as djlk;adjklasd</h6>
+                    <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
-                <div class="option-prompt-div">
+                <div id="YouProvideWithHelp" class="option-prompt-div">
                     <button class='option-prompt--button gradient' type='button' onclick='BeerGame.Signal.chooseOption("YouProvideWithHelp")'><h5>You provide with help</h5></button>
                     <h6 style="display:inline-block;padding-left:10px">Description alksdkjlasd jlkadjlkasdjkla djlk asdjklas djkl;as djlk;adjklasd</h6>
+                    <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
-                <div class="option-prompt-div">
+                <div id="TrustedParty" class="option-prompt-div">
                     <button class='option-prompt--button gradient' type='button' onclick='BeerGame.Signal.chooseOption("TrustedParty")'><h5>Trusted party</h5></button>
                     <h6 style="display:inline-block;padding-left:10px">Description alksdkjlasd jlkadjlkasdjkla djlk asdjklas djkl;as djlk;adjklasd</h6>
+                    <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
-                <div class="option-prompt-div">
+                <div id="DLT" class="option-prompt-div">
                     <button class='option-prompt--button gradient' type='button' onclick='BeerGame.Signal.chooseOption("DLT")'><h5>DLT</h5></button>
                     <h6 style="display:inline-block;padding-left:10px">Description alksdkjlasd jlkadjlkasdjkla djlk asdjklas djkl;as djlk;adjklasd</h6>
+                    <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
             </section>`);
+    }
+
+    const updatePromptOption = (playerJson) => {
+        let player = JSON.parse(playerJson);
+        $(`#${player.Id}`).remove();
+        $(`#${player.ChosenOption.Name} > div`).append($(`<b id="${player.Id}" class="gradient-font">${player.Name}</b>`));
     }
 
     const drawChart = function (labels, data, chartId, labelName, lineColour) {
@@ -294,7 +304,8 @@ const BeerGame = (() => {
         promptOptions: promptOptions,
         updateGameTuningPage: updateGameTuningPage,
         drawChart: drawChart,
-        checkInGame: checkInGame
+        checkInGame: checkInGame,
+        updatePromptOption: updatePromptOption
     }
 })();
 
@@ -343,6 +354,19 @@ BeerGame.Signal = (() => {
         connection.on("PromptOptions", function () {
             BeerGame.promptOptions();
         })
+
+        connection.on("UpdatePromptOptions", function (playerJson) {
+            BeerGame.updatePromptOption(playerJson)
+        })
+
+        connection.on("ClosePromptOptions", function (mostChosenOption) {
+            $(".option-prompt").empty();
+            $(".option-prompt").append(`<h2>Chosen supplychain setup: <span class=gradient-font>${mostChosenOption.replace(/([A-Z])/g, ' $1').trim()}</span></h2>`);
+            setTimeout(() => {
+                $(".option-prompt").remove();
+                $(".actor-tab").show();
+            },3000);
+        })
     }
 
     let sendOrder = () => {
@@ -366,9 +390,12 @@ BeerGame.Signal = (() => {
     }
 
     let chooseOption = (option) => {
-        $(".option-prompt").remove();
-        $(".actor-tab").show();
-        connection.invoke("ChooseOption", configMap.playerId, option);
+        connection.invoke("ChooseOption", configMap.playerId, option).then((result) => {
+            if (result) {
+                $(".option-prompt").remove();
+                $(".actor-tab").show();
+            }
+        });
     }
 
     let checkAvailableRoles = () => {
