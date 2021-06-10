@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
     {
         [Key]
         public string Id { get; set; }
-        [Required]
-        public virtual Game Game { get; set; }
+        [ForeignKey("GameMasterId")]
+        public virtual List<Game> Game { get; set; }
     }
 }

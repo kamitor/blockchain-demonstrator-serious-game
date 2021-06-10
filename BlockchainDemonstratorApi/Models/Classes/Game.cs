@@ -97,6 +97,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		public bool GameStarted { get; set; }
 
+		public string GameMasterId { get; set; }
+
 		public Game(string id)
 		{
 			Id = id;
