@@ -32,7 +32,7 @@ jobs:
     
     steps:
       - name: build webapp image
-        run: sudo docker build -t webapp:latest .
+        run: sudo docker build --rm -t webapp:latest .
           
       - name: update appsettings.json
         working-directory: ./BlockchainDemonstratorApi
@@ -40,4 +40,4 @@ jobs:
         
       - name: build Api image
         working-directory: ./BlockchainDemonstratorApi
-        run: sudo docker build -t api:latest .
+        run: sudo docker build --rm -t api:latest .
