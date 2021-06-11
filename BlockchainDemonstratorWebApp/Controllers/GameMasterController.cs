@@ -12,5 +12,12 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         {
             return View();
         }
+        public IActionResult GameMasterView()
+        {
+            return View();
+        }
+        
+
+
     }
 }

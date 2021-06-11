@@ -140,6 +140,13 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return View();
         }
 
+        public IActionResult NewGameView()
+        {
+            return View();
+        }
+
+        
+
         public IActionResult EndGame(string gameId, string playerId)
         {
             using (var client = new HttpClient())

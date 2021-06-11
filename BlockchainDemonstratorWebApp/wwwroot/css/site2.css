@@ -1,0 +1,260 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+    color: #0366d6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+}
+
+
+/* new game view
+-------------------------------------------------- */
+
+.container {
+    max-width: 1170px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1em;
+}
+
+#topcontainer {
+    margin-bottom: 2000px;
+}
+
+#top-left {
+    margin-bottom: 2000px;
+}
+
+.wrapper {
+    border-radius: 40px 40px 40px 40px;
+    display: grid;
+    grid-template-columns: 6fr 2fr;
+    padding: 2em;
+}
+
+
+.plaey-info {
+    justify-content: space-around;
+    background: #f9feff;
+    display: grid;
+    border-width: 4px;
+    border-style: solid;
+    border-color: rgba(28,110,164,0.51);
+    border-radius: 40px 40px 40px 40px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#borderbox {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(28,110,164,0.51);
+    border-radius: 40px 40px 40px 40px;
+    -webkit-box-shadow: 0px 3px 50px 18px #B6B5FF;
+    box-shadow: 0px 3px 50px 18px #B6B5FF;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+#maincanves {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 40px 40px 40px 40px;
+    height: 600px;
+    box-shadow: 0px 3px 50px 18px #B6B5FF;
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    display: flex;
+    background: url("Ui.png");
+    background-size: contain;
+    background-size: cover;
+}
+
+#canves {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 40px 40px 40px 40px;
+    box-shadow: 0px 3px 50px 18px #B6B5FF;
+    display: inline-block;
+    background: linear-gradient(180deg, #008aff, #ff137d);
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    display: flex;
+    margin-bottom: 200px;
+}
+
+#topcontainer {
+    display: grid;
+    grid-template-columns: 6fr 1fr;
+}
+
+#canves1 {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 40px 40px 40px 40px;
+    box-shadow: 0px 3px 50px 18px #B6B5FF;
+    display: inline-block;
+    background: linear-gradient(180deg, #008aff, #ff137d);
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    display: flex;
+    width: 100%;
+    height: 70px;
+    position: relative;
+}
+
+
+#canves2 {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 40px 40px 40px 40px;
+    box-shadow: 0px 3px 50px 18px #B6B5FF;
+    display: inline-block;
+    background: linear-gradient(180deg, #008aff, #ff137d);
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    display: flex;
+    width: 100%;
+    height: 70px;
+    width: 100%;
+    height: 500px;
+}
+
+#canves3 {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 40px 40px 40px 40px;
+    box-shadow: 0px 3px 50px 18px #B6B5FF;
+    display: inline-block;
+    background: linear-gradient(180deg, #008aff, #ff137d);
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    display: flex;
+    width: 95%;
+    height: 70px;
+}
+
+#canvessubmit {
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+}
+
+.bot-left {
+    display: grid;
+    grid-template-columns: 3fr 3fr 2.5fr;
+    grid-gap: 40px;
+    position: relative;
+}
+
+.input {
+    box-shadow: 0px 3px 50px 18px #B6B5FF;
+    height: 35px;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.order-button {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    width: 100%;
+    outline: none;
+    border: none;
+    color: white;
+    height: 35px;
+}
+
+.gradient {
+    background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
+}
