@@ -182,7 +182,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             Response.Cookies.Append(key, value, option);
         }
 
-        public void RemoveCookie(string key)
+        private void RemoveCookie(string key)
         {
             Response.Cookies.Delete(key);
         }

@@ -1,14 +1,15 @@
 ﻿
 @{
     ViewData["Title"] = "Login";
+    bool setupAdmin = (bool)ViewData["SetupAdmin"];
 }
 
 <head>
     <link rel="stylesheet" href="~/css/StyleSheet.css" />
 </head>
 
-<form class="login-form box-absolute">
-    <input type="text" placeholder="Insert id..." />
-    <input type="text" placeholder="Insert password... [optional]" />
+<form method="post" class="login-form box-absolute" asp-action="LoginPost">
+    <input name="id" type="text" placeholder="Insert id..." />
+    <input name="password" type="text" placeholder="Insert password... [optional]" />
     <input type="submit" value="Login" />
 </form>

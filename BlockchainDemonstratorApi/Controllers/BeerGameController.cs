@@ -200,6 +200,24 @@ namespace BlockchainDemonstratorApi.Controllers
                      .Any(p => p.Id.Equals(playerId))).Id;
         }
 
+        // POST: api/BeerGame/Login
+        [HttpPost("Login")]
+        public ActionResult<dynamic> Login([FromBody] dynamic data)
+        {
+            if (data.id.Value == "") return BadRequest();
+            string id = (string)data.id;
+            string password = (string)data.password;
+            bool anyGameMaster = _context.GameMasters.Any(gm => gm.Id == id);
+            bool anyAdmin = _context.Admins.Any(a => a.Id == id && a.Password == password);
+            string loggedInAs = "";
+            if (anyGameMaster) loggedInAs = "GameMaster";
+            if (anyAdmin) loggedInAs = "Admin";
+            return new {
+                loggedIn = anyGameMaster || anyAdmin,
+                loggedInAs = loggedInAs
+            };
+        }
+
         // PUT: api/BeerGame/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
