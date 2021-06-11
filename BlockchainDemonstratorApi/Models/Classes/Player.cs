@@ -291,7 +291,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		/// <summary>Adds a holding cost payment to the Payments list </summary>
 		/// <param name="currentDay">integer that specifies the current day</param>
-		//TODO: HoldingCost can be zero (adds extra records in database)
 		public void SetHoldingCost(int currentDay)
 		{
 			if (HoldingCosts > 0)
