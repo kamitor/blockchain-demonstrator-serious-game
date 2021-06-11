@@ -40,6 +40,7 @@ namespace BlockchainDemonstratorApi.Hubs
             {
                 game.Progress();
                 await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(game));
+                
                 if (game.CurrentDay == Factors.RoundIncrement * 8 + 1) await PromptOptions(gameId);
                 if (game.CurrentDay == Factors.RoundIncrement * 16 + 1)
                 {
@@ -50,6 +51,8 @@ namespace BlockchainDemonstratorApi.Hubs
                     await PromptOptions(gameId);
                 }
 
+                if (game.CurrentDay == Factors.RoundIncrement * 24 + 1) await EndGame(gameId);
+
                 foreach (Player gamePlayer in game.Players)
                 {
                     gamePlayer.CurrentOrder = null;
@@ -58,6 +61,11 @@ namespace BlockchainDemonstratorApi.Hubs
             
             _context.Games.Update(game);
             _context.SaveChanges();
+        }
+
+        public async Task EndGame(string gameId)
+        {
+            await Clients.Group(gameId).SendAsync("EndGame");
         }
 
         public Task JoinGroup(string gameId)
@@ -135,11 +143,11 @@ namespace BlockchainDemonstratorApi.Hubs
 
         public async Task<bool> ChooseOption(string playerId, string option)
         {
-            var player = _context.Players.FirstOrDefault(x => x.Id == playerId);
             Game game = _context.Games.FirstOrDefault(g => g.Retailer.Id == playerId ||
                                                            g.Manufacturer.Id == playerId ||
                                                            g.Processor.Id == playerId ||
                                                            g.Farmer.Id == playerId);
+            Player player = game.Players.FirstOrDefault(p => p.Id == playerId);
             bool thirdPhase = game.CurrentDay == Factors.RoundIncrement * 16 + 1;
             player.ChosenOption = _context.Options.FirstOrDefault(x => x.RoleId == player.Role.Id && x.Name == option);
             player.ChosenOption.Name += ""; //Do not remove this line, otherwise this function will no longer work
@@ -179,7 +187,7 @@ namespace BlockchainDemonstratorApi.Hubs
                 }
             }
 
-            _context.Players.Update(player);
+            _context.Games.Update(game);
             _context.SaveChanges();
             return !thirdPhase;
         }

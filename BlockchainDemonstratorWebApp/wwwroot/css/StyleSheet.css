@@ -293,15 +293,16 @@ ul {
 
 .login-form {
     width: 35%;
-    height:35%;
+    height: 35%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    margin-left:auto;
-    margin-right:auto;
-    top:15%;
-    align-items:center;
+    margin-left: auto;
+    margin-right: auto;
+    top: 15%;
+    align-items: center;
+    left: 32%;
 }
 
 .box {
