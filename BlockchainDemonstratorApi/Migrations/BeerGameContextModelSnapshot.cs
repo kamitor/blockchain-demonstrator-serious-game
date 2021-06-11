@@ -14,7 +14,7 @@ namespace BlockchainDemonstratorApi.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.14")
+                .HasAnnotation("ProductVersion", "3.1.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -27,7 +27,7 @@ namespace BlockchainDemonstratorApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

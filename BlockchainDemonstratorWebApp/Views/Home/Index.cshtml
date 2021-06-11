@@ -5,16 +5,15 @@
     <link rel="stylesheet" href="~/css/StyleSheet.css" />
 </head>
 
-<div class="text-center">
-    <h1 class="gradient-font">Beer game</h1>
-    <form id="gameIdBox" class="game-id-box" asp-controller="BeerGame" asp-action="ChooseRoleAndName">
+<div class="login-grid">
+    <h2 style="margin-top:10%">THE BLOCKCHAIN DEMONSTATOR</h2> @*//TODO: make this look good*@
+    <h1 class="gradient-font">BEERGAME</h1>
+    <form style="padding:0px" id="gameIdBox" class="game-id box" asp-controller="BeerGame" asp-action="ChooseRoleAndName">
         <input name="gameId" class="input-id" type="text" placeholder="Insert game id..." />
         <input class="input-button gradient" type="button" value="Join game" onclick="joinGame()" />
         <div class="gradient-shadow"></div>
     </form>
 </div>
-
-<a asp-controller="BeerGame" asp-action="Graphs" asp-route-gameId="447127" asp-route-playerId="973f7486-1527-4a80-8f86-6b4416208a80">TESTGRAPHS</a>
 
 @section Scripts
 {

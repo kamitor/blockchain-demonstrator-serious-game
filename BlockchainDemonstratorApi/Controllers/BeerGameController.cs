@@ -208,7 +208,7 @@ namespace BlockchainDemonstratorApi.Controllers
             string id = (string)data.id;
             string password = (string)data.password;
             bool anyGameMaster = _context.GameMasters.Any(gm => gm.Id == id);
-            bool anyAdmin = _context.Admins.Any(a => a.Id == id && a.Password == password);
+            bool anyAdmin = _context.Admins.AsEnumerable().Any(a => a.Id == id && Cryptography.HashCompare(password, a.Password, a.Salt));
             string loggedInAs = "";
             if (anyGameMaster) loggedInAs = "GameMaster";
             if (anyAdmin) loggedInAs = "Admin";

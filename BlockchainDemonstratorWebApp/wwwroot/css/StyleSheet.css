@@ -196,35 +196,14 @@ ul {
     }
 }
 
-.game-id-box {
+.game-id {
     height: auto;
-    width: 15%;
+    width: 25%;
     display: flex;
     flex-direction: row;
-    position: absolute;
-    top: 40%;
-    left: 42.5%;
     flex-wrap: wrap;
+    margin-top:5%;
 }
-
-    .game-id-box:before {
-        position: absolute;
-        z-index: -1;
-        width: 100%;
-        height: 103.2%;
-        background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
-        left: -5px;
-        bottom: -8px;
-        opacity: 0.8;
-        border-radius: 10px;
-        background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
-        -webkit-filter: blur(7px);
-        -moz-filter: blur(7px);
-        -o-filter: blur(7px);
-        -ms-filter: blur(7px);
-        filter: blur(7px);
-        content: '';
-    }
 
 .input-id {
     height: 30px;
@@ -233,6 +212,9 @@ ul {
     outline: none;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    text-align: center;
+    font-size: 30px;
+    height: auto;
 }
 
 .input-button {
@@ -242,6 +224,8 @@ ul {
     outline: none;
     border: none;
     color: white;
+    font-size: 20px;
+    height:auto;
 }
 
 .choiceForm {
@@ -300,14 +284,28 @@ ul {
 
 .login-form {
     width: 35%;
-    height: 35%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    margin: auto;
-    margin-top:30%;
+    margin-top:22%;
     align-items: center;
+}
+
+.login-failed {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+    align-items: center;
+}
+
+.text-input {
+    border:none;
+    outline:none;
+    background-color:lavender;
+    border-radius:10px;
+    text-align:center;
 }
 
 .box {
@@ -340,6 +338,7 @@ ul {
 }
 
 .gradient-font {
+    display:inline;
     background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

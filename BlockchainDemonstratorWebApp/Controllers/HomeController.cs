@@ -9,6 +9,8 @@ using Blockchain_Demonstrator_Web_App.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using BlockchainDemonstratorApi.Models.Classes;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
 {
@@ -27,7 +29,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return View();
         }
 
-        public IActionResult Login()
+        public IActionResult Login(bool loginFailed = false)
         {
             using (var client = new HttpClient())
             {
@@ -40,6 +42,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     if (responseString != null)
                     {
                         ViewData["AdminExists"] = JsonConvert.DeserializeObject<bool>(responseString);
+                        ViewData["LoginFailed"] = loginFailed;
                         return View();
                     }
                 }
@@ -59,9 +62,9 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     var responseContent = response.Content;
                     string responseString = responseContent.ReadAsStringAsync().Result;
                     dynamic data = JsonConvert.DeserializeObject<dynamic>(responseString);
-                    bool loggedIn = (bool)data.loggedIn.value;
-                    string loggedInAs = (string)data.loggedInAs.value;
-                    
+                    bool loggedIn = (bool)data.loggedIn.Value;
+                    string loggedInAs = (string)data.loggedInAs.Value;
+
                     if (loggedIn)
                     {
                         SetCookie(loggedInAs + "Id", id, 480);
@@ -69,29 +72,29 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     }
                 }
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Login", new { loginFailed = true });
         }
 
         public IActionResult CreateAdmin(string id, string password)
         {
             using (var client = new HttpClient())
             {
-                var stringContent = new StringContent(JsonConvert.SerializeObject(new { id, password }), System.Text.Encoding.UTF8, "application/json");
-                var response = client.PostAsync(Config.RestApiUrl + "/api/Admin/CreateAdmin", stringContent).Result;
+                var stringContent = new StringContent(JsonConvert.SerializeObject(new Admin() { Id = id, Password = password }), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/Admin/Create", stringContent).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseContent = response.Content;
-                    string responseString = responseContent.ReadAsStringAsync().Result;
-                    bool loggedIn = JsonConvert.DeserializeObject<bool>(responseString);
-
-                    if (loggedIn)
-                    {
-                        SetCookie("AdminId", id, 480);
-                        return RedirectToAction("Index", "Admin");
-                    }
+                    SetCookie("AdminId", id, 480);
+                    return RedirectToAction("Index", "Admin");
                 }
             }
+            return RedirectToAction("Login", true);
+        }
+
+        public IActionResult Logout()
+        {
+            RemoveCookie("AdminId");
+            RemoveCookie("GameMasterId");
             return RedirectToAction("Index");
         }
 

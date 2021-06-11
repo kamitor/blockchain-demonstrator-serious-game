@@ -447,6 +447,7 @@ BeerGame.Signal = (() => {
     }
 })();
 
+//TODO: remove usages and change to site cookie getter
 BeerGame.Cookie = (() => {
     function getCookie(name) {
         const value = `; ${document.cookie}`;

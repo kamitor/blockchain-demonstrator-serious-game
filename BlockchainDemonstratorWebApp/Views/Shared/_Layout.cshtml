@@ -3,39 +3,26 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Blockchain_Demonstrator_Web_App</title>
+    <title>@ViewData["Title"] - Blockchain Demonstrator</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/BeerGame.css" />
+    <link rel="Shortcut Icon" href="~/images/icon.ico" type="image/x-icon" />
 </head>
 <body>
 
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Blockchain_Demonstrator_Web_App</a>
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-
+                    <ul id="navbar-list" class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <div class="container">
-
-                                <a href="https://localhost:44313" class="btn btn-outline-primary my-2 my-sm-0 login-color"
-                                   style="">Home Page</a>
-
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="container">
-
-                                <a href=" https://localhost:44313/Home/Privacy" class="btn btn-outline-primary my-2 my-sm-0 login-color"
-                                   style="">Privacy</a>
-
-                            </div>
+                            <img style="height:35px;cursor: pointer;" src="~/images/logo.png" asp-area="" onclick="document.location = '/';" onmouseover="" />
                         </li>
                     </ul>
                 </div>
@@ -51,7 +38,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - Blockchain_Demonstrator_Web_App
+            &copy; 2021 - Spark! Living Lab
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

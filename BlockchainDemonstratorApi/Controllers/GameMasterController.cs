@@ -61,7 +61,7 @@ namespace BlockchainDemonstratorApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GameMasterExists(id))
+                if (!GameMasterExistsFunc(id))
                 {
                     return NotFound();
                 }
@@ -87,7 +87,7 @@ namespace BlockchainDemonstratorApi.Controllers
             }
             catch (DbUpdateException)
             {
-                if (GameMasterExists(gameMaster.Id))
+                if (GameMasterExistsFunc(gameMaster.Id))
                 {
                     return Conflict();
                 }
@@ -116,7 +116,13 @@ namespace BlockchainDemonstratorApi.Controllers
             return gameMaster;
         }
 
-        private bool GameMasterExists(string id)
+        [HttpPost("GameMasterExists")]
+        public ActionResult<bool> GameMasterExists([FromBody] string id)
+        {
+            return GameMasterExistsFunc(id);
+        }
+
+        private bool GameMasterExistsFunc(string id)
         {
             return _context.GameMasters.Any(e => e.Id == id);
         }
