@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewData["Title"] = "GameMasterView";
+}
+
+<h1>GameMasterView</h1>
+
+
+
+<style>
+
+    body {
+        background-color:lightblue;
+    }
+
+    .table-fixed {
+       
+    }
+
+        .table-fixed thead,
+        .table-fixed thead > th {
+            background: #4d7275;
+            color: #fff;
+
+        }
+
+        .table-fixed tbody tr td {
+            background: #fff;
+        }
+
+        .table-fixed > thead > tr > th {
+            border: 0;
+        }
+
+        .table-fixed > tbody > tr > td:last-child {
+            border-right: 0;
+        }
+
+        .table-fixed tbody td,
+        .table-fixed thead > tr > th {
+            float:none;
+            font-size: 14px;
+            padding-left: 20px;
+        }
+
+        .table-fixed .col {
+            width: 25%;
+        }
+
+        .table-fixed tbody {
+            display:inline-grid;
+            height:auto;
+            overflow-y: auto;
+        }
+
+        .table-fixed tr {
+            display: block;
+        }
+
+
+      .botwrapper {
+        display: flex;
+        flex-wrap: wrap;
+        float: left;
+       
+        }
+
+
+    /*
+    .scrollbox {
+        background-color: lightblue;
+        width: 600px;
+        height: 400px;
+        overflow: scroll;
+    }
+  
+    .wrap {
+  
+    }
+  
+    .topbox {
+        display:grid;
+        grid-column:span;
+        background-color:aqua;
+    }
+  
+    .col {
+        border: solid;
+        background-color:green;
+        
+    }
+    */
+</style>
+
+
+<body>
+    <div class="container">
+        <div class="row">
+            <table class="col-xs-7 table-bordered table-striped table-condensed table-fixed">
+                <thead>
+                    <tr>
+
+                        <th class="col">Game Id</th>
+                        <th class="col">Amount of Games</th>
+                        <th class="col">Status</th>
+
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    <tr>
+                        <td class="col">test</td>
+                        <td class="col">test</td>
+                        <td class="col">test</td>
+                    </tr>
+
+                </tbody>
+
+
+
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div class="container">
+        <button class="">  testbutton  </button>
+        <button class="">  testbutton  </button>
+        <button class="">  testbutton  </button>
+    </div>
+
+</body>
+
+
