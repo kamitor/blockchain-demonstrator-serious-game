@@ -140,7 +140,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return View();
         }
 
-        public IActionResult Graphs(string gameId, string playerId)
+        public IActionResult EndGame(string gameId, string playerId)
         {
             using (var client = new HttpClient())
             {
@@ -153,13 +153,17 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     string responseString = responseContent.ReadAsStringAsync().Result;
                     if (responseString != null)
                     {
+                        RemoveCookie("PlayerId");
+                        RemoveCookie("JoinedGame");
                         Game game = JsonConvert.DeserializeObject<Game>(responseString);
                         ViewData["Player"] = game.Players.FirstOrDefault(p => p.Id == playerId);
+                        ViewData["RestApiUrl"] = Config.RestApiUrl;
+                        ViewData["GameId"] = gameId;
                         return View(game);
                     }
                 }
             }
-            return View();
+            return BadRequest();
         }
 
         private void SetCookie(string key, string value, int? expireTime)

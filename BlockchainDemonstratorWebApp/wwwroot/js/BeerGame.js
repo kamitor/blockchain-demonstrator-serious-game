@@ -367,6 +367,15 @@ BeerGame.Signal = (() => {
                 $(".actor-tab").show();
             },3000);
         })
+
+        connection.on("EndGame", function () {
+            $('body').append($(`<form id="endGameForm" action="/beergame/endgame" style="display:none;">
+                                    <input name=gameId type="hidden" value="${configMap.gameId}"/>
+                                    <input name=playerId type="hidden" value="${configMap.playerId}"/>
+                                </form>`));
+            $("#endGameForm").submit();
+
+        })
     }
 
     let sendOrder = () => {

@@ -32,7 +32,7 @@
     string orderWorthHistoryData = "[";
     for (int i = 0; i < player.OrderWorthHistory.Count; i++)
     {
-        orderWorthHistoryData += "'" + player.OrderWorthHistory[i] + "'";
+        orderWorthHistoryData += "'" + player.OrderWorthHistory[i].ToString().Replace(',', '.') + "'";
         if (player.OrderWorthHistory.Count - 1 > i) orderWorthHistoryData += ", ";
         else orderWorthHistoryData += "]";
     }
@@ -48,7 +48,7 @@
     string overallProfitHistoryData = "[";
     for (int i = 0; i < player.OverallProfitHistory.Count; i++)
     {
-        overallProfitHistoryData += "'" + player.OverallProfitHistory[i] + "'";
+        overallProfitHistoryData += "'" + player.OverallProfitHistory[i].ToString().Replace(',', '.') + "'";
         if (player.OverallProfitHistory.Count - 1 > i) overallProfitHistoryData += ", ";
         else overallProfitHistoryData += "]";
     }
@@ -64,12 +64,16 @@
     string grossProfitHistoryData = "[";
     for (int i = 0; i < player.GrossProfitHistory.Count; i++)
     {
-        grossProfitHistoryData += "'" + player.GrossProfitHistory[i] + "'";
+        grossProfitHistoryData += "'" + player.GrossProfitHistory[i].ToString().Replace(',', '.') + "'";
         if (player.GrossProfitHistory.Count - 1 > i) grossProfitHistoryData += ", ";
         else grossProfitHistoryData += "]";
     }
 
     string endText = (player.Profit > 0) ? "Well Done " : "Better luck next time ";
+    string profitDeficitPlayer = (player.Profit > 0) ? "profit" : "deficit";
+    string profitDeficitTeam = (Model.Players.Sum(p => p.Profit) > 0) ? "profit" : "deficit";
+    string profitValuePlayer = (player.Profit > 0) ? "€" + player.Profit : "-€" + (player.Profit * -1);
+    string profitValueTeam = (Model.Players.Sum(p => p.Profit) > 0) ? "€" + Model.Players.Sum(p => p.Profit) : "-€" + (Model.Players.Sum(p => p.Profit) * -1);
 }
 
 <head>
@@ -79,8 +83,8 @@
 <div class="endGrid">
     <div class="endText box">
         <h1 style="display:inline-block">@endText<span class="gradient-font">@player.Name</span>!</h1>
-        <h2 style="display:inline-block">You made a profit of €<span class="gradient-font"> @player.Profit</span></h2>
-        <h2 style="display:inline-block">Your team made a total profit of €<span class="gradient-font"> @Model.Players.Sum(p => p.Profit)</span></h2>
+        <h2 style="display:inline-block">You made a @profitDeficitPlayer of <nobr class="gradient-font">@profitValuePlayer</nobr></h2>
+        <h2 style="display:inline-block">Your team made a total @profitDeficitTeam of <nobr class="gradient-font">@profitValueTeam</nobr></h2>
     </div>
     <div class="endStatistics box">
         <canvas id="inventoryChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
@@ -98,7 +102,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
 
     <script>
-        BeerGame.init("", "", "");
+        BeerGame.init("@ViewData["GameId"]", "@player.Id", "@ViewData["RestApiUrl"]");
         BeerGame.drawChart(@Html.Raw(inventoryHistoryLabel), @Html.Raw(inventoryHistoryData), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
         BeerGame.drawChart(@Html.Raw(orderWorthHistoryLabel), @Html.Raw(orderWorthHistoryData), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
         BeerGame.drawChart(@Html.Raw(overallProfitHistoryLabel), @Html.Raw(overallProfitHistoryData), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
