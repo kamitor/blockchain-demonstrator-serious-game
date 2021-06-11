@@ -42,19 +42,27 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				.Sum(p => p.Amount);
 		}
 
+		/* Old shite
+		 int backorder = 0;
+		 int maxOrderDay = 0;
+		 if(IncomingOrders.Count != 0) maxOrderDay = IncomingOrders.Max(o => o.OrderDay);
+		 if (IncomingOrders.Count == 1)
+		 {
+			 backorder = IncomingOrders[0].Volume - IncomingOrders[0].Deliveries.Sum(x => x.Volume);
+		 }
+		 else
+		 {
+			 foreach (Order incomingOrder in IncomingOrders)
+			 {
+				 if(incomingOrder.OrderDay != maxOrderDay) backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
+			 } 
+		 }
+		 return backorder;
+		 */
 		public int Backorder
 		{
-			get
-			{
-				 int backorder = 0;
-				 int maxOrderDay = 0;
-				 if(IncomingOrders.Count != 0) maxOrderDay = IncomingOrders.Max(o => o.OrderDay);
-				 foreach (Order incomingOrder in IncomingOrders)
-				 {
-					 if(incomingOrder.OrderDay != maxOrderDay) backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
-				 }
-				 return backorder;
-			}
+			get;
+			set;
 		}
 
 		public virtual Order CurrentOrder { get; set; }
@@ -163,6 +171,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// <param name="currentDay">integer that specifies the current day</param>
 		public void GetOutgoingDeliveries(int currentDay)
 		{
+			Backorder = 0;
 			for (int i = 0; i < IncomingOrders.Count; i++)
 			{
 				int leadTimeRand = new Random().Next(Factors.OrderLeadTimeRandomMinimum,
@@ -206,6 +215,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 					Inventory = 0;
 				}
+			}
+			
+			foreach (Order incomingOrder in IncomingOrders)
+			{
+				Backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
 			}
 		}
 

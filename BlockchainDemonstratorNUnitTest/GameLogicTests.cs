@@ -47,24 +47,22 @@ namespace BlockchainDemonstratorNUnitTest
             _game.Processor.CurrentOrder = new Order { Volume = 12 };
             _game.Farmer.CurrentOrder = new Order { Volume = 13 };
         }
-
-        //TODO: fix test or delete
-        /*[Test]
+        
+        [Test]
         public void ProgressIncomingOrdersTests()
         {
             _game.Progress();
-
-            if(_game.Retailer.IncomingOrders.OrderDay == 1 && _game.Retailer.IncomingOrders.Volume >= 5 && _game.Retailer.IncomingOrders.Volume <= 15 &&
-                _game.Manufacturer.IncomingOrders.OrderDay == 1 && _game.Manufacturer.IncomingOrders.Volume == 10 &&
-                _game.Processor.IncomingOrders.OrderDay == 1 && _game.Processor.IncomingOrders.Volume == 11 &&
-                _game.Farmer.IncomingOrders.OrderDay == 1 && _game.Farmer.IncomingOrders.Volume == 12)
+            
+            Assert.Multiple(() =>
             {
-                Assert.Pass();
-            }
-            Assert.Fail();
-        }*/
+                Assert.IsTrue(_game.Retailer.IncomingOrders[0].Volume >= 5 && _game.Retailer.IncomingOrders[0].Volume <= 15);
+                Assert.IsTrue(_game.Manufacturer.IncomingOrders[0].Volume == 10);
+                Assert.IsTrue(_game.Processor.IncomingOrders[0].Volume >= 11);
+                Assert.IsTrue(_game.Farmer.IncomingOrders[0].Volume >= 12);
+            });
+        }
 
-        /*[Test]
+        [Test]
         public void ProgressInventoriesTest()
         {
             _game.Progress();
@@ -77,26 +75,26 @@ namespace BlockchainDemonstratorNUnitTest
                 Assert.AreEqual(9, _game.Processor.Inventory);
                 Assert.AreEqual(8, _game.Farmer.Inventory);
             });
-        }*/
+        }
 
-        /*[Test]
+        [Test]
+        [Repeat(25)]
         public void ProgressIncomingDeliveries()
         {
             _game.Progress();
 
-            if (_game.Retailer.OutgoingOrders.Find(o => o.OrderDay == 1 && o.Volume == 10) != null &&
-                _game.Manufacturer.OutgoingOrders.Find(o => o.OrderDay == 1 && o.Volume == 11) != null &&
-                _game.Processor.OutgoingOrders.Find(o => o.OrderDay == 1 && o.Volume == 12) != null &&
-                _game.Farmer.OutgoingOrders.Find(o => o.OrderDay == 1 && o.Volume == 13) != null)
+            Assert.Multiple(() =>
             {
-                Assert.Pass();
-            }
-            Assert.Fail();
-        }*/
+                Assert.IsTrue(_game.Retailer.OutgoingOrders.Find(o => o.Volume == 10) != null);
+                Assert.IsTrue(_game.Manufacturer.OutgoingOrders.Find(o => o.Volume == 11) != null);
+                Assert.IsTrue(_game.Processor.OutgoingOrders.Find(o => o.Volume == 12) != null);
+                Assert.IsTrue(_game.Farmer.OutgoingOrders.Find(o => o.Volume == 13) != null);
+            });
+        }
 
-        //TODO: fix test use repeat function
-        /*[Test]
-        public void ProgressProcessDeliveries() //TODO: Does not always work even though 5*10 = 50 days is more than maximum possible leadtime
+        [Test]
+        [Repeat(25)]
+        public void ProgressProcessDeliveries()
         {
             _game.Progress();
 
@@ -110,110 +108,68 @@ namespace BlockchainDemonstratorNUnitTest
             int processorInventory = _game.Processor.Inventory;
             int farmerInventory = _game.Farmer.Inventory;
 
-            for (int i = 0; i < 10; i++)
+            _game.Progress();
+            
+            Assert.Multiple(() =>
             {
-                _game.Progress();
-                if(_game.Retailer.Inventory != retailerInventory &&
-                    _game.Manufacturer.Inventory != manufacturerInventory &&
-                    _game.Processor.Inventory != processorInventory &&
-                    _game.Farmer.Inventory != farmerInventory)
-                {
-                    Assert.Pass();
-                }
-            }
-
-            Assert.Fail();
-        }*/
-
-        [Test]
-        public void EachActorHasDifferentLeadtime_True()
-        {
-            int leadtimeRetailer = (int)_game.Retailer.Role.LeadTime;
-            int leadtimeManufacturer = (int)_game.Manufacturer.Role.LeadTime;
-            int leadtimeProcessor = (int)_game.Processor.Role.LeadTime;
-            int leadtimeFarmer = (int)_game.Farmer.Role.LeadTime;
-            bool result = false;
-
-            if (leadtimeRetailer != leadtimeManufacturer && leadtimeRetailer != leadtimeProcessor && leadtimeRetailer != leadtimeFarmer)
-            {
-                result = true;
-            }
-            else
-            {
-                result = false;
-            }
-            if (leadtimeManufacturer != leadtimeProcessor && leadtimeManufacturer != leadtimeFarmer)
-            {
-                result = true;
-            }
-            else
-            {
-                result = false;
-            }
-            if (leadtimeProcessor != leadtimeFarmer)
-            {
-                result = true;
-            }
-            else
-            {
-                result = false;
-            }
-
-            Assert.IsTrue(result);
+                Assert.IsTrue(_game.Retailer.Inventory != retailerInventory);
+                Assert.IsTrue(_game.Manufacturer.Inventory != manufacturerInventory);
+                Assert.IsTrue(_game.Processor.Inventory != processorInventory);
+                Assert.IsTrue(_game.Farmer.Inventory != farmerInventory);
+            });
         }
 
-        //TODO: fix test or delete
         [Test]
-        public void OrderLeadtimeRandomlyIncreases() //TODO: No longer works because GetOutgoingDeliveries() is a void
-        {
-            /*_game.Manufacturer.Inventory = 20;
-            _game.Manufacturer.IncomingOrders.Add(new Order() {Volume = 20});
-            
-            List<Order> result = _game.Manufacturer.GetOutgoingDeliveries(1);
-            
-            if (result.First().ArrivalDay >= _game.Manufacturer.Role.LeadTime + 1)
-            {
-                Assert.Pass();
-            }*/
-        }
-
-        /*[Test]
-        public void OrderFailedToDeliverFullVolume_ExcessAddedToBackorder() //TODO: Probably no longer works because of order rework
+        public void OrderFailedToDeliverFullVolume_ExcessAddedToBackorder() 
         {
             _game.Manufacturer.Inventory = 10;
             _game.Manufacturer.IncomingOrders.Add(new Order() {Volume = 20, OrderDay = -1});
             
-
             _game.Manufacturer.GetOutgoingDeliveries(1);
 
             int result = _game.Manufacturer.Backorder;
             
             Assert.AreEqual(10, result);
-        }*/
-
-        //TODO: fix test or delete
-        [Test]
-        public void OrderPriceSubtractedFromBalance_expectTrue() //No longer works because order does not have price
-        {
-            /*_game.Manufacturer.OutgoingOrders.Add(new Order() {Volume = 20, Price = 2000, ArrivalDay = 1});
-            _game.Manufacturer.ProcessDeliveries(1);
-            _game.Manufacturer.UpdateBalance(2);
-            
-            Assert.AreEqual(-2000, _game.Manufacturer.Balance);*/
         }
         
-        //TODO: fix test or delete
         [Test]
-        public void OrderPriceAddedToBalance_expectTrue() //No longer works because order does not have price
+        public void OrderPriceSubtractedFromBalance_expectTrue()
         {
-            /*_game.Manufacturer.OutgoingOrders.Add(new Order() {Volume = 20, Price = 2000, ArrivalDay = 1});
+            List<Delivery> deliveries = new List<Delivery>();
+            deliveries.Add(new Delivery()
+            {
+                Volume = 20,
+                Price = 2000
+            });
+            
+            Order order = new Order()
+            {
+                Volume = 20,
+                Deliveries = deliveries
+            };
+            
+            _game.Manufacturer.OutgoingOrders.Add(order);
+            
+            _game.Manufacturer.ProcessDeliveries(1);
+            _game.Manufacturer.UpdateBalance(8);
+            
+            Assert.AreEqual(-2000, _game.Manufacturer.Balance);
+        }
+        
+        [Test]
+        [Repeat(25)]
+        public void OrderPriceAddedToBalance_expectTrue() 
+        {
+            
+            _game.Manufacturer.IncomingOrders.Add(new Order() {Volume = 10});
+            
+            _game.Manufacturer.GetOutgoingDeliveries(1);
+            
+            _game.Manufacturer.UpdateBalance(26);
 
-            _game.CurrentDay = 3;
-            _game.Progress();
+            int expected = Factors.ManuProductPrice * 10;
+            Assert.AreEqual(expected, _game.Manufacturer.Balance);
             
-            _game.Processor.UpdateBalance(3);
-            
-            Assert.AreEqual(2000, _game.Processor.Balance);*/
         }
     }
 }
