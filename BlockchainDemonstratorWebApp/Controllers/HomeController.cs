@@ -29,8 +29,22 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 
         public IActionResult Login()
         {
-            ViewData["RestApiUrl"] = Config.RestApiUrl;
-            return View();
+            using (var client = new HttpClient())
+            {
+                var response = client.GetAsync(Config.RestApiUrl + "/api/Admin/AdminExists").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null)
+                    {
+                        ViewData["AdminExists"] = JsonConvert.DeserializeObject<bool>(responseString);
+                        return View();
+                    }
+                }
+            }
+            return BadRequest();
         }
 
         public IActionResult LoginPost(string id, string password)
@@ -52,6 +66,29 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     {
                         SetCookie(loggedInAs + "Id", id, 480);
                         return RedirectToAction("Index", loggedInAs);
+                    }
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult CreateAdmin(string id, string password)
+        {
+            using (var client = new HttpClient())
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(new { id, password }), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/Admin/CreateAdmin", stringContent).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    bool loggedIn = JsonConvert.DeserializeObject<bool>(responseString);
+
+                    if (loggedIn)
+                    {
+                        SetCookie("AdminId", id, 480);
+                        return RedirectToAction("Index", "Admin");
                     }
                 }
             }

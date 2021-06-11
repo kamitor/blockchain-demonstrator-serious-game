@@ -59,11 +59,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		 }
 		 return backorder;
 		 */
-		public int Backorder
-		{
-			get;
-			set;
-		}
+		[NotMapped]
+		public int Backorder { get; set; }
 
 		public virtual Order CurrentOrder { get; set; }
 

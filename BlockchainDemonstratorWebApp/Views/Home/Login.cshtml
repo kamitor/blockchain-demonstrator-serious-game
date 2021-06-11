@@ -1,15 +1,29 @@
 ﻿
 @{
     ViewData["Title"] = "Login";
-    bool setupAdmin = (bool)ViewData["SetupAdmin"];
+    bool AdminExists = (bool)ViewData["AdminExists"];
 }
 
 <head>
     <link rel="stylesheet" href="~/css/StyleSheet.css" />
 </head>
-
-<form method="post" class="login-form box-absolute" asp-action="LoginPost">
-    <input name="id" type="text" placeholder="Insert id..." />
-    <input name="password" type="text" placeholder="Insert password... [optional]" />
-    <input type="submit" value="Login" />
-</form>
+<div class="login-grid">
+    @if (AdminExists)
+    {
+        <form method="post" class="login-form box" asp-action="LoginPost">
+            <input name="id" type="text" placeholder="Insert id..." />
+            <input name="password" type="text" placeholder="Insert password... [optional]" />
+            <input class="rejoinButton gradient-font" type="submit" value="Login" />
+        </form>
+    }
+    else
+    {
+        <h1 style="margin:auto;margin-top:15%" class="gradient-font">It seems like no admin account has been created yet</h1>
+        <h2 style="margin:auto">Please create a admin account before continuing</h2>
+        <form method="post" class="login-form box" asp-action="CreateAdmin" style="margin-top:5%">
+            <input style="width:60%" name="id" type="text" placeholder="Insert id..." />
+            <input style="margin-top: 10px; width:60%" name="password" type="password" placeholder="Insert password..." />
+            <input style="margin-top: 10px;" class="rejoinButton gradient" type="submit" value="Create account" />
+        </form>
+    }
+</div>

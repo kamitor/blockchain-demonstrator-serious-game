@@ -21,39 +21,46 @@ namespace BlockchainDemonstratorApi.Controllers
             _context = context;
         }
 
+        // GET: api/Admin/AdminExists
+        [HttpGet("AdminExists")]
+        public async Task<ActionResult<bool>> AdminExists()
+        {
+            return await _context.Admins.CountAsync() > 0;
+        }
+
         // GET: api/Admin
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameMaster>>> GetGameMasters()
+        public async Task<ActionResult<IEnumerable<Admin>>> GetAdmins()
         {
-            return await _context.GameMasters.ToListAsync();
+            return await _context.Admins.ToListAsync();
         }
 
         // GET: api/Admin/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<GameMaster>> GetGameMaster(string id)
+        public async Task<ActionResult<Admin>> GetAdmin(string id)
         {
-            var gameMaster = await _context.GameMasters.FindAsync(id);
+            var admin = await _context.Admins.FindAsync(id);
 
-            if (gameMaster == null)
+            if (admin == null)
             {
                 return NotFound();
             }
 
-            return gameMaster;
+            return admin;
         }
 
         // PUT: api/Admin/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGameMaster(string id, GameMaster gameMaster)
+        public async Task<IActionResult> PutAdmin(string id, Admin admin)
         {
-            if (id != gameMaster.Id)
+            if (id != admin.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(gameMaster).State = EntityState.Modified;
+            _context.Entry(admin).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +68,7 @@ namespace BlockchainDemonstratorApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GameMasterExists(id))
+                if (!AdminExists(id))
                 {
                     return NotFound();
                 }
@@ -78,16 +85,16 @@ namespace BlockchainDemonstratorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<GameMaster>> PostGameMaster(GameMaster gameMaster)
+        public async Task<ActionResult<GameMaster>> PostAdmin(Admin admin)
         {
-            _context.GameMasters.Add(gameMaster);
+            _context.Admins.Add(admin);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (GameMasterExists(gameMaster.Id))
+                if (AdminExists(admin.Id))
                 {
                     return Conflict();
                 }
@@ -97,26 +104,26 @@ namespace BlockchainDemonstratorApi.Controllers
                 }
             }
 
-            return CreatedAtAction("GetGameMaster", new { id = gameMaster.Id }, gameMaster);
+            return CreatedAtAction("GetAdmins", new { id = admin.Id }, admin);
         }
 
         // DELETE: api/Admin/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<GameMaster>> DeleteGameMaster(string id)
+        public async Task<ActionResult<Admin>> DeleteAdmin(string id)
         {
-            var gameMaster = await _context.GameMasters.FindAsync(id);
-            if (gameMaster == null)
+            var admin = await _context.Admins.FindAsync(id);
+            if (admin == null)
             {
                 return NotFound();
             }
 
-            _context.GameMasters.Remove(gameMaster);
+            _context.Admins.Remove(admin);
             await _context.SaveChangesAsync();
 
-            return gameMaster;
+            return admin;
         }
 
-        private bool GameMasterExists(string id)
+        private bool AdminExists(string id)
         {
             return _context.GameMasters.Any(e => e.Id == id);
         }

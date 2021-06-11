@@ -23,37 +23,37 @@ namespace BlockchainDemonstratorApi.Controllers
 
         // GET: api/GameMaster
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Game>>> GetGames()
+        public async Task<ActionResult<IEnumerable<GameMaster>>> GetGameMasters()
         {
-            return await _context.Games.ToListAsync();
+            return await _context.GameMasters.ToListAsync();
         }
 
         // GET: api/GameMaster/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Game>> GetGame(string id)
+        public async Task<ActionResult<GameMaster>> GetGameMaster(string id)
         {
-            var game = await _context.Games.FindAsync(id);
+            var gameMaster = await _context.GameMasters.FindAsync(id);
 
-            if (game == null)
+            if (gameMaster == null)
             {
                 return NotFound();
             }
 
-            return game;
+            return gameMaster;
         }
 
         // PUT: api/GameMaster/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGame(string id, Game game)
+        public async Task<IActionResult> PutGameMaster(string id, GameMaster gameMaster)
         {
-            if (id != game.Id)
+            if (id != gameMaster.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(game).State = EntityState.Modified;
+            _context.Entry(gameMaster).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace BlockchainDemonstratorApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GameExists(id))
+                if (!GameMasterExists(id))
                 {
                     return NotFound();
                 }
@@ -78,16 +78,16 @@ namespace BlockchainDemonstratorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Game>> PostGame(Game game)
+        public async Task<ActionResult<GameMaster>> PostGameMaster(GameMaster gameMaster)
         {
-            _context.Games.Add(game);
+            _context.GameMasters.Add(gameMaster);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (GameExists(game.Id))
+                if (GameMasterExists(gameMaster.Id))
                 {
                     return Conflict();
                 }
@@ -97,28 +97,28 @@ namespace BlockchainDemonstratorApi.Controllers
                 }
             }
 
-            return CreatedAtAction("GetGame", new { id = game.Id }, game);
+            return CreatedAtAction("GetGameMaster", new { id = gameMaster.Id }, gameMaster);
         }
 
         // DELETE: api/GameMaster/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Game>> DeleteGame(string id)
+        public async Task<ActionResult<GameMaster>> DeleteGameMaster(string id)
         {
-            var game = await _context.Games.FindAsync(id);
-            if (game == null)
+            var gameMaster = await _context.GameMasters.FindAsync(id);
+            if (gameMaster == null)
             {
                 return NotFound();
             }
 
-            _context.Games.Remove(game);
+            _context.GameMasters.Remove(gameMaster);
             await _context.SaveChangesAsync();
 
-            return game;
+            return gameMaster;
         }
 
-        private bool GameExists(string id)
+        private bool GameMasterExists(string id)
         {
-            return _context.Games.Any(e => e.Id == id);
+            return _context.GameMasters.Any(e => e.Id == id);
         }
     }
 }
