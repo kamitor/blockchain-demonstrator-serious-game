@@ -2,7 +2,8 @@
 @using Newtonsoft.Json;
 @model BlockchainDemonstratorApi.Models.Classes.Player
 
-@{ ViewData["Title"] = "BeerGame";
+@{
+    ViewData["Title"] = "BeerGame";
     int currentDay = (int)ViewData["CurrentDay"];
     string gameId = (string)ViewData["GameId"];
     bool gameReady = (bool)ViewData["GameReady"];
@@ -11,17 +12,38 @@
     List<Player> players = (List<Player>)ViewData["Players"];
 
     int modelIndex = players.FindIndex(p => p.Id == Model.Id);
-    string firstPlayerName = players[(0 >= modelIndex) ? 1 : 0].Name;
-    string secondPlayerName = players[(1 >= modelIndex) ? 2 : 1].Name;
-    string thirdPlayerName = players[(2 >= modelIndex) ? 3 : 2].Name;
-    string firstPlayerRole = players[(0 >= modelIndex) ? 1 : 0].Role.Id;
-    string secondPlayerRole = players[(1 >= modelIndex) ? 2 : 1].Role.Id;
-    string thirdPlayerRole = players[(2 >= modelIndex) ? 3 : 2].Role.Id;
+    string firstPlayerName = "";
+    string secondPlayerName = "";
+    string thirdPlayerName = "";
+    string firstPlayerRole = "";
+    string secondPlayerRole = "";
+    string thirdPlayerRole = "";
 
-    string profitPlayer = (Model.Profit >= 0) ? "€" + Model.Profit : "-€" + (Model.Profit * -1);
-    string profitTeam = (players.Sum(p => p.Profit) >= 0) ? "€" + players.Sum(p => p.Profit) : "-€" + (players.Sum(p => p.Profit) * -1);
-    string balancePlayer = (Model.Balance >= 0) ? "€" + Model.Balance : "-€" + (Model.Balance * -1);
-    string balanceTeam = (players.Sum(p => p.Balance) >= 0) ? "€" + players.Sum(p => p.Balance) : "-€" + (players.Sum(p => p.Balance) * -1);
+    string profitPlayer = "";
+    string profitTeam = "";
+    string balancePlayer = "";
+    string balanceTeam = "";
+
+    if (players.Count == 4)
+    {
+        modelIndex = players.FindIndex(p => p.Id == Model.Id);
+        firstPlayerName = players[(0 >= modelIndex) ? 1 : 0].Name;
+        secondPlayerName = players[(1 >= modelIndex) ? 2 : 1].Name;
+        thirdPlayerName = players[(2 >= modelIndex) ? 3 : 2].Name;
+        firstPlayerRole = players[(0 >= modelIndex) ? 1 : 0].Role.Id;
+        secondPlayerRole = players[(1 >= modelIndex) ? 2 : 1].Role.Id;
+        thirdPlayerRole = players[(2 >= modelIndex) ? 3 : 2].Role.Id;
+
+        profitPlayer = (Model.Profit >= 0) ? "€" + Model.Profit : "-€" + (Model.Profit * -1);
+        profitTeam = (players.Sum(p => p.Profit) >= 0) ? "€" + players.Sum(p => p.Profit) : "-€" + (players.Sum(p => p.Profit) * -1);
+        balancePlayer = (Model.Balance >= 0) ? "€" + Model.Balance : "-€" + (Model.Balance * -1);
+        balanceTeam = (players.Sum(p => p.Balance) >= 0) ? "€" + players.Sum(p => p.Balance) : "-€" + (players.Sum(p => p.Balance) * -1);
+
+        if (!profitPlayer.Contains(",")) profitPlayer += ",";
+        if (!profitTeam.Contains(",")) profitTeam += ",";
+        if (!balancePlayer.Contains(",")) balancePlayer += ",";
+        if (!balanceTeam.Contains(",")) balanceTeam += ",";
+    }
 
     int currentRound = (int)Math.Ceiling((double)currentDay / (double)Factors.RoundIncrement);
     string ordinalSuffix = "th";
@@ -49,16 +71,16 @@
             <span style="text-align:center" class="tertiary-text">Customer</span>
         </div>
         <div class="first-player-text">
-            <span style="text-align:center" class="tertiary-text">@firstPlayerRole</span>
-            <span style="text-align:center" class="secondary-text">@firstPlayerName</span>
+            <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayerRole</span>
+            <span id="first-player-name" style="text-align:center" class="secondary-text">@firstPlayerName</span>
         </div>
         <div class="second-player-text">
-            <span style="text-align:center" class="tertiary-text">@secondPlayerRole</span>
-            <span style="text-align:center" class="secondary-text">@secondPlayerName</span>
+            <span id="second-player-role" style="text-align:center" class="tertiary-text">@secondPlayerRole</span>
+            <span id="second-player-name" style="text-align:center" class="secondary-text">@secondPlayerName</span>
         </div>
         <div class="third-player-text">
-            <span style="text-align:center" class="tertiary-text">@thirdPlayerRole</span>
-            <span style="text-align:center" class="secondary-text">@thirdPlayerName</span>
+            <span id="third-player-role" style="text-align:center" class="tertiary-text">@thirdPlayerRole</span>
+            <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
         </div>
         <div class="harvester-text">
             <span style="text-align:center" class="tertiary-text">Harvester</span>
@@ -98,13 +120,13 @@
             <span class="main-text">Cash position</span>
             <div class="cash-position-box">
                 <span class="secondary-text">Whole supplychain status</span>
-                <span class="tertiary-text cash-position-value">Balance: <span id="balance-team" class="gradient-font">@balanceTeam,-</span></span>
-                <span class="tertiary-text cash-position-value">Profit: <span id="profit-team" class="gradient-font">@profitTeam,-</span></span>
+                <span class="tertiary-text cash-position-value">Balance: <span id="balance-team" class="gradient-font">@balanceTeam-</span></span>
+                <span class="tertiary-text cash-position-value">Profit: <span id="profit-team" class="gradient-font">@profitTeam-</span></span>
             </div>
             <div class="cash-position-box">
                 <span class="secondary-text">Your supplychain status</span>
-                <span class="tertiary-text cash-position-value">Balance: <span id="balance-@Model.Role.Id" class="gradient-font">@balancePlayer,-</span></span>
-                <span class="tertiary-text cash-position-value">Profit: <span id="profit-@Model.Role.Id" class="gradient-font">@profitPlayer,-</span></span>
+                <span class="tertiary-text cash-position-value">Balance: <span id="balance-@Model.Role.Id" class="gradient-font">@balancePlayer-</span></span>
+                <span class="tertiary-text cash-position-value">Profit: <span id="profit-@Model.Role.Id" class="gradient-font">@profitPlayer-</span></span>
             </div>
         </div>
     </div>
@@ -118,7 +140,7 @@
         <span class="secondary-text">Round</span>
     </div>
     <div style="padding:0px" class="bottom-canvas box">
-        <input id="place-order-text" name="order" class="input secondary-text" type="text" placeholder="Insert order...">
+        <input id="place-order-text" name="order" class="input secondary-text" type="number" placeholder="Insert order..." min="0" oninput="validity.valid||(value='');">
         <input id="place-order-button" style="color:white" class="order-button gradient secondary-text" type="button" value="Place order">
     </div>
     <div class="bottom-canvas box">

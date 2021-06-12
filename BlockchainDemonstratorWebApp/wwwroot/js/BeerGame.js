@@ -41,6 +41,7 @@ const BeerGame = (() => {
         }).then(result => updateGameTuningPage(result));
     }
 
+    //#region updateGameTuningPage
     const updateGameTuningPage = (game) => {
         gameSerialized = JSON.parse(game);
         updateGameTuningBalance(gameSerialized);
@@ -209,6 +210,140 @@ const BeerGame = (() => {
             style = "";
         });
     }
+    //#endregion
+
+    //#region updateGamePlayerPage
+    const updateGamePlayerPage = (gameJson) => {
+        game = JSON.parse(gameJson);
+
+        updateGamePlayers(game);
+
+        updateGamePlayerBackorder(game);
+        updateGamePlayerIncomingOrder(game);
+        updateGamePlayerInventory(game);
+        updateGamePlayerIncomingDelivery(game);
+
+        updateGamePlayerTeamBalance(game);
+        updateGamePlayerTeamProfit(game);
+        updateGamePlayerPlayerBalance(game);
+        updateGamePlayerPlayerProfit(game);
+
+        updateGamePlayerCurrentRound(game);
+        updateGamePlayerLastOrder(game);
+
+        $("#place-order-text").val("");
+    }
+
+    const updateGamePlayers = (game) => {
+        let modelIndex = game.Players.findIndex(player => {
+            return player.Id == configMap.playerId;
+        })
+
+        $("#first-player-role").text(game.Players[(0 >= modelIndex) ? 1 : 0].Name);
+        $("#second-player-role").text(game.Players[(0 >= modelIndex) ? 2 : 1].Name);
+        $("#third-player-role").text(game.Players[(0 >= modelIndex) ? 3 : 2].Name);
+        $("#first-player-name").text(game.Players[(0 >= modelIndex) ? 1 : 0].Role.Id);
+        $("#second-player-name").text(game.Players[(0 >= modelIndex) ? 2 : 1].Role.Id);
+        $("#third-player-name").text(game.Players[(0 >= modelIndex) ? 3 : 2].Role.Id);
+    }
+
+    const updateGamePlayerBackorder = (game) => {
+        game.Players.forEach(player => {
+            $(`#backorder-${player.Role.Id}`).text(player.Backorder);
+        });
+    }
+
+    const updateGamePlayerIncomingOrder = (game) => {
+        game.Players.forEach(player => {
+            let incomingOrder = 0;
+            player.IncomingOrders.forEach(order => {
+                if (order.OrderDay == game.CurrentDay - 7) incomingOrder += order.Volume;
+            });
+            $(`#incoming-order-${player.Role.Id}`).text(incomingOrder);            
+        });
+    }
+
+    const updateGamePlayerInventory = (game) => {
+        game.Players.forEach(player => {
+            $(`#inventory-${player.Role.Id}`).text(player.Inventory);
+        });
+    }
+
+    const updateGamePlayerIncomingDelivery = (game) => {
+        game.Players.forEach(player => {
+            let incomingDelivery = 0;
+            player.OutgoingOrders.forEach(order => {
+                order.Deliveries.forEach(delivery => {
+                    if (delivery.ArrivalDay >= game.CurrentDay && delivery.ArrivalDay < game.CurrentDay + 7) incomingDelivery += delivery.Volume;
+                });
+            });
+            $(`#incoming-delivery-${player.Role.Id}`).text(incomingDelivery);
+        });
+    }
+
+    const updateGamePlayerTeamBalance = (game) => {
+        let teamBalance = 0;
+        game.Players.forEach(player => {
+            teamBalance += player.Balance;
+        });
+        let minus = (teamBalance < 0) ? "-" : "";
+        if (teamBalance < 0) teamBalance = teamBalance * -1;
+        teamBalance = String(teamBalance).replace(".", ",");
+        let comma = (teamBalance.includes(",")) ? "" : ","; 
+        $("#balance-team").text(minus + "\u20AC" + teamBalance + comma + "-");
+    }
+
+    const updateGamePlayerTeamProfit = (game) => {
+        let teamProfit = 0;
+        game.Players.forEach(player => {
+            teamProfit += player.Profit;
+        });
+        let minus = (teamProfit < 0) ? "-" : "";
+        if (teamProfit < 0) teamProfit = teamProfit * -1;
+        teamProfit = String(teamProfit).replace(".", ",");
+        let comma = (teamProfit.includes(",")) ? "" : ","; 
+        $("#profit-team").text(minus + "\u20AC" + teamProfit + comma + "-");
+    }
+
+    const updateGamePlayerPlayerBalance = (game) => {
+        game.Players.forEach(player => {
+            let minus = (player.Balance < 0) ? "-" : "";
+            if (player.Balance < 0) player.Balance = player.Balance * -1;
+            let balance = String(player.Balance).replace(".", ",");
+            let comma = (balance.includes(",")) ? "" : ","; 
+            $(`#balance-${player.Role.Id}`).text(minus + "\u20AC" + balance + comma + "-");
+        });
+    }
+
+    const updateGamePlayerPlayerProfit = (game) => {
+        game.Players.forEach(player => {
+            let minus = (player.Profit < 0) ? "-" : "";
+            if (player.Profit < 0) player.Profit = player.Profit * -1;
+            let profit = String(player.Profit).replace(".", ",");
+            let comma = (profit.includes(",")) ? "" : ","; 
+            $(`#profit-${player.Role.Id}`).text(minus + "\u20AC" + profit + comma + "-");
+        });
+    }
+
+    const updateGamePlayerCurrentRound = (game) => {
+        let currentRound = Math.ceil(game.CurrentDay / 7);
+        $("#current-round").text(currentRound);
+        if (currentRound == 2) $("#ordinal-suffix").text("nd");
+        else if (currentRound == 3) $("#ordinal-suffix").text("rd");
+        else if (currentRound >= 4) $("#ordinal-suffix").text("th");
+    }
+
+    const updateGamePlayerLastOrder = (game) => {
+        game.Players.forEach(player => {
+            player.OutgoingOrders.sort((a, b) => {
+                if (a.OrderDay > b.OrderDay) return 1;
+                else if (a.OrderDay < b.OrderDay) return -1;
+                return 0;
+            });
+            $(`#last-order-${player.Role.Id}`).text(player.OutgoingOrders[player.OutgoingOrders.length - 1].Volume);
+        });
+    }
+    //#endregion
 
     const joinGame = (gameId, role, name, playerId) => {
         if (configMap.gameId !== null) {
@@ -227,7 +362,8 @@ const BeerGame = (() => {
     }
 
     const promptOptions = () => {
-        $(".actor-tab").hide();
+        $(".top-container").hide();
+        $(".bottom-container").hide();
         $("body").append(`
             <section class='option-prompt box'>
                 <h3 class='option-prompt--text'>Choose your supplychain setup</h3>
@@ -305,7 +441,8 @@ const BeerGame = (() => {
         updateGameTuningPage: updateGameTuningPage,
         drawChart: drawChart,
         checkInGame: checkInGame,
-        updatePromptOptions: updatePromptOptions
+        updatePromptOptions: updatePromptOptions,
+        updateGamePlayerPage: updateGamePlayerPage
     }
 })();
 
@@ -340,11 +477,13 @@ BeerGame.Signal = (() => {
         connection.on("ShowGame", function (game) {
             $(".lds").hide();
             $(".top-container").show();
-            BeerGame.updateGameTuningPage(game);
+            if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
+            else if (document.title == "BeerGame Admin - Page") BeerGame.updateGameTuningPage(game);
         })
 
         connection.on("UpdateGame", function (game) {
-            BeerGame.updateGameTuningPage(game);
+            if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
+            else if (document.title == "BeerGame Admin - Page") BeerGame.updateGameTuningPage(game);
         })
 
         connection.on("HelloWorld", function () {
@@ -402,7 +541,8 @@ BeerGame.Signal = (() => {
         connection.invoke("ChooseOption", configMap.playerId, option).then((result) => {
             if (result) {
                 $(".option-prompt").remove();
-                $(".actor-tab").show();
+                $(".top-container").show();
+                $(".bottom-container").show();
             }
         });
     }
