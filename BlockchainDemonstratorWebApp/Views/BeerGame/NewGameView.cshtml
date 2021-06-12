@@ -1,72 +1,106 @@
-﻿
+﻿@*@model Player*@
+@using BlockchainDemonstratorApi.Models.Classes
 @{
     ViewData["Title"] = "NewGameView";
-
-
-    string role="";
-
-    if (role == "") { };
 }
+<head>
+    <link rel="stylesheet" href="~/css/site2.css">
+</head>
 
-<h1>NewGameView</h1>
-
-<link rel="stylesheet" href="~/css/site2.css">
-
-<body>
-
-    <div class="wrapper">
-
-        <div class="top-container">
-
-            <div id="maincanves"> </div>
+<div class="top-container">
+    <div class="main-canvas box">
+        <div class="customer-text">
+            <span style="text-align:center" class="tertiary-text">Customer</span>
+        </div>
+        <div class="first-player-text">
+            <span style="text-align:center" class="tertiary-text">Retailer</span>
+            <span style="text-align:center" class="secondary-text">Joshua</span>
+        </div>
+        <div class="second-player-text">
+            <span style="text-align:center" class="tertiary-text">Processor</span>
+            <span style="text-align:center" class="secondary-text">Benjamin</span>
+        </div>
+        <div class="third-player-text">
+            <span style="text-align:center" class="tertiary-text">Farmer</span>
+            <span style="text-align:center" class="secondary-text">Elizabeth</span>
+        </div>
+        <div class="harvester-text">
+            <span style="text-align:center" class="tertiary-text">Harvester</span>
         </div>
 
-        <div class="top-left">
-
-            <div id="canves1"></div>
-            <div id="canves2"></div>
-
+        <div class="backorder-value">
+            <span style="margin-bottom:5%" class="head-text">20</span>
         </div>
-
-
+        <div class="backorder-text">
+            <span style="text-align:center" class="secondary-text">Backorder</span>
+        </div>
+        <div class="incoming-order-value">
+            <span style="margin-bottom:5%" class="head-text">7</span>
+        </div>
+        <div class="incoming-order-text">
+            <span style="text-align:center" class="secondary-text">Incoming order</span>
+        </div>
+        <div class="inventory-value">
+            <span style="margin-bottom:5%" class="head-text">0</span>
+        </div>
+        <div class="inventory-text">
+            <span style="text-align:center" class="secondary-text">Inventory</span>
+        </div>
+        <div class="incoming-delivery-value">
+            <span style="margin-bottom:5%" class="head-text">8</span>
+        </div>
+        <div class="incoming-delivery-text">
+            <span style="text-align:center" class="secondary-text">Incoming delivery</span>
+        </div>
     </div>
-
-
-    <div class="bot-left">
-
-        <div id="canves3"></div>
-
-        <div id="canvessubmit">
-
-            <input name="order" class="input" type="text" placeholder="Insert order...">
-
-            <input class="order-button gradient" type="button" value="Join game">
-
+    <div>
+        <div class="top-right-canvas gradient box">
+            <span style="color:white; margin-top:-5px;" class="main-text">Jennifer</span>
+            <span style="color:white" class="secondary-text">Manufacturer</span>
         </div>
-
-
-        <div id="canves3"></div>
-
+        <div class="right-canvas box">
+            <span class="main-text">Cash position</span>
+            <div class="cash-position-box">
+                <span class="secondary-text">Whole supplychain status</span>
+                <span class="tertiary-text cash-position-value">Balance: <span class="gradient-font">€843.000,-</span></span>
+                <span class="tertiary-text cash-position-value">Profit: <span class="gradient-font">€79.324,-</span></span>
+            </div>
+            <div class="cash-position-box">
+                <span class="secondary-text">Your supplychain status</span>
+                <span class="tertiary-text cash-position-value">Balance: <span class="gradient-font">€185.000,-</span></span>
+                <span class="tertiary-text cash-position-value">Profit: <span class="gradient-font">€10.000,-</span></span>
+            </div>
+        </div>
     </div>
+</div>
+<div class="bottom-container">
+    <div class="bottom-canvas box">
+        <span style="width:fit-content" class="main-text gradient-font">6<span class="tertiary-text">th</span></span>
+        <span class="secondary-text">Round</span>
+    </div>
+    <div style="padding:0px" class="bottom-canvas box">
+        <input name="order" class="input secondary-text" type="text" placeholder="Insert order...">
+        <input style="color:white" class="order-button gradient secondary-text" type="button" value="Place order">
+    </div>
+    <div class="bottom-canvas box">
+        <span class="main-text">Order history</span>
+        <span class="tertiary-text">Last order: <span class=" secondary-text gradient-font">10</span></span>
+    </div>
+</div>
 
-
-
-
-    
-
-    
-
-
-
-    @* Comment goes here
-        <div class="wrapper">
-
-            <div id="maincanves">test</div>
-            <div id="borderbox">test</div>
-
-
-        </div>
-
-        <div id="borderbox">test</div>
-    *@
-</body>
+@section Scripts{
+    <script>
+        @*if ("Retailer" == "Retailer") {
+            $(".main-canvas").css("background", "url('/images/retailer.png'), no-repeat center white");
+        }
+        else if ("@Model.Role.Id" == "Manufacturer") {
+            $(".main-canvas").attr("background", "~/images/manufacturer.png");
+        }
+        else if ("@Model.Role.Id" == "Processor") {
+            $(".main-canvas").attr("background", "~/images/processor.png");
+        }
+        else if ("@Model.Role.Id" == "Farmer") {
+            $(".main-canvas").attr("background", "~/images/farmer.png");
+        }*@
+    </script>
+}
