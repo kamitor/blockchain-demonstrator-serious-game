@@ -160,7 +160,7 @@
                                     <tbody id="payments-@player.Role.Id">
                                         @foreach (Payment payment in player.Payments)
                                         {
-                                            if ((int)payment.DueDay <= Model.CurrentDay && (int)payment.DueDay > Model.CurrentDay - Factors.RoundIncrement) style += "background-color:#f5fac5;"; //TODO: Ask Janka about this?
+                                            if ((int)payment.DueDay <= Model.CurrentDay && (int)payment.DueDay > Model.CurrentDay - Factors.RoundIncrement) style += "background-color:#f5fac5;";
 
                                             if (lastPayment != null && Math.Ceiling(payment.DueDay / Factors.RoundIncrement + 1 - (1 / (double)Factors.RoundIncrement)) > Math.Ceiling(lastPayment.DueDay / Factors.RoundIncrement + 1 - (1 / (double)Factors.RoundIncrement))) style += "border-top: 3px solid grey;"; 
 

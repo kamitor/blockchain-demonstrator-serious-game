@@ -254,7 +254,7 @@ const BeerGame = (() => {
             </section>`);
     }
 
-    const updatePromptOption = (playerJson) => {
+    const updatePromptOptions = (playerJson) => {
         let player = JSON.parse(playerJson);
         $(`#${player.Id}`).remove();
         $(`#${player.ChosenOption.Name} > div`).append($(`<b id="${player.Id}" class="gradient-font">${player.Name}</b>`));
@@ -305,7 +305,7 @@ const BeerGame = (() => {
         updateGameTuningPage: updateGameTuningPage,
         drawChart: drawChart,
         checkInGame: checkInGame,
-        updatePromptOption: updatePromptOption
+        updatePromptOptions: updatePromptOptions
     }
 })();
 
@@ -339,7 +339,7 @@ BeerGame.Signal = (() => {
 
         connection.on("ShowGame", function (game) {
             $(".lds").hide();
-            $(".actor-tab").show();
+            $(".top-container").show();
             BeerGame.updateGameTuningPage(game);
         })
 
@@ -356,7 +356,7 @@ BeerGame.Signal = (() => {
         })
 
         connection.on("UpdatePromptOptions", function (playerJson) {
-            BeerGame.updatePromptOption(playerJson)
+            BeerGame.updatePromptOptions(playerJson)
         })
 
         connection.on("ClosePromptOptions", function (mostChosenOption) {

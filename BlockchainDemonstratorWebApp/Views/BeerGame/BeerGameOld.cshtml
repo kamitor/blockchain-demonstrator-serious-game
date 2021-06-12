@@ -1,0 +1,189 @@
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@using Newtonsoft.Json;
+@model BlockchainDemonstratorApi.Models.Classes.Player
+
+@{ ViewData["Title"] = "BeerGame";
+    int currentDay = (int)ViewData["CurrentDay"];
+    string gameId = (string)ViewData["GameId"];
+    bool gameReady = (bool)ViewData["GameReady"];
+    string containerDisplay = (gameReady) ? "" : "display:none";
+    bool thirdPhaseNotReady = (bool)ViewData["ThirdPhaseNotReady"];
+    List<Player> players = (List<Player>)ViewData["Players"];
+}
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blockchain Demonstrator</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
+    <link rel="stylesheet" href="~/css/StyleSheetBeerGame.css"/>
+    <link rel="stylesheet" href="~/css/StyleSheet.css"/>
+</head>
+<body>
+    @if (!gameReady)
+    {
+        <div class="lds">
+            <h1>Waiting for players</h1>
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        </div>
+    }
+    
+    <div class="actor-tab" style="@containerDisplay">
+        <h1 class="brand">The <span>Blockchain </span>Game</h1>
+        <div class="wrapper animated bounceInLeft">
+            <div class="company-info">
+                <h3 id="name-@Model.Role.Id">Name: @Model.Name</h3>
+                <h3 id="role-@Model.Role.Id">Role: @Model.Role.Id</h3>
+                <h3 id="balance-@Model.Role.Id">Balance: @Math.Round(Model.Balance, 2)</h3>
+                <h3 id="profit-@Model.Role.Id">Profit: @Math.Round(Model.Profit, 2)</h3>
+                <h3 id="inventory-@Model.Role.Id">Inventory: @Model.Inventory</h3>
+                <h3 id="backorder-@Model.Role.Id">Backorder: @Model.Backorder</h3>
+            </div>
+            <div class="contact">
+                <form>
+                    <div class="tab">
+                        <input id="place-order-text" type="text" placeholder="Enter volume">
+                        <button id="place-order-button" type="button">Place order</button>
+                    </div>
+                    <div class="tab">
+                        <h3>Incoming order</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order number</th>
+                                    <th>Order day</th>
+                                    <th>Volume</th>
+                                </tr>
+                            </thead>
+                            <tbody id="incomingOrders-@Model.Role.Id">
+                                @foreach (var order in Model.IncomingOrders)
+                                {
+                                    @if (order.OrderDay == currentDay - Factors.RoundIncrement)
+                                    {
+                                        <tr>
+                                            <td>@order.OrderNumber</td>
+                                            <td>@order.OrderDay</td>
+                                            <td>@order.Volume</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab">
+                        <h3>Order history:</h3>
+                        <div class="table-scroll">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Order number</th>
+                                        <th>Volume</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderHistory-@Model.Role.Id">
+                                    @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in Model.OutgoingOrders)
+                                    {
+                                        @if (order.OrderDay >= 1)
+                                        {
+                                            <tr>
+                                                <td>@order.OrderNumber</td>
+                                                <td>@order.Volume</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab">
+                        <h3>Incoming deliveries</h3>
+                        <div class="table-scroll">
+                            <table name="incomingDeliveries">
+                                <thead>
+                                    <tr>
+                                        <th>Order number</th>
+                                        <th>Order day</th>
+                                        <th>Volume</th>
+                                        <th>Deliveries</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="incomingDeliveries-@Model.Role.Id">
+                                    @foreach (var order in Model.OutgoingOrders)
+                                    {
+                                        if (order.Deliveries.Any(d => d.ArrivalDay <= currentDay && d.ArrivalDay > currentDay - Factors.RoundIncrement))
+                                        {
+                                            <tr>
+                                                <td>@order.OrderNumber</td>
+                                                <td>@order.OrderDay</td>
+                                                <td>@order.Volume</td>
+                                                <td>
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Volume</th>
+                                                                <th>Send day</th>
+                                                                <th>Arrival day</th>
+                                                                <th>Price</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var delivery in order.Deliveries.OrderBy(d => d.ArrivalDay))
+                                                            {
+                                                                @if (delivery.ArrivalDay <= currentDay && delivery.ArrivalDay > currentDay - Factors.RoundIncrement)
+                                                                {
+                                                                    <tr style="        background-color: #f5fac5;">
+                                                                        <td>@delivery.Volume</td>
+                                                                        <td>@delivery.SendDeliveryDay</td>
+                                                                        <td>@Math.Round(delivery.ArrivalDay, 2)</td>
+                                                                        <td>@delivery.Price</td>
+                                                                    </tr>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <tr>
+                                                                        <td>@delivery.Volume</td>
+                                                                        <td>@delivery.SendDeliveryDay</td>
+                                                                        <td>@Math.Round(delivery.ArrivalDay, 2)</td>
+                                                                        <td>@delivery.Price</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+@section Scripts
+{
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/BeerGame.js"></script>
+    <script>
+        $(document).ready(() => {
+            BeerGame.init("@gameId", "@Model.Id", "@ViewData["RestApiUrl"]");
+            $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
+            if (@if(thirdPhaseNotReady){@Html.Raw("true || ");}@currentDay == 7 * 8 + 1 && "@if(Model.ChosenOption != null){@Html.Raw(Model.ChosenOption.Name);}else{@Html.Raw("null");}" == "Basic") {
+                BeerGame.promptOptions();
+                @foreach(Player player in players)
+                {
+                    if (player.ChosenOption != null) @Html.Raw($"BeerGame.updatePromptOption('{JsonConvert.SerializeObject(player)}');\n");
+                }
+            }
+        });
+    </script>
+}

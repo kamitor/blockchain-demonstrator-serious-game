@@ -69,11 +69,11 @@
         else grossProfitHistoryData += "]";
     }
 
-    string endText = (player.Profit > 0) ? "Well Done " : "Better luck next time ";
-    string profitDeficitPlayer = (player.Profit > 0) ? "profit" : "deficit";
-    string profitDeficitTeam = (Model.Players.Sum(p => p.Profit) > 0) ? "profit" : "deficit";
-    string profitValuePlayer = (player.Profit > 0) ? "€" + player.Profit : "-€" + (player.Profit * -1);
-    string profitValueTeam = (Model.Players.Sum(p => p.Profit) > 0) ? "€" + Model.Players.Sum(p => p.Profit) : "-€" + (Model.Players.Sum(p => p.Profit) * -1);
+    string endText = (player.Profit >= 0) ? "Well Done " : "Better luck next time ";
+    string profitDeficitPlayer = (player.Profit >= 0) ? "profit" : "deficit";
+    string profitDeficitTeam = (Model.Players.Sum(p => p.Profit) >= 0) ? "profit" : "deficit";
+    string profitValuePlayer = (player.Profit >= 0) ? "€" + player.Profit : "-€" + (player.Profit * -1);
+    string profitValueTeam = (Model.Players.Sum(p => p.Profit) >= 0) ? "€" + Model.Players.Sum(p => p.Profit) : "-€" + (Model.Players.Sum(p => p.Profit) * -1);
 }
 
 <head>
