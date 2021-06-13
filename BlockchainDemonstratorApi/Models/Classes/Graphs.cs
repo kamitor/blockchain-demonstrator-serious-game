@@ -14,8 +14,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 labels += "'Round " + (i + 1) + "'";
                 if (list.Count - 1 > i) labels += ", ";
-                else labels += "]";
             }
+            labels += "]";
             return labels;
         }
 
@@ -26,8 +26,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
             {
                 data += "'" + list[i].ToString().Replace(',', '.') + "'";
                 if (list.Count - 1 > i) data += ", ";
-                else data += "]";
             }
+            data += "]";
             return data;
         }
 

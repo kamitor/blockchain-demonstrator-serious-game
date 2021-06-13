@@ -32,9 +32,9 @@ namespace BlockchainDemonstratorApi.Hubs
             if (player != null)
                 player.CurrentOrder = new Order(){Volume = Convert.ToInt32(volume)};
             
-            game.Manufacturer.CurrentOrder = new Order() { Volume = 15 };
+            /*game.Manufacturer.CurrentOrder = new Order() { Volume = 15 };
             game.Processor.CurrentOrder = new Order() { Volume = 15 };
-            game.Farmer.CurrentOrder = new Order() { Volume = 15 };
+            game.Farmer.CurrentOrder = new Order() { Volume = 15 };*/
 
             if (game.Players.All(x => x.CurrentOrder != null))
             {
@@ -58,11 +58,11 @@ namespace BlockchainDemonstratorApi.Hubs
                     gamePlayer.CurrentOrder = null;
                 }
             }
-            
+
+            await Clients.Group(game.Id).SendAsync("UpdateGraphs", game);
             _context.Games.Update(game);
             _context.SaveChanges();
         }
-
         public async Task EndGame(string gameId)
         {
             await Clients.Group(gameId).SendAsync("EndGame");

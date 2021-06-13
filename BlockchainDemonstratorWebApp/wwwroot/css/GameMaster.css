@@ -37,7 +37,6 @@
 
 .switch-button {
     border: none;
-    outline: none;
     color: white;
 }
 
@@ -46,6 +45,7 @@
     grid-template-columns: 1fr 1fr;
     grid-gap: 10px;
     width: 100%;
+    grid-column-gap: 65px;
 }
 
 .graph-left {
@@ -66,4 +66,24 @@
     height: 350px;
     width: 350px;
     justify-self: start;
+}
+
+.info-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.latest-info {
+    width: 21%;
+    height: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 17%;
+    margin-bottom: 18.89%;
+}
+
+#chosen-game {
+    background-color:lavender;
 }

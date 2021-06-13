@@ -20,10 +20,31 @@
 <link rel="stylesheet" href="~/css/GameMaster.css" />
 
 <div class="graphs-grid">
-    <canvas class="graph-left box" id="inventoryChart"></canvas>
-    <canvas class="graph-right box" id="orderWorthChart"></canvas>
-    <canvas class="graph-left box" id="overallProfitChart"></canvas>
-    <canvas class="graph-right box" id="grossProfitChart"></canvas>
+</div>
+
+<div style="display:none" class="info-grid">
+    @foreach (Player player in Model.Players)
+    {
+    <div class="latest-info box">
+        <span class="gradient-font main-text">@player.Name</span>
+        <span style="margin-bottom: 10px" class="secondary-text">@player.Role.Id</span>
+        <span class="tertiary-text">Last order: <span id="last-order-@player.Role.Id">@Html.Raw((currentRound == 1) ? "none" : player.OutgoingOrders.Last().Volume.ToString())</span></span>
+        <span class="tertiary-text">Incoming order: <span id="incoming-order-@player.Role.Id">@player.IncomingOrders.Where(o => o.OrderDay == Model.CurrentDay - Factors.RoundIncrement).Sum(o => o.Volume)</span></span>
+        <span class="tertiary-text">Backorder: <span id="backorder-@player.Role.Id">@player.Backorder</span></span>
+        <span class="tertiary-text">Inventory: <span id="inventory-@player.Role.Id">@player.Inventory</span></span>
+        <span class="tertiary-text">Incoming deliver: <span id="incoming-delivery-@player.Role.Id">@player.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay >= Model.CurrentDay && d.ArrivalDay < Model.CurrentDay + Factors.RoundIncrement).Sum(d => d.Volume))</span></span>
+        <span class="tertiary-text">Balance: <span id="balance-@player.Role.Id">@{
+            string balance = (player.Balance >= 0) ? "€" + player.Balance : "-€" + (player.Balance * -1);
+            if (!balance.Contains(",")) balance += ",";
+            @Html.Raw(balance);
+        }-</span></span>
+        <span class="tertiary-text">Profit: <span id="profit-@player.Role.Id">@{ 
+            string profit = (player.Profit >= 0) ? "€" + player.Profit : "-€" + (player.Profit * -1);
+            if (!profit.Contains(",")) profit += ",";
+            @Html.Raw(balance);
+        }-</span></span>
+    </div>
+    }
 </div>
 <div class="bottom-container">
     <div class="bottom-canvas box">
@@ -33,11 +54,11 @@
         </div>
         <span class="secondary-text">Round</span>
     </div>
-    <button class="switch-button bottom-canvas secondary-text gradient box">Show latest information</button>
+    <button style="outline:none" class="switch-button bottom-canvas secondary-text gradient box" onclick="switchGrid()">Show latest information</button>
     <div class="bottom-canvas box">
         <span class="secondary-text">Team</span>
-        <nobr class="tertiary-text">Balance: <span class="secondary-text gradient-font">@balanceTeam-</span></nobr>
-        <nobr class="tertiary-text">Profit: <span class="secondary-text gradient-font">@profitTeam-</span></nobr>
+        <nobr class="tertiary-text">Balance: <span id="balance-team" class="secondary-text gradient-font">@balanceTeam-</span></nobr>
+        <nobr class="tertiary-text">Profit: <span id="profit-team" class="secondary-text gradient-font">@profitTeam-</span></nobr>
     </div>
 </div>
 
@@ -47,10 +68,22 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
     <script>
         BeerGame.init("@Model.Id", "", "@ViewData["RestApiUrl"]");
-        BeerGame.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.InventoryHistory)), @Html.Raw(Graphs.CreateInventoryDataSets(Model.Players)), "inventoryChart", "Inventory");
-        BeerGame.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OrderWorthHistory)), @Html.Raw(Graphs.CreateOrderWorthDataSets(Model.Players)), "orderWorthChart", "Order worth");
-        BeerGame.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OverallProfitHistory)), @Html.Raw(Graphs.CreateOverallProfitDataSets(Model.Players)), "overallProfitChart", "Overall profit");
-        BeerGame.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.GrossProfitHistory)), @Html.Raw(Graphs.CreateGrossProfitDataSets(Model.Players)), "grossProfitChart", "Gross profit");
+        $("document").ready(() => {
+            BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.InventoryHistory)), @Html.Raw(Graphs.CreateInventoryDataSets(Model.Players)), "inventoryChart", "Inventory");
+            BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OrderWorthHistory)), @Html.Raw(Graphs.CreateOrderWorthDataSets(Model.Players)), "orderWorthChart", "Order worth");
+            BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OverallProfitHistory)), @Html.Raw(Graphs.CreateOverallProfitDataSets(Model.Players)), "overallProfitChart", "Overall profit");
+            BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.GrossProfitHistory)), @Html.Raw(Graphs.CreateGrossProfitDataSets(Model.Players)), "grossProfitChart", "Gross profit");
+        })
+        let switchGrid = () => {
+            if ($(".graphs-grid").css("display") != "none" && $(".info-grid").css("display") == "none") {
+                $(".graphs-grid").hide()
+                $(".info-grid").show();
+            }
+            else if ($(".graphs-grid").css("display") == "none" && $(".info-grid").css("display") != "none") {
+                $(".graphs-grid").show()
+                $(".info-grid").hide();
+            }
+        }
     </script>
 
 }

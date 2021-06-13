@@ -234,6 +234,7 @@ const BeerGame = (() => {
         $("#place-order-text").val("");
         $(".cssload-jumping").hide();
         $("#place-order-button").prop("disabled", false);
+        $("#place-order-button").css("filter", "");
         $("#place-order-button").val("Place order");
     }
 
@@ -399,55 +400,6 @@ const BeerGame = (() => {
         $(`#${player.ChosenOption.Name} > div`).append($(`<b id="${player.Id}" class="gradient-font">${player.Name}</b>`));
     }
 
-    const drawChart = function (labels, data, chartId, labelName, lineColour) {
-        let ctx = document.getElementById(chartId).getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: labelName,
-                    data: data,
-                    fill: true,
-                    backgroundColor: 'rgba(46, 49, 146, 0.2)',
-                    borderColor: lineColour,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    };
-
-    const drawMultipleChart = function (labels, datasets, chartId, title) {
-        let ctx = document.getElementById(chartId).getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: datasets
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: title
-                    }
-                }
-            }
-        });
-    };
-
     const checkInGame = (playerId) => {
         return $.ajax({
             url: `${configMap.baseUrl}/api/BeerGame/CheckInGame`,
@@ -465,11 +417,9 @@ const BeerGame = (() => {
         sendOrders: sendOrders,
         promptOptions: promptOptions,
         updateGameTuningPage: updateGameTuningPage,
-        drawChart: drawChart,
         checkInGame: checkInGame,
         updatePromptOptions: updatePromptOptions,
-        updateGamePlayerPage: updateGamePlayerPage,
-        drawMultipleChart: drawMultipleChart
+        updateGamePlayerPage: updateGamePlayerPage
     }
 })();
 
@@ -506,24 +456,20 @@ BeerGame.Signal = (() => {
             $(".top-container").show();
             if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
             else if (document.title == "BeerGame Admin - Page") BeerGame.updateGameTuningPage(game);
-        })
+        });
 
         connection.on("UpdateGame", function (game) {
             if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
             else if (document.title == "BeerGame Admin - Page") BeerGame.updateGameTuningPage(game);
-        })
-
-        connection.on("HelloWorld", function () {
-            console.log("Hello from Hub");
-        })
+        });
 
         connection.on("PromptOptions", function () {
             BeerGame.promptOptions();
-        })
+        });
 
         connection.on("UpdatePromptOptions", function (playerJson) {
             BeerGame.updatePromptOptions(playerJson)
-        })
+        });
 
         connection.on("ClosePromptOptions", function (mostChosenOption) {
             $(".option-prompt").empty();
@@ -531,8 +477,8 @@ BeerGame.Signal = (() => {
             setTimeout(() => {
                 $(".option-prompt").remove();
                 $(".actor-tab").show();
-            },3000);
-        })
+            }, 3000);
+        });
 
         connection.on("EndGame", function () {
             $('body').append($(`<form method="post" id="endGameForm" action="/beergame/endgame" style="display:none;">
@@ -540,7 +486,11 @@ BeerGame.Signal = (() => {
                                     <input name=playerId type="hidden" value="${configMap.playerId}"/>
                                 </form>`));
             $("#endGameForm").submit();
-        })
+        });
+
+        connection.on("UpdateGraphs", function (game) {
+            BeerGame.Graphs.updateGraphs(game);
+        });
     }
 
     let sendOrder = () => {
@@ -552,6 +502,7 @@ BeerGame.Signal = (() => {
                 return console.error(err.toString())
             });
         $("#place-order-button").prop("disabled", true);
+        $("#place-order-button").css("filter", "grayscale(100%)");
         $("#place-order-button").val("");
         $(".cssload-jumping").show();
     }
@@ -616,7 +567,6 @@ BeerGame.Signal = (() => {
     }
 })();
 
-//TODO: remove usages and change to site cookie getter
 BeerGame.Cookie = (() => {
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -629,6 +579,154 @@ BeerGame.Cookie = (() => {
     }
 })();
 
+BeerGame.Graphs = (() => {
+    const drawChart = function (labels, data, chartId, labelName, lineColour) {
+        let chart = new Chart(document.getElementById(chartId), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: labelName,
+                    data: data,
+                    fill: true,
+                    backgroundColor: 'rgba(46, 49, 146, 0.2)',
+                    borderColor: lineColour,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    };
+
+    const drawMultipleChart = function (labels, datasets, chartId, title) {
+        let graphClass = ($(".graphs-grid").children().length % 2 == 0) ? "graph-left" : "graph-right";
+        $(".graphs-grid").append($(`<canvas class="${graphClass} box" id="${chartId}"></canvas>`));
+        let chart = new Chart(document.getElementById(chartId), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: title
+                    }
+                }
+            }
+        });
+    };
+
+    function createLabels(list) {
+        let labels = [];
+        for (let i = 0; i < list.length; i++)
+        {
+            labels.push("Round " + (i + 1));
+        }
+        return labels;
+    }
+
+    function createData(list) {
+        let data = [];
+        for (let i = 0; i < list.length; i++)
+        {
+            data.push(String(list[i]).replace(',', '.'));
+        }
+        return data;
+    }
+
+    function createDataSet(data, name, lineColour) { 
+        return {
+                    label: name,
+                    data: data,
+                    fill: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderColor: lineColour,
+                    borderWidth: 1
+                };
+    }
+
+    function createInventoryDataSets(players) {
+        let dataSets = [];
+        for (let i = 0; i < players.length; i++)
+        {
+            if (i == 0) dataSets.push(createDataSet(createData(players[i].InventoryHistory), players[i].Name, "rgba(255, 0, 0, 1)"));
+            if (i == 1) dataSets.push(createDataSet(createData(players[i].InventoryHistory), players[i].Name, "rgba(0, 255, 0, 1)"));
+            if (i == 2) dataSets.push(createDataSet(createData(players[i].InventoryHistory), players[i].Name, "rgba(0, 0, 255, 1)"));
+            if (i == 3) dataSets.push(createDataSet(createData(players[i].InventoryHistory), players[i].Name, "rgba(255, 255, 0, 1)"));
+        }
+
+        return dataSets;
+    }
+
+    function createOrderWorthDataSets(players) {
+        let dataSets = [];
+        for (let i = 0; i < players.length; i++) {
+            if (i == 0) dataSets.push(createDataSet(createData(players[i].OrderWorthHistory), players[i].Name, "rgba(255, 0, 0, 1)"));
+            if (i == 1) dataSets.push(createDataSet(createData(players[i].OrderWorthHistory), players[i].Name, "rgba(0, 255, 0, 1)"));
+            if (i == 2) dataSets.push(createDataSet(createData(players[i].OrderWorthHistory), players[i].Name, "rgba(0, 0, 255, 1)"));
+            if (i == 3) dataSets.push(createDataSet(createData(players[i].OrderWorthHistory), players[i].Name, "rgba(255, 255, 0, 1)"));
+        }
+
+        return dataSets;
+    }
+
+    function createOverallProfitDataSets(players) {
+        let dataSets = [];
+        for (let i = 0; i < players.length; i++) {
+            if (i == 0) dataSets.push(createDataSet(createData(players[i].OverallProfitHistory), players[i].Name, "rgba(255, 0, 0, 1)"));
+            if (i == 1) dataSets.push(createDataSet(createData(players[i].OverallProfitHistory), players[i].Name, "rgba(0, 255, 0, 1)"));
+            if (i == 2) dataSets.push(createDataSet(createData(players[i].OverallProfitHistory), players[i].Name, "rgba(0, 0, 255, 1)"));
+            if (i == 3) dataSets.push(createDataSet(createData(players[i].OverallProfitHistory), players[i].Name, "rgba(255, 255, 0, 1)"));
+        }
+
+        return dataSets;
+    }
+
+    function createGrossProfitDataSets(players) {
+        let dataSets = [];
+        for (let i = 0; i < players.length; i++) {
+            if (i == 0) dataSets.push(createDataSet(createData(players[i].GrossProfitHistory), players[i].Name, "rgba(255, 0, 0, 1)"));
+            if (i == 1) dataSets.push(createDataSet(createData(players[i].GrossProfitHistory), players[i].Name, "rgba(0, 255, 0, 1)"));
+            if (i == 2) dataSets.push(createDataSet(createData(players[i].GrossProfitHistory), players[i].Name, "rgba(0, 0, 255, 1)"));
+            if (i == 3) dataSets.push(createDataSet(createData(players[i].GrossProfitHistory), players[i].Name, "rgba(255, 255, 0, 1)"));
+        }
+
+        return dataSets;
+    }
+
+    function updateGraphs(game) {
+        $(".graphs-grid").empty();
+        drawMultipleChart(createLabels(game.Retailer.InventoryHistory), createInventoryDataSets(game.Players), "inventoryChart","Inventory");
+        drawMultipleChart(createLabels(game.Retailer.OrderWorthHistory), createInventoryDataSets(game.Players), "orderWorthChart","Order worth");
+        drawMultipleChart(createLabels(game.Retailer.OverallProfitHistory), createInventoryDataSets(game.Players), "overallProfitChart","Overall profit");
+        drawMultipleChart(createLabels(game.Retailer.GrossProfitHistory), createInventoryDataSets(game.Players), "grossProfitChart", "Gross profit");
+
+    }
+
+    return {
+        drawChart: drawChart,
+        drawMultipleChart: drawMultipleChart,
+        createLabels: createLabels,
+        createInventoryDataSets: createInventoryDataSets,
+        createOrderWorthDataSets: createOrderWorthDataSets,
+        createOverallProfitDataSets: createOverallProfitDataSets,
+        createGrossProfitDataSets: createGrossProfitDataSets,
+        updateGraphs: updateGraphs
+    }
+})();
 
 
 

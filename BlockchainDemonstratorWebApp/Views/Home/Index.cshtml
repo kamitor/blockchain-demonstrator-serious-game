@@ -25,7 +25,6 @@
             if (playerId != null) {
                 BeerGame.checkInGame(playerId).then((result) => {
                     let gameId = JSON.parse(result);
-                    console.log(gameId);
                     if (gameId != null) {
                         $("body").append($(`<form class="choiceForm box" style="flex-direction:row; margin-top:2%" id="join-game-form" action="/beergame">
                             <h4>Seems like you are already part of an ongoing game. Would you like to join this game?</h4>

@@ -204,6 +204,7 @@
 
             if (@waiting) {
                 $("#place-order-button").prop("disabled", true);
+                $("#place-order-button").css("filter", "grayscale(100%)");
                 $("#place-order-button").val("");
                 $(".cssload-jumping").show();
             }

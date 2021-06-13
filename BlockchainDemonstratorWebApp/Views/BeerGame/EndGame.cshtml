@@ -47,10 +47,9 @@
 
     <script>
         BeerGame.init("@ViewData["GameId"]", "@player.Id", "@ViewData["RestApiUrl"]");
-        BeerGame.drawChart(@Html.Raw(inventoryHistoryLabels), @Html.Raw(inventoryHistoryData), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
-        BeerGame.drawChart(@Html.Raw(orderWorthHistoryLabels), @Html.Raw(orderWorthHistoryData), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
-        BeerGame.drawChart(@Html.Raw(overallProfitHistoryLabels), @Html.Raw(overallProfitHistoryData), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
-        BeerGame.drawChart(@Html.Raw(grossProfitHistoryLabels), @Html.Raw(grossProfitHistoryData), "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
+        BeerGame.Graphs.drawChart(@Html.Raw(inventoryHistoryLabels), @Html.Raw(inventoryHistoryData), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
+        BeerGame.Graphs.drawChart(@Html.Raw(orderWorthHistoryLabels), @Html.Raw(orderWorthHistoryData), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
+        BeerGame.Graphs.drawChart(@Html.Raw(overallProfitHistoryLabels), @Html.Raw(overallProfitHistoryData), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
+        BeerGame.Graphs.drawChart(@Html.Raw(grossProfitHistoryLabels), @Html.Raw(grossProfitHistoryData), "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
     </script>
-
 }

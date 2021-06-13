@@ -213,7 +213,6 @@
             $("#btnPrevious").on("click", () => {
                 $(".actor-display").each((index, element) => {
                     if ($(element).css("display") == "flex" && index > 0) {
-                        console.log(index);
                         $(element).css("display", "none");
                         $(".actor-display").eq(index - 1).css("display", "flex");
                         return false;
