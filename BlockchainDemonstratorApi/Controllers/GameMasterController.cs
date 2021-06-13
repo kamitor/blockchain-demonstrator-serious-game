@@ -21,6 +21,14 @@ namespace BlockchainDemonstratorApi.Controllers
             _context = context;
         }
 
+        // POST: api/GameMaster/GetGames
+        [HttpPost("GetGames")]
+        public async Task<ActionResult<IEnumerable<Game>>> GetGames([FromBody] string gameMasterId)
+        {
+            return await _context.Games.Where(g => g.GameMasterId == gameMasterId).ToListAsync();
+        }
+
+
         // GET: api/GameMaster
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GameMaster>>> GetGameMasters()

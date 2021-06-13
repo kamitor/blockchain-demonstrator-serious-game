@@ -1,129 +1,83 @@
-﻿
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@model IEnumerable<Game>
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<style>
+<head>
+    <link rel="stylesheet" href="~/css/GameMaster.css"/>
+</head>
 
-    body {
-        background-color: lightblue;
-    }
-
-    .table-fixed {
-    }
-
-        .table-fixed thead,
-        .table-fixed thead > th {
-            background: #4d7275;
-            color: #fff;
-        }
-
-        .table-fixed tbody tr td {
-            background: #fff;
-        }
-
-        .table-fixed > thead > tr > th {
-            border: 0;
-        }
-
-        .table-fixed > tbody > tr > td:last-child {
-            border-right: 0;
-        }
-
-        .table-fixed tbody td,
-        .table-fixed thead > tr > th {
-            float: none;
-            font-size: 14px;
-            padding-left: 20px;
-        }
-
-        .table-fixed .col {
-            width: 25%;
-        }
-
-        .table-fixed tbody {
-            display: inline-grid;
-            height: auto;
-            overflow-y: auto;
-        }
-
-        .table-fixed tr {
-            display: block;
-        }
-
-
-    .botwrapper {
-        display: flex;
-        flex-wrap: wrap;
-        float: left;
-    }
-
-
-    /*
-    .scrollbox {
-        background-color: lightblue;
-        width: 600px;
-        height: 400px;
-        overflow: scroll;
-    }
-
-    .wrap {
-
-    }
-
-    .topbox {
-        display:grid;
-        grid-column:span;
-        background-color:aqua;
-    }
-
-    .col {
-        border: solid;
-        background-color:green;
-
-    }
-    */
-</style>
-
-<body>
-    <div class="container">
-        <div class="row">
-            <table class="col-xs-7 table-bordered table-striped table-condensed table-fixed">
-                <thead>
-                    <tr>
-
-                        <th class="col">Game Id</th>
-                        <th class="col">Amount of Games</th>
-                        <th class="col">Status</th>
-
+<div class="game-grid">
+    <div class="game-list box">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Players)
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr onclick="selectGame(this)">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @{
+                                string players = "";
+                                for (int i = 0; i < item.Players.Count; i++)
+                                {
+                                    players += item.Players[i].Name;
+                                    if (i != item.Players.Count - 1) players += ", ";
+                                }
+                                @Html.Raw(players);
+                            }
+                        </td>
+                        <td>
+                            @if (!item.GameStarted)
+                            {@Html.Raw("Waiting for players");
+                        }
+                        else if (item.CurrentDay == Factors.RoundIncrement * 24 + 1)
+                        {@Html.Raw("Done");
+                    }
+                    else
+                    {
+                        <span class="gradient-font">Playing</span>
+                    }
+                        </td>
                     </tr>
-                </thead>
-
-
-                <tbody>
-                    <tr>
-                        <td class="col">test</td>
-                        <td class="col">test</td>
-                        <td class="col">test</td>
-                    </tr>
-
-                </tbody>
-
-
-
-
-            </table>
-
-        </div>
-
+                }
+            </tbody>
+        </table>
     </div>
+    <button class="view-game-button box gradient" onclick="viewGame()">
+        View game
+    </button>
+</div>
 
-
-    <div class="container">
-        <button class="">  testbutton  </button>
-        <button class="">  testbutton  </button>
-        <button class="">  testbutton  </button>
-    </div>
-</body>
-
-
+@section Scripts{ 
+    <script>
+        let selectGame = (tr) => {
+            console.log(tr);
+            console.log($(tr));
+            $("#chosen-game").removeAttr("id");
+            $(tr).attr("id", "chosen-game");
+        }
+        let viewGame = () => {
+            $('body').append($(`<form method="post" id="viewGameForm" action="/gamemaster/beergame" style="display:none;">
+                                    <input name=gameId type="hidden" value="${$("#chosen-game > td:eq(0)")[0].innerText}"/>
+                                </form>`));
+            $("#viewGameForm").submit();
+        }
+    </script>
+}

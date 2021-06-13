@@ -5,69 +5,17 @@
     ViewData["Title"] = "Graphs";
     Player player = (Player)ViewData["Player"];
 
-    string inventoryHistoryLabel = "[";
-    for (int i = 0; i < player.InventoryHistory.Count; i++)
-    {
-        inventoryHistoryLabel += "'Round " + (i + 1) + "'";
-        if (player.InventoryHistory.Count - 1 > i) inventoryHistoryLabel += ", ";
-        else inventoryHistoryLabel += "]";
-    }
+    string inventoryHistoryLabels = Graphs.CreateLabels(player.InventoryHistory);
+    string inventoryHistoryData = Graphs.CreateData(player.InventoryHistory);
 
-    string inventoryHistoryData = "[";
-    for (int i = 0; i < player.InventoryHistory.Count; i++)
-    {
-        inventoryHistoryData += "'" + player.InventoryHistory[i] + "'";
-        if (player.InventoryHistory.Count - 1 > i) inventoryHistoryData += ", ";
-        else inventoryHistoryData += "]";
-    }
+    string orderWorthHistoryLabels = Graphs.CreateLabels(player.OrderWorthHistory);
+    string orderWorthHistoryData = Graphs.CreateData(player.OrderWorthHistory);
 
-    string orderWorthHistoryLabel = "[";
-    for (int i = 0; i < player.OrderWorthHistory.Count; i++)
-    {
-        orderWorthHistoryLabel += "'Round " + (i + 1) + "'";
-        if (player.OrderWorthHistory.Count - 1 > i) orderWorthHistoryLabel += ", ";
-        else orderWorthHistoryLabel += "]";
-    }
+    string overallProfitHistoryLabels = Graphs.CreateLabels(player.OverallProfitHistory);
+    string overallProfitHistoryData = Graphs.CreateData(player.OverallProfitHistory);
 
-    string orderWorthHistoryData = "[";
-    for (int i = 0; i < player.OrderWorthHistory.Count; i++)
-    {
-        orderWorthHistoryData += "'" + player.OrderWorthHistory[i].ToString().Replace(',', '.') + "'";
-        if (player.OrderWorthHistory.Count - 1 > i) orderWorthHistoryData += ", ";
-        else orderWorthHistoryData += "]";
-    }
-
-    string overallProfitHistoryLabel = "[";
-    for (int i = 0; i < player.OverallProfitHistory.Count; i++)
-    {
-        overallProfitHistoryLabel += "'Round " + (i + 1) + "'";
-        if (player.OverallProfitHistory.Count - 1 > i) overallProfitHistoryLabel += ", ";
-        else overallProfitHistoryLabel += "]";
-    }
-
-    string overallProfitHistoryData = "[";
-    for (int i = 0; i < player.OverallProfitHistory.Count; i++)
-    {
-        overallProfitHistoryData += "'" + player.OverallProfitHistory[i].ToString().Replace(',', '.') + "'";
-        if (player.OverallProfitHistory.Count - 1 > i) overallProfitHistoryData += ", ";
-        else overallProfitHistoryData += "]";
-    }
-
-    string grossProfitHistoryLabel = "[";
-    for (int i = 0; i < player.GrossProfitHistory.Count; i++)
-    {
-        grossProfitHistoryLabel += "'Round " + (i + 1) + "'";
-        if (player.GrossProfitHistory.Count - 1 > i) grossProfitHistoryLabel += ", ";
-        else grossProfitHistoryLabel += "]";
-    }
-
-    string grossProfitHistoryData = "[";
-    for (int i = 0; i < player.GrossProfitHistory.Count; i++)
-    {
-        grossProfitHistoryData += "'" + player.GrossProfitHistory[i].ToString().Replace(',', '.') + "'";
-        if (player.GrossProfitHistory.Count - 1 > i) grossProfitHistoryData += ", ";
-        else grossProfitHistoryData += "]";
-    }
+    string grossProfitHistoryLabels = Graphs.CreateLabels(player.GrossProfitHistory);
+    string grossProfitHistoryData = Graphs.CreateData(player.GrossProfitHistory);
 
     string endText = (player.Profit >= 0) ? "Well Done " : "Better luck next time ";
     string profitDeficitPlayer = (player.Profit >= 0) ? "profit" : "deficit";
@@ -99,10 +47,10 @@
 
     <script>
         BeerGame.init("@ViewData["GameId"]", "@player.Id", "@ViewData["RestApiUrl"]");
-        BeerGame.drawChart(@Html.Raw(inventoryHistoryLabel), @Html.Raw(inventoryHistoryData), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
-        BeerGame.drawChart(@Html.Raw(orderWorthHistoryLabel), @Html.Raw(orderWorthHistoryData), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
-        BeerGame.drawChart(@Html.Raw(overallProfitHistoryLabel), @Html.Raw(overallProfitHistoryData), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
-        BeerGame.drawChart(@Html.Raw(grossProfitHistoryLabel), @Html.Raw(grossProfitHistoryData), "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
+        BeerGame.drawChart(@Html.Raw(inventoryHistoryLabels), @Html.Raw(inventoryHistoryData), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
+        BeerGame.drawChart(@Html.Raw(orderWorthHistoryLabels), @Html.Raw(orderWorthHistoryData), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
+        BeerGame.drawChart(@Html.Raw(overallProfitHistoryLabels), @Html.Raw(overallProfitHistoryData), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
+        BeerGame.drawChart(@Html.Raw(grossProfitHistoryLabels), @Html.Raw(grossProfitHistoryData), "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
     </script>
 
 }

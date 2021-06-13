@@ -1,0 +1,57 @@
+﻿@using BlockchainDemonstratorApi.Models.Classes;
+@model Game
+@{
+    ViewData["Title"] = "BeerGame";
+
+    int currentRound = (int)Math.Ceiling((double)Model.CurrentDay / (double)Factors.RoundIncrement);
+    string ordinalSuffix = "th";
+    if (currentRound == 1) ordinalSuffix = "st";
+    if (currentRound == 2) ordinalSuffix = "nd";
+    if (currentRound == 3) ordinalSuffix = "rd";
+
+    string profitTeam = (Model.Players.Sum(p => p.Profit) >= 0) ? "€" + Model.Players.Sum(p => p.Profit) : "-€" + (Model.Players.Sum(p => p.Profit) * -1);
+    string balanceTeam = (Model.Players.Sum(p => p.Balance) >= 0) ? "€" + Model.Players.Sum(p => p.Balance) : "-€" + (Model.Players.Sum(p => p.Balance) * -1);
+
+    if (!profitTeam.Contains(",")) profitTeam += ",";
+    if (!balanceTeam.Contains(",")) balanceTeam += ",";
+}
+
+<link rel="stylesheet" href="~/css/BeerGame.css" />
+<link rel="stylesheet" href="~/css/GameMaster.css" />
+
+<div class="graphs-grid">
+    <canvas class="graph-left box" id="inventoryChart"></canvas>
+    <canvas class="graph-right box" id="orderWorthChart"></canvas>
+    <canvas class="graph-left box" id="overallProfitChart"></canvas>
+    <canvas class="graph-right box" id="grossProfitChart"></canvas>
+</div>
+<div class="bottom-container">
+    <div class="bottom-canvas box">
+        <div>
+            <span id="current-round" style="width:fit-content" class="main-text gradient-font">@currentRound</span>
+            <span style="margin-left:-3px" id="ordinal-suffix" class="tertiary-text gradient-font">@ordinalSuffix</span>
+        </div>
+        <span class="secondary-text">Round</span>
+    </div>
+    <button class="switch-button bottom-canvas secondary-text gradient box">Show latest information</button>
+    <div class="bottom-canvas box">
+        <span class="secondary-text">Team</span>
+        <nobr class="tertiary-text">Balance: <span class="secondary-text gradient-font">@balanceTeam-</span></nobr>
+        <nobr class="tertiary-text">Profit: <span class="secondary-text gradient-font">@profitTeam-</span></nobr>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/BeerGame.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
+    <script>
+        BeerGame.init("@Model.Id", "", "@ViewData["RestApiUrl"]");
+        BeerGame.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.InventoryHistory)), @Html.Raw(Graphs.CreateInventoryDataSets(Model.Players)), "inventoryChart", "Inventory");
+        BeerGame.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OrderWorthHistory)), @Html.Raw(Graphs.CreateOrderWorthDataSets(Model.Players)), "orderWorthChart", "Order worth");
+        BeerGame.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OverallProfitHistory)), @Html.Raw(Graphs.CreateOverallProfitDataSets(Model.Players)), "overallProfitChart", "Overall profit");
+        BeerGame.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.GrossProfitHistory)), @Html.Raw(Graphs.CreateGrossProfitDataSets(Model.Players)), "grossProfitChart", "Gross profit");
+    </script>
+
+}
+

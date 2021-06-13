@@ -411,7 +411,6 @@ const BeerGame = (() => {
                     fill: true,
                     backgroundColor: 'rgba(46, 49, 146, 0.2)',
                     borderColor: lineColour,
-
                     borderWidth: 1
                 }]
             },
@@ -419,6 +418,30 @@ const BeerGame = (() => {
                 scales: {
                     y: {
                         beginAtZero: true
+                    }
+                }
+            }
+        });
+    };
+
+    const drawMultipleChart = function (labels, datasets, chartId, title) {
+        let ctx = document.getElementById(chartId).getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: title
                     }
                 }
             }
@@ -445,7 +468,8 @@ const BeerGame = (() => {
         drawChart: drawChart,
         checkInGame: checkInGame,
         updatePromptOptions: updatePromptOptions,
-        updateGamePlayerPage: updateGamePlayerPage
+        updateGamePlayerPage: updateGamePlayerPage,
+        drawMultipleChart: drawMultipleChart
     }
 })();
 
@@ -516,7 +540,6 @@ BeerGame.Signal = (() => {
                                     <input name=playerId type="hidden" value="${configMap.playerId}"/>
                                 </form>`));
             $("#endGameForm").submit();
-
         })
     }
 

@@ -1,0 +1,69 @@
+﻿.game-grid {
+    display:flex;
+    flex-direction:column;
+}
+
+.game-list {
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top:30%;
+    margin-top:8%;
+}
+    .game-list table {
+        display: block;
+        max-height: 300px;
+        overflow-y: auto;
+        table-layout: fixed;
+    }
+
+    .game-list th{
+        width: 30%;
+    }
+
+    .game-list tr:hover{
+        background-color:lavender;
+    }
+
+.view-game-button {
+    margin-top: 20px;
+    border: none;
+    outline: none;
+    color: white;
+    width: 30%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.switch-button {
+    border: none;
+    outline: none;
+    color: white;
+}
+
+.graphs-grid {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    width: 100%;
+}
+
+.graph-left {
+    max-width: 350px;
+    max-height: 350px;
+    display: inline-block;
+    box-sizing: border-box;
+    height: 350px;
+    width: 350px;
+    justify-self: end;
+}
+
+.graph-right {
+    max-width: 350px;
+    max-height: 350px;
+    display: inline-block;
+    box-sizing: border-box;
+    height: 350px;
+    width: 350px;
+    justify-self: start;
+}
