@@ -232,6 +232,9 @@ const BeerGame = (() => {
         updateGamePlayerLastOrder(game);
 
         $("#place-order-text").val("");
+        $(".cssload-jumping").hide();
+        $("#place-order-button").prop("disabled", false);
+        $("#place-order-button").val("Place order");
     }
 
     const updateGamePlayers = (game) => {
@@ -519,12 +522,15 @@ BeerGame.Signal = (() => {
 
     let sendOrder = () => {
         connection.invoke("SendOrder",
-                $('#place-order-text').val(), 
-                BeerGame.Cookie.getCookie('JoinedGame'), 
-                BeerGame.Cookie.getCookie('PlayerId'))
+            $('#place-order-text').val(),
+            BeerGame.Cookie.getCookie('JoinedGame'),
+            BeerGame.Cookie.getCookie('PlayerId'))
             .catch(function (err) {
-            return console.error(err.toString())
-        })
+                return console.error(err.toString())
+            });
+        $("#place-order-button").prop("disabled", true);
+        $("#place-order-button").val("");
+        $(".cssload-jumping").show();
     }
 
     let joinGroup = () => {

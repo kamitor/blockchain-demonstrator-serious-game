@@ -24,6 +24,8 @@
     string balancePlayer = "";
     string balanceTeam = "";
 
+    string waiting = (players.Any(p => p.CurrentOrder == null) && Model.CurrentOrder != null).ToString().ToLower();
+
     if (players.Count == 4)
     {
         modelIndex = players.FindIndex(p => p.Id == Model.Id);
@@ -60,8 +62,23 @@
 @if (!gameReady)
 {
     <div class="lds">
-        <h1>Waiting for players</h1>
-        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        <h1 style="margin-bottom: 80px">Waiting for players</h1>
+        <div class="cssload-dots">
+            <div class="cssload-dot"></div>
+            <div class="cssload-dot"></div>
+            <div class="cssload-dot"></div>
+            <div class="cssload-dot"></div>
+            <div class="cssload-dot"></div>
+        </div>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="12"></feGaussianBlur>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0	0 1 0 0 0	0 0 1 0 0	0 0 0 18 -7" result="goo"></feColorMatrix>
+                    <!--<feBlend in2="goo" in="SourceGraphic" result="mix" ></feBlend>-->
+                </filter>
+            </defs>
+        </svg>
     </div>
 }
 
@@ -142,6 +159,9 @@
     <div style="padding:0px" class="bottom-canvas box">
         <input id="place-order-text" name="order" class="input secondary-text" type="number" placeholder="Insert order..." min="0" oninput="validity.valid||(value='');">
         <input id="place-order-button" style="color:white" class="order-button gradient secondary-text" type="button" value="Place order">
+        <div style="position: absolute; top: -44px; left: 108px;display:none"class="cssload-jumping">
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
     </div>
     <div class="bottom-canvas box">
         <span class="main-text">Order history</span>
@@ -155,7 +175,9 @@
     <script>
         $(document).ready(() => {
             BeerGame.init("@gameId", "@Model.Id", "@ViewData["RestApiUrl"]");
+
             $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
+
             if (@if(thirdPhaseNotReady){@Html.Raw("true || ");}@currentDay == 7 * 8 + 1 && "@if(Model.ChosenOption != null){@Html.Raw(Model.ChosenOption.Name);}else{@Html.Raw("null");}" == "Basic") {
                 BeerGame.promptOptions(); //TODO: get promptoptions working
                 @foreach(Player player in players)
@@ -163,6 +185,7 @@
                     if (player.ChosenOption != null) @Html.Raw($"BeerGame.updatePromptOptions('{JsonConvert.SerializeObject(player)}');\n");
                 }
             }
+
             if ("@Model.Role.Id" == "Retailer") {
                 $(".main-canvas").css("background", "url('/images/retailer.png'), white");
             }
@@ -178,6 +201,12 @@
             $(".main-canvas").css("background-size", "contain");
             $(".main-canvas").css("background-repeat", "no-repeat");
             $(".main-canvas").css("background-position", "center");
+
+            if (@waiting) {
+                $("#place-order-button").prop("disabled", true);
+                $("#place-order-button").val("");
+                $(".cssload-jumping").show();
+            }
         });
     </script>
 }
