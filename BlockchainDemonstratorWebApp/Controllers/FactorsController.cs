@@ -43,24 +43,6 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 			return BadRequest();
 		}
 
-		// GET: Factors/Edit/5
-		public async Task<IActionResult> Edit(string id)
-		{
-			using (var client = new HttpClient())
-			{
-				var response = client.GetAsync(Config.RestApiUrl + "/api/Factors/" + id).Result;
-
-				if (response.IsSuccessStatusCode)
-				{
-					var responseContent = response.Content;
-					var responseString = responseContent.ReadAsStringAsync().Result;
-					if (responseString != null) return View(JsonConvert.DeserializeObject<Factors>(responseString));
-				}
-			}
-
-			return BadRequest();
-		}
-
 		// POST: Factors/Edit/5
 		// To protect from overposting attacks, enable the specific properties you want to bind to, for 
 		// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
