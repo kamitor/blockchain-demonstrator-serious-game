@@ -76,10 +76,6 @@
     string profitValueTeam = (Model.Players.Sum(p => p.Profit) >= 0) ? "€" + Model.Players.Sum(p => p.Profit) : "-€" + (Model.Players.Sum(p => p.Profit) * -1);
 }
 
-<head>
-    <link rel="stylesheet" href="~/css/StyleSheet.css" />
-</head>
-
 <div class="endGrid">
     <div class="endText box">
         <h1 style="display:inline-block">@endText<span class="gradient-font">@player.Name</span>!</h1>
