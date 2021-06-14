@@ -1,233 +1,90 @@
-﻿@using Microsoft.CodeAnalysis
-@using BlockchainDemonstratorApi.Models.Classes
-@model BlockchainDemonstratorApi.Models.Classes.Game
+﻿@using BlockchainDemonstratorApi.Models.Classes;
+@model Game
 @{
-    ViewData["Title"] = "BeerGame Admin - Page";
-    Payment lastPayment = null;
-    string style = "";
+    ViewData["Title"] = "BeerGame GameMaster";
+
+    int currentRound = (int)Math.Ceiling((double)Model.CurrentDay / (double)Factors.RoundIncrement);
+    string ordinalSuffix = "th";
+    if (currentRound == 1) ordinalSuffix = "st";
+    if (currentRound == 2) ordinalSuffix = "nd";
+    if (currentRound == 3) ordinalSuffix = "rd";
+
+    string profitTeam = (Model.Players.Sum(p => p.Profit) >= 0) ? "€" + Model.Players.Sum(p => p.Profit) : "-€" + (Model.Players.Sum(p => p.Profit) * -1);
+    string balanceTeam = (Model.Players.Sum(p => p.Balance) >= 0) ? "€" + Model.Players.Sum(p => p.Balance) : "-€" + (Model.Players.Sum(p => p.Balance) * -1);
+
+    if (!profitTeam.Contains(",")) profitTeam += ",";
+    if (!balanceTeam.Contains(",")) balanceTeam += ",";
 }
 
-<head>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
-    <link rel="stylesheet" href="~/css/BeerGameAdmin.css">
-</head>
+<link rel="stylesheet" href="~/css/BeerGame.css" />
+<link rel="stylesheet" href="~/css/GameMaster.css" />
 
-<div>
-    <h3>Current day: @Model.CurrentDay</h3>
+<div class="graphs-grid">
 </div>
 
-<div class="container">
-    @foreach (var player in Model.Players)
+<div style="display:none" class="info-grid">
+    @foreach (Player player in Model.Players)
     {
-        @if (Model.Players.FirstOrDefault() != player) { style = "display:none"; }
-        <section style="@style" class="actor-display">
-            <div class="wrapper">
-                <div class="company-info">
-                    <h3 id="name-@player.Role.Id">Name: @player.Name</h3>
-                    <h3 id="role-@player.Role.Id">Role: @player.Role.Id</h3>
-                    <h3 id="balance-@player.Role.Id">Balance: @Math.Round(player.Balance, 2)</h3>
-                    <h3 id="profit-@player.Role.Id">Profit: @Math.Round(player.Profit, 2)</h3>
-                    <h3 id="inventory-@player.Role.Id">Inventory: @player.Inventory</h3>
-                    <h3 id="backorder-@player.Role.Id">Backorder: @player.Backorder</h3>
-                </div>
-                <div class="contact">
-                    <form>
-                        <div class="tab">
-                            <h3>Incoming order</h3>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Order number</th>
-                                        <th>Order day</th>
-                                        <th>Volume</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="incomingOrders-@player.Role.Id">
-                                    @foreach (var order in player.IncomingOrders)
-                                    {
-                                        @if (order.OrderDay == Model.CurrentDay - BlockchainDemonstratorApi.Models.Classes.Factors.RoundIncrement)
-                                        {
-                                            <tr style="background-color: #f5fac5;">
-                                                <td>@order.OrderNumber</td>
-                                                <td>@order.OrderDay</td>
-                                                <td>@order.Volume</td>
-                                            </tr>
-                                        }
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab">
-                            <h3>Incoming deliveries</h3>
-                            <div class="table-scroll">
-                                <table name="incomingDeliveries">
-                                    <thead>
-                                        <tr>
-                                            <th>Order number</th>
-                                            <th>Order day</th>
-                                            <th>Volume</th>
-                                            <th>Deliveries</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="incomingDeliveries-@player.Role.Id">
-                                        @foreach (var order in player.OutgoingOrders)
-                                        {
-                                            if (order.Deliveries.Any(d => d.ArrivalDay <= Model.CurrentDay && d.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement))
-                                            {
-                                                <tr>
-                                                    <td>@order.OrderNumber</td>
-                                                    <td>@order.OrderDay</td>
-                                                    <td>@order.Volume</td>
-                                                    <td>
-                                                        <table>
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Volume</th>
-                                                                    <th>Send day</th>
-                                                                    <th>Arrival day</th>
-                                                                    <th>Price</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @foreach (var delivery in order.Deliveries.OrderBy(d => d.ArrivalDay))
-                                                                {
-                                                                    @if (delivery.ArrivalDay <= Model.CurrentDay && delivery.ArrivalDay > Model.CurrentDay - Factors.RoundIncrement)
-                                                                    {
-                                                                        <tr style="        background-color: #f5fac5;">
-                                                                            <td>@delivery.Volume</td>
-                                                                            <td>@delivery.SendDeliveryDay</td>
-                                                                            <td>@Math.Round(delivery.ArrivalDay, 2)</td>
-                                                                            <td>@delivery.Price</td>
-                                                                        </tr>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <tr>
-                                                                            <td>@delivery.Volume</td>
-                                                                            <td>@delivery.SendDeliveryDay</td>
-                                                                            <td>@Math.Round(delivery.ArrivalDay, 2)</td>
-                                                                            <td>@delivery.Price</td>
-                                                                        </tr>
-                                                                    }
-                                                                }
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab">
-                            <h3>Order history:</h3>
-                            <div class="table-scroll">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Order number</th>
-                                            <th>Volume</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="orderHistory-@player.Role.Id">
-                                        @foreach (BlockchainDemonstratorApi.Models.Classes.Order order in player.OutgoingOrders)
-                                        {
-                                            @if (order.OrderDay >= 1)
-                                            {
-                                                <tr>
-                                                    <td>@order.OrderNumber</td>
-                                                    <td>@order.Volume</td>
-                                                </tr>
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab">
-                            <h3>Payments:</h3>
-                            <div class="table-scroll">
-                                <table name="payments">
-                                    <thead>
-                                        <tr>
-                                            <th>Topic</th>
-                                            <th>Amount</th>
-                                            <th>Due day</th>
-                                            <th>From player</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="payments-@player.Role.Id">
-                                        @foreach (Payment payment in player.Payments)
-                                        {
-                                            if ((int)payment.DueDay <= Model.CurrentDay && (int)payment.DueDay > Model.CurrentDay - Factors.RoundIncrement) style += "background-color:#f5fac5;";
-
-                                            if (lastPayment != null && Math.Ceiling(payment.DueDay / Factors.RoundIncrement + 1 - (1 / (double)Factors.RoundIncrement)) > Math.Ceiling(lastPayment.DueDay / Factors.RoundIncrement + 1 - (1 / (double)Factors.RoundIncrement))) style += "border-top: 3px solid grey;"; 
-
-                                            <tr style="@style">
-                                                <td>@payment.Topic</td>
-                                                @if (payment.Amount >= 0)
-                                                {
-                                                    <td style="color:green">@payment.Amount</td>
-                                                }
-                                                else
-                                                {
-                                                    <td style="color:red">@payment.Amount</td>
-                                                }
-                                                <td>@Math.Round(payment.DueDay, 2)</td>
-                                                <td>@payment.FromPlayer</td>
-                                            </tr>
-                                            lastPayment = payment;
-                                            style = "";
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab">
-                            <h3>Order volume: </h3>
-                            <input id="order-@player.Role.Id" type="number" name="order">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-        style = "";
+    <div class="latest-info box">
+        <span class="gradient-font main-text">@player.Name</span>
+        <span style="margin-bottom: 10px" class="secondary-text">@player.Role.Id</span>
+        <span class="tertiary-text">Last order: <span id="last-order-@player.Role.Id">@Html.Raw((currentRound == 1) ? "none" : player.OutgoingOrders.Last().Volume.ToString())</span></span>
+        <span class="tertiary-text">Incoming order: <span id="incoming-order-@player.Role.Id">@player.IncomingOrders.Where(o => o.OrderDay == Model.CurrentDay - Factors.RoundIncrement).Sum(o => o.Volume)</span></span>
+        <span class="tertiary-text">Backorder: <span id="backorder-@player.Role.Id">@player.Backorder</span></span>
+        <span class="tertiary-text">Inventory: <span id="inventory-@player.Role.Id">@player.Inventory</span></span>
+        <span class="tertiary-text">Incoming deliver: <span id="incoming-delivery-@player.Role.Id">@player.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay >= Model.CurrentDay && d.ArrivalDay < Model.CurrentDay + Factors.RoundIncrement).Sum(d => d.Volume))</span></span>
+        <span class="tertiary-text">Balance: <span id="balance-@player.Role.Id">@{
+            string balance = (player.Balance >= 0) ? "€" + player.Balance : "-€" + (player.Balance * -1);
+            if (!balance.Contains(",")) balance += ",";
+            @Html.Raw(balance);
+        }-</span></span>
+        <span class="tertiary-text">Profit: <span id="profit-@player.Role.Id">@{ 
+            string profit = (player.Profit >= 0) ? "€" + player.Profit : "-€" + (player.Profit * -1);
+            if (!profit.Contains(",")) profit += ",";
+            @Html.Raw(balance);
+        }-</span></span>
+    </div>
     }
-
-    <div class="bottomBar">
-        <button id="btnPrevious" class="buttonGameView"><h4>Previous</h4></button>
-        <button onclick="BeerGame.sendOrders('@Model.Id')" class="buttonGameView"><h4>Send orders</h4></button>
-        <button id="btnNext" class="buttonGameView"><h4>Next</h4></button>
+</div>
+<div class="bottom-container">
+    <div class="bottom-canvas box">
+        <div>
+            <span id="current-round" style="width:fit-content" class="main-text gradient-font">@currentRound</span>
+            <span style="margin-left:-3px" id="ordinal-suffix" class="tertiary-text gradient-font">@ordinalSuffix</span>
+        </div>
+        <span class="secondary-text">Round</span>
+    </div>
+    <button style="outline:none" class="switch-button bottom-canvas secondary-text gradient box" onclick="switchGrid()">Show latest information</button>
+    <div class="bottom-canvas box">
+        <span class="secondary-text">Team</span>
+        <nobr class="tertiary-text">Balance: <span id="balance-team" class="secondary-text gradient-font">@balanceTeam-</span></nobr>
+        <nobr class="tertiary-text">Profit: <span id="profit-team" class="secondary-text gradient-font">@profitTeam-</span></nobr>
     </div>
 </div>
 
-@section Scripts
-{
+@section Scripts{
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/BeerGame.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
     <script>
+        BeerGame.init("@Model.Id", "", "@ViewData["RestApiUrl"]");
         $("document").ready(() => {
-            BeerGame.init("@Model.Id", "", "@ViewData["RestApiUrl"]");
-            $("#btnPrevious").on("click", () => {
-                $(".actor-display").each((index, element) => {
-                    if ($(element).css("display") == "flex" && index > 0) {
-                        $(element).css("display", "none");
-                        $(".actor-display").eq(index - 1).css("display", "flex");
-                        return false;
-                    }
-                });
-            });
-            $("#btnNext").on("click", () => {
-                $(".actor-display").each((index, element) => {
-                    if ($(element).css("display") == "flex" && index < $(".actor-display").length - 1) {
-                        $(element).css("display", "none");
-                        $(".actor-display").eq(index + 1).css("display", "flex");
-                        return false;
-                    }
-                });
-            });
-        });
+            BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.InventoryHistory)), @Html.Raw(Graphs.CreateInventoryDataSets(Model.Players)), "inventoryChart", "Inventory");
+            BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OrderWorthHistory)), @Html.Raw(Graphs.CreateOrderWorthDataSets(Model.Players)), "orderWorthChart", "Order worth");
+            BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OverallProfitHistory)), @Html.Raw(Graphs.CreateOverallProfitDataSets(Model.Players)), "overallProfitChart", "Overall profit");
+            BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.GrossProfitHistory)), @Html.Raw(Graphs.CreateGrossProfitDataSets(Model.Players)), "grossProfitChart", "Gross profit");
+        })
+        let switchGrid = () => {
+            if ($(".graphs-grid").css("display") != "none" && $(".info-grid").css("display") == "none") {
+                $(".graphs-grid").hide()
+                $(".info-grid").show();
+            }
+            else if ($(".graphs-grid").css("display") == "none" && $(".info-grid").css("display") != "none") {
+                $(".graphs-grid").show()
+                $(".info-grid").hide();
+            }
+        }
     </script>
+
 }
+

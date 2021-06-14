@@ -1,0 +1,43 @@
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@model Game
+
+@{
+    ViewData["Title"] = "Edit game";
+}
+
+<div class="row middle-form box">
+    <form asp-action="PutGame" asp-controller="Admin">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <input type="hidden" name="Id" class="form-control" value="@Model.Id" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Remove players</label>
+            @foreach (Player player in Model.Players)
+            {
+                <div>
+                    <input id="remove_@player.Role.Id" name="remove_@player.Role.Id" type="checkbox" value="true" />
+                    <label for="remove_@player.Role.Id">@player.Role.Id: @player.Name</label>
+                </div>
+            }
+        </div>
+        <div class="form-group">
+            <label asp-for="CurrentDay" class="control-label"></label>
+            <input type="number" name="CurrentDay" class="form-control" value="@Model.CurrentDay" />
+        </div>
+        <div class="form-group">
+            <input id="GameStarted" name="GameStarted" type="checkbox" value="true" @if (Model.GameStarted) { @Html.Raw("checked") ; } />
+            <label for="GameStarted">Game started</label>
+        </div>
+        <div class="form-group">
+            <label asp-for="GameMasterId" class="control-label"></label>
+            <input name="GameMasterId" class="form-control" value="@Model.GameMasterId" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <button style="margin-left:10px" class="btn btn-primary" action="/Admin">Back to List</button>
+        </div>
+    </form>
+</div>
+
+

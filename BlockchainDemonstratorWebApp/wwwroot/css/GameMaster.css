@@ -35,6 +35,20 @@
     margin-left: auto;
 }
 
+.bottom-game-button {
+    border: none;
+    outline: none;
+    color: white;
+    width: 18%;
+}
+
+.bottom-buttons-container {
+    display:flex;
+    flex-direction:row;
+    justify-content:space-evenly;
+    margin-top:20px;
+}
+
 .switch-button {
     border: none;
     color: white;

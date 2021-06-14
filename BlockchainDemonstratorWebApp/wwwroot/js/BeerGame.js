@@ -455,20 +455,20 @@ BeerGame.Signal = (() => {
             $(".lds").hide();
             $(".top-container").show();
             if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
-            else if (document.title == "BeerGame Admin - Page") BeerGame.updateGameTuningPage(game);
+            else if (document.title == "BeerGame Admin - Blockchain Demonstrator") BeerGame.updateGameTuningPage(game);
         });
 
         connection.on("UpdateGame", function (game) {
-            if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
-            else if (document.title == "BeerGame Admin - Page") BeerGame.updateGameTuningPage(game);
+            if (document.title == "BeerGame - Blockchain Demonstrator" || document.title == "BeerGame Game master - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
+            else if (document.title == "BeerGame Admin - Blockchain Demonstrator") BeerGame.updateGameTuningPage(game);
         });
 
         connection.on("PromptOptions", function () {
-            BeerGame.promptOptions();
+            if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.promptOptions();
         });
 
         connection.on("UpdatePromptOptions", function (playerJson) {
-            BeerGame.updatePromptOptions(playerJson)
+            if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updatePromptOptions(playerJson)
         });
 
         connection.on("ClosePromptOptions", function (mostChosenOption) {
