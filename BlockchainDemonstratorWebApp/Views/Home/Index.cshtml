@@ -14,3 +14,41 @@
     <p> <a href="https://localhost:44313/BeerGame/Gamemaster">Gamemaster</a></p>
     <p> <a href="https://localhost:44313/factors">Factors</a></p>
 </div>
+
+<a asp-controller="BeerGame" asp-action="Graphs" asp-route-gameId="447127" asp-route-playerId="973f7486-1527-4a80-8f86-6b4416208a80">TESTGRAPHS</a>
+
+@section Scripts
+{
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/BeerGame.js"></script>
+    <script>
+        $("document").ready(() => {
+            BeerGame.init("", "", "@ViewData["RestApiUrl"]");
+            let playerId = BeerGame.Cookie.getCookie("PlayerId");
+            if (playerId != null) {
+                BeerGame.checkInGame(playerId).then((result) => {
+                    let gameId = JSON.parse(result);
+                    console.log(gameId);
+                    if (gameId != null) {
+                        $("body").append($(`<form class="choiceForm box" style="flex-direction:row; margin-top:2%" id="join-game-form" action="/beergame/beergame">
+                            <h4>Seems like you are already part of an ongoing game. Would you like to join this game?</h4>
+                            <input class="rejoinButton gradient" type="submit" value="Join game">
+                            <input class="rejoinButton gradient" type="button" onclick="(function () { $('#join-game-form').hide() })()" value="Cancel"/>
+                            </form>`
+                        ));
+                    }
+                })
+            }
+        });
+        let joinGame = () => {
+            let gameId = $("input[name=gameId]").val();
+
+            BeerGame.Signal.checkFull(gameId).then((result) => {
+                if (result.length != 0) $("#gameIdBox").submit();
+                else {
+                    //TODO: make small popup that warns that the game is full
+                }
+            });
+        }
+    </script>
+}

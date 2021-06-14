@@ -42,19 +42,28 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				.Sum(p => p.Amount);
 		}
 
+		/* Old shite
+		 int backorder = 0;
+		 int maxOrderDay = 0;
+		 if(IncomingOrders.Count != 0) maxOrderDay = IncomingOrders.Max(o => o.OrderDay);
+		 if (IncomingOrders.Count == 1)
+		 {
+			 backorder = IncomingOrders[0].Volume - IncomingOrders[0].Deliveries.Sum(x => x.Volume);
+		 }
+		 else
+		 {
+			 foreach (Order incomingOrder in IncomingOrders)
+			 {
+				 if(incomingOrder.OrderDay != maxOrderDay) backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
+			 } 
+		 }
+		 return backorder;
+		 */
+		[NotMapped]
 		public int Backorder
 		{
-			get
-			{
-				 int backorder = 0;
-				 int maxOrderDay = 0;
-				 if(IncomingOrders.Count != 0) maxOrderDay = IncomingOrders.Max(o => o.OrderDay);
-				 foreach (Order incomingOrder in IncomingOrders)
-				 {
-					 if(incomingOrder.OrderDay != maxOrderDay) backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
-				 }
-				 return backorder;
-			}
+			get;
+			set;
 		}
 
 		public virtual Order CurrentOrder { get; set; }
@@ -106,6 +115,38 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			}
 		}
 
+		public string InventoryHistoryJson { get; set; }
+		[NotMapped]
+		public List<int> InventoryHistory
+        {
+            get { return (InventoryHistoryJson == null) ? new List<int>() : JsonConvert.DeserializeObject<List<int>>(InventoryHistoryJson); }
+            set { InventoryHistoryJson = JsonConvert.SerializeObject(value); }
+        }
+
+		public string OrderWorthHistoryJson { get; set; }
+		[NotMapped]
+		public List<double> OrderWorthHistory
+		{
+			get { return (OrderWorthHistoryJson == null) ? new List<double>() : JsonConvert.DeserializeObject<List<double>>(OrderWorthHistoryJson); }
+			set { OrderWorthHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
+		public string OverallProfitHistoryJson { get; set; }
+		[NotMapped]
+		public List<double> OverallProfitHistory
+		{
+			get { return (OverallProfitHistoryJson == null) ? new List<double>() : JsonConvert.DeserializeObject<List<double>>(OverallProfitHistoryJson); }
+			set { OverallProfitHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
+		public string GrossProfitHistoryJson { get; set; }
+		[NotMapped]
+		public List<double> GrossProfitHistory
+		{
+			get { return (GrossProfitHistoryJson == null) ? new List<double>() : JsonConvert.DeserializeObject<List<double>>(GrossProfitHistoryJson); }
+			set { GrossProfitHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
 		public Player(string name)
 		{
 			Id = Guid.NewGuid().ToString();
@@ -131,6 +172,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// <param name="currentDay">integer that specifies the current day</param>
 		public void GetOutgoingDeliveries(int currentDay)
 		{
+			Backorder = 0;
 			for (int i = 0; i < IncomingOrders.Count; i++)
 			{
 				int leadTimeRand = new Random().Next(Factors.OrderLeadTimeRandomMinimum,
@@ -174,6 +216,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 					Inventory = 0;
 				}
+			}
+			
+			foreach (Order incomingOrder in IncomingOrders)
+			{
+				Backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
 			}
 		}
 
@@ -291,6 +338,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		/// <summary>Adds a holding cost payment to the Payments list </summary>
 		/// <param name="currentDay">integer that specifies the current day</param>
+		//TODO: HoldingCost can be zero (adds extra records in database)
 		public void SetHoldingCost(int currentDay)
 		{
 			if (HoldingCosts > 0)
