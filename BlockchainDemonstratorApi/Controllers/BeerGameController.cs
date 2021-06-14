@@ -24,12 +24,12 @@ namespace BlockchainDemonstratorApi.Controllers
         }
 
         [HttpPost("CreateGame")]
-        public ActionResult CreateGame()
+        public ActionResult<Game> CreateGame()
         {
             Game game = new Game(GetUniqueId());
             _context.Games.Add(game);
             _context.SaveChanges();
-            return Ok();
+            return game;
         }
 
         /// <summary>Creates a unique id using six numbers</summary>
