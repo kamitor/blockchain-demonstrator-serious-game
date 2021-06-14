@@ -75,7 +75,7 @@ namespace BlockchainDemonstratorApi
                 File.WriteAllText("appsettings.json", output);
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
             
