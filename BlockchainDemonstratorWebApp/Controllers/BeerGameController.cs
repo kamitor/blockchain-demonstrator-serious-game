@@ -53,8 +53,6 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                         ViewData["Players"] = game.Players;
                         if (game.Players.Any(p => p.ChosenOption == null) && game.CurrentDay == Factors.RoundIncrement * 16 + 1){
                             ViewData["ThirdPhaseNotReady"] = true;
-                            Dictionary<string, string> chosenOptionsPlayers = new Dictionary<string, string>();
-                            //TODO: use dictionary in cshtml page ?
                         }
                         return View(player);
                     }

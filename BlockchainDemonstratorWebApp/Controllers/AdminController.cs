@@ -13,10 +13,8 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
     [AuthorityCookie("Admin")]
     public class AdminController : Controller
     {
-        private string _adminId;
         public IActionResult Index(string gameMasterId = null)
         {
-            _adminId = Request.Cookies["AdminId"];
             using (var client = new HttpClient())
             {
                 HttpResponseMessage response = null;
@@ -170,6 +168,69 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     {
                         ViewData["RestApiUrl"] = Config.RestApiUrl;
                         return RedirectToAction("Index", "Admin");
+                    }
+                }
+            }
+            return StatusCode(500);
+        }
+
+        public IActionResult GameMaster()
+        {
+            using (var client = new HttpClient())
+            {
+                var response = client.GetAsync(Config.RestApiUrl + "/api/GameMaster").Result;
+
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null)
+                    {
+                        ViewData["RestApiUrl"] = Config.RestApiUrl;
+                        return View(JsonConvert.DeserializeObject<List<GameMaster>>(responseString));
+                    }
+                }
+            }
+            return StatusCode(500);
+        }
+
+        public IActionResult DeleteGameMaster(string gameMasterId)
+        {
+            if (gameMasterId == null) return StatusCode(400);
+            using (var client = new HttpClient())
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(gameMasterId), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/GameMaster/GetGameMaster", stringContent).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null)
+                    {
+                        ViewData["RestApiUrl"] = Config.RestApiUrl;
+                        return View(JsonConvert.DeserializeObject<GameMaster>(responseString));
+                    }
+                }
+            }
+            return StatusCode(500);
+        }
+
+        public IActionResult ConfirmDeleteGameMaster(string gameId)
+        {
+            if (gameId == null) return StatusCode(400);
+            using (var client = new HttpClient())
+            {
+                var response = client.DeleteAsync(Config.RestApiUrl + "/api/GameMaster/" + gameId).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    if (responseString != null)
+                    {
+                        ViewData["RestApiUrl"] = Config.RestApiUrl;
+                        return RedirectToAction("GameMaster", "Admin");
                     }
                 }
             }

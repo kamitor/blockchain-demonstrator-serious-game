@@ -12,6 +12,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
         [Key]
         public string Id { get; set; }
         [ForeignKey("GameMasterId")]
-        public virtual List<Game> Game { get; set; }
+        public virtual List<Game> Games { get; set; }
     }
 }

@@ -25,6 +25,29 @@
         background-color:lavender;
     }
 
+.game-master-list {
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 30%;
+    margin-top: 8%;
+}
+
+    .game-master-list table {
+        display: block;
+        max-height: 300px;
+        overflow-y: auto;
+        table-layout: fixed;
+    }
+
+    .game-master-list th {
+        width: 46%;
+    }
+
+    .game-master-list tr:hover {
+        background-color: lavender;
+    }
+
 .view-game-button {
     margin-top: 20px;
     border: none;

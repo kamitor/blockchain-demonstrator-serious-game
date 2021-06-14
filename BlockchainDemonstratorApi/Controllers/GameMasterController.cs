@@ -28,6 +28,31 @@ namespace BlockchainDemonstratorApi.Controllers
             return await _context.Games.Where(g => g.GameMasterId == gameMasterId).ToListAsync();
         }
 
+        [HttpPost("CreateGameMaster")]
+        public ActionResult<GameMaster> CreateGameMaster()
+        {
+            GameMaster gameMaster = new GameMaster() { Id = GetUniqueId() };
+            _context.GameMasters.Add(gameMaster);
+            _context.SaveChanges();
+            return gameMaster;
+        }
+
+        private string GetUniqueId()
+        {
+            List<string> usedIds = _context.GameMasters.Select(g => g.Id).ToList();
+
+            Random r = new Random();
+            while (true)
+            {
+                int id = r.Next(100000, 1000000);
+
+                if (!usedIds.Contains(id.ToString()))
+                {
+                    return id.ToString();
+                }
+            }
+        }
+
 
         // GET: api/GameMaster
         [HttpGet]
@@ -36,76 +61,19 @@ namespace BlockchainDemonstratorApi.Controllers
             return await _context.GameMasters.ToListAsync();
         }
 
-        // GET: api/GameMaster/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<GameMaster>> GetGameMaster(string id)
+        // POST: api/BeerGame/GetGameMaster
+        [HttpPost("GetGameMaster")]
+        public ActionResult<GameMaster> GetGameMaster([FromBody] string gameMasterId)
         {
-            var gameMaster = await _context.GameMasters.FindAsync(id);
+            if (gameMasterId == "") return BadRequest();
+
+            var gameMaster = _context.GameMasters.FirstOrDefault(g => g.Id == gameMasterId);
 
             if (gameMaster == null)
             {
                 return NotFound();
             }
-
             return gameMaster;
-        }
-
-        // PUT: api/GameMaster/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutGameMaster(string id, GameMaster gameMaster)
-        {
-            if (id != gameMaster.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(gameMaster).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GameMasterExistsFunc(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/GameMaster
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<GameMaster>> PostGameMaster(GameMaster gameMaster)
-        {
-            _context.GameMasters.Add(gameMaster);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (GameMasterExistsFunc(gameMaster.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetGameMaster", new { id = gameMaster.Id }, gameMaster);
         }
 
         // DELETE: api/GameMaster/5
