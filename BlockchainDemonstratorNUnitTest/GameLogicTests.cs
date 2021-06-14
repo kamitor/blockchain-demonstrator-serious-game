@@ -47,12 +47,11 @@ namespace BlockchainDemonstratorNUnitTest
             _game.Processor.CurrentOrder = new Order { Volume = 12 };
             _game.Farmer.CurrentOrder = new Order { Volume = 13 };
         }
-        
         [Test]
         public void ProgressIncomingOrdersTests()
         {
             _game.Progress();
-            
+           
             Assert.Multiple(() =>
             {
                 Assert.IsTrue(_game.Retailer.IncomingOrders[0].Volume >= 5 && _game.Retailer.IncomingOrders[0].Volume <= 15);
@@ -79,6 +78,7 @@ namespace BlockchainDemonstratorNUnitTest
 
         [Test]
         [Repeat(25)]
+
         public void ProgressIncomingDeliveries()
         {
             _game.Progress();
@@ -95,6 +95,7 @@ namespace BlockchainDemonstratorNUnitTest
         [Test]
         [Repeat(25)]
         public void ProgressProcessDeliveries()
+
         {
             _game.Progress();
 
@@ -131,7 +132,7 @@ namespace BlockchainDemonstratorNUnitTest
             
             Assert.AreEqual(10, result);
         }
-        
+      
         [Test]
         public void OrderPriceSubtractedFromBalance_expectTrue()
         {

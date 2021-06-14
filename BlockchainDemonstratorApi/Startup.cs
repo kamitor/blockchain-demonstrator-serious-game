@@ -51,7 +51,7 @@ namespace BlockchainDemonstratorApi
                             .AllowAnyMethod().AllowCredentials();
                         builder.WithOrigins("https://142.93.130.201:5003").AllowAnyHeader()
                             .AllowAnyMethod().AllowCredentials();
-                        builder.WithOrigins("http://13.81.37.9/").AllowAnyHeader()
+                        builder.WithOrigins("http://13.81.37.9").AllowAnyHeader()
                             .AllowAnyMethod().AllowCredentials();
                     });
             });

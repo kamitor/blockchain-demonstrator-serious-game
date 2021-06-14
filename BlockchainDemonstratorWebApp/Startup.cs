@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Blockchain_Demonstrator_Web_App.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,18 +45,25 @@ namespace Blockchain_Demonstrator_Web_App
             else
             {
                 Config.WebApplicationUrl = "http://localhost:5000";
-                Config.RestApiUrl = "http://127.0.0.1:5002";
+                Config.RestApiUrl = "http://13.81.37.9:8080";
                 
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions()
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+            
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
