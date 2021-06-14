@@ -23,6 +23,15 @@ namespace BlockchainDemonstratorApi.Controllers
             _context = context;
         }
 
+        [HttpPost("CreateGame")]
+        public ActionResult CreateGame()
+        {
+            Game game = new Game(GetUniqueId());
+            _context.Games.Add(game);
+            _context.SaveChanges();
+            return Ok();
+        }
+
         /// <summary>Creates a unique id using six numbers</summary>
         /// <returns>Unique id as string</returns>
         /// <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>

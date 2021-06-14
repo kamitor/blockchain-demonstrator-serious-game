@@ -31,7 +31,7 @@ namespace BlockchainDemonstratorApi.Hubs
 
             if (player != null)
                 player.CurrentOrder = new Order(){Volume = Convert.ToInt32(volume)};
-            
+
             /*game.Manufacturer.CurrentOrder = new Order() { Volume = 15 };
             game.Processor.CurrentOrder = new Order() { Volume = 15 };
             game.Farmer.CurrentOrder = new Order() { Volume = 15 };*/

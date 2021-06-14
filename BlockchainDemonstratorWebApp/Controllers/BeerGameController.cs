@@ -63,20 +63,6 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return BadRequest();
         }
 
-        public IActionResult CreateGame()
-        {
-            using (var client = new HttpClient())
-            {
-                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/CreateGame", null).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return Ok();
-                }
-            }
-            return BadRequest();
-        }
-
         public IActionResult ChooseRoleAndName(string gameId)
         {
             ViewData["RestApiUrl"] = Config.RestApiUrl;
