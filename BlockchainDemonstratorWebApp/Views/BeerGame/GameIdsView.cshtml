@@ -1,0 +1,35 @@
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@model List<Game>
+
+@foreach(Game game in Model)
+    {
+        <div>
+             <!-- The text field -->
+                    <input type="text" id="@game.Id" size="20" value="@game.Id" readonly>
+            
+                    <!-- The button used to copy the text -->
+                    <button onclick="CopyFunction(@game.Id)">Copy text</button>
+        </div>
+    }
+
+@section Scripts
+{
+    <script>
+    
+    
+    function CopyFunction(elementId) {
+          /* Get the text field */
+          let text = $(`#${elementId}`)
+          
+          text.select();
+        
+          /* Copy the text inside the text field */
+          document.execCommand("copy");
+        
+          /* Alert the copied text */
+          alert("Copied the text: " + text.val());
+    }
+    
+        
+    </script>
+}
