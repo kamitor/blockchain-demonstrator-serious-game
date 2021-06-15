@@ -73,15 +73,17 @@
             BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OrderWorthHistory)), @Html.Raw(Graphs.CreateOrderWorthDataSets(Model.Players)), "orderWorthChart", "Order worth");
             BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OverallProfitHistory)), @Html.Raw(Graphs.CreateOverallProfitDataSets(Model.Players)), "overallProfitChart", "Overall profit");
             BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.GrossProfitHistory)), @Html.Raw(Graphs.CreateGrossProfitDataSets(Model.Players)), "grossProfitChart", "Gross profit");
-        })
+        });
         let switchGrid = () => {
             if ($(".graphs-grid").css("display") != "none" && $(".info-grid").css("display") == "none") {
                 $(".graphs-grid").hide()
                 $(".info-grid").show();
+                $(".switch-button").text("Show graphs");
             }
             else if ($(".graphs-grid").css("display") == "none" && $(".info-grid").css("display") != "none") {
                 $(".graphs-grid").show()
                 $(".info-grid").hide();
+                $(".switch-button").text("Show latest information");
             }
         }
     </script>

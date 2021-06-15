@@ -78,10 +78,12 @@
             if ($(".graphs-grid").css("display") != "none" && $(".info-grid").css("display") == "none") {
                 $(".graphs-grid").hide()
                 $(".info-grid").show();
+                $(".switch-button").text("Show graphs");
             }
             else if ($(".graphs-grid").css("display") == "none" && $(".info-grid").css("display") != "none") {
                 $(".graphs-grid").show()
                 $(".info-grid").hide();
+                $(".switch-button").text("Show latest information");
             }
         }
     </script>

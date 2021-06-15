@@ -75,6 +75,7 @@
 .switch-button {
     border: none;
     color: white;
+    align-items: center;
 }
 
 .graphs-grid {
