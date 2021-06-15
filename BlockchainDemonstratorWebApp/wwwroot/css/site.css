@@ -164,6 +164,18 @@ body {
 }
 
 /*------------Specific elements------------*/
+.login-button {
+    height: 100%;
+    width: 75px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border: none;
+    outline: none;
+    color: white;
+    border-radius: 10px;
+}
+
 .game-id {
     height: auto;
     width: 25%;

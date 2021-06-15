@@ -36,6 +36,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     if (responseString != null)
                     {
                         ViewData["RestApiUrl"] = Config.RestApiUrl;
+                        ViewData["GameMasterId"] = (gameMasterId != null) ? gameMasterId : "";
                         return View(JsonConvert.DeserializeObject<List<Game>>(responseString));
                     }
                 }

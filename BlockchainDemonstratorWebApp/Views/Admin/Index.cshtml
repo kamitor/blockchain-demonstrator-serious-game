@@ -15,7 +15,10 @@
             <thead class="secondary-text">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Id)
+                        Game id
+                    </th>
+                    <th>
+                        Game master id
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Players)
@@ -31,6 +34,9 @@
                     <tr onclick="selectGame(this)">
                         <td>
                             @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GameMasterId)
                         </td>
                         <td>
                             @{
@@ -90,16 +96,17 @@
         }
         let addGame = () => {
             $.ajax({
-                url: `@ViewData["RestApiUrl"]/api/BeerGame/CreateGame`,
+                url: `@ViewData["RestApiUrl"]/api/BeerGame/@if((string)ViewData["GameMasterId"]!=""){@Html.Raw("CreateGameWithGameMaster")}else{@Html.Raw("CreateGame")}`,
                 type: "POST",
                 contentType: "application/JSON",
+                @if((string)ViewData["GameMasterId"]!=""){@Html.Raw("data: JSON.stringify(\""+ViewData["GameMasterId"]+"\"),\n")}
                 dataType: "text"
             }).then((result) => {
                 let game = JSON.parse(result);
                 let players = "";
                 for (let i = 0; i < game.Players.length; i++) {
                     players += game.Players[i].Name;
-                    if (i != game.Players.length - 1) players += ", "; 
+                    if (i != game.Players.length - 1) players += ", ";
                 }
                 let status = "";
                 if (!game.GameStarted) status = "Waiting for players";
@@ -107,6 +114,7 @@
                 else status = '<span class="gradient-font">Playing</span>'
                 $("tbody").append($(`<tr onclick="selectGame(this)">
                                         <td>${game.Id}</td>
+                                        <td>${game.GameMasterId}</td>
                                         <td>${players}</td>
                                         <td>${status}</td>
                                     </tr>`));

@@ -18,7 +18,7 @@
     }
 
     .game-list th{
-        width: 30%;
+        width: 1%;
     }
 
     .game-list tr:hover{
@@ -41,7 +41,7 @@
     }
 
     .game-master-list th {
-        width: 46%;
+        width: 1%;
     }
 
     .game-master-list tr:hover {

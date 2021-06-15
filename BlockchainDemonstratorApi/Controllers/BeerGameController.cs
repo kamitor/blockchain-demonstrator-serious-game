@@ -32,6 +32,16 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
+        [HttpPost("CreateGameWithGameMaster")]
+        public ActionResult<Game> CreateGameWithGameMaster([FromBody] string gameMasterId)
+        {
+            Game game = new Game(GetUniqueId());
+            if (gameMasterId != null) game.GameMasterId = gameMasterId;
+            _context.Games.Add(game);
+            _context.SaveChanges();
+            return game;
+        }
+
         /// <summary>Creates a unique id using six numbers</summary>
         /// <returns>Unique id as string</returns>
         /// <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>

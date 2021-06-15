@@ -34,7 +34,7 @@ Site = (() => {
         else {
             $("#navbar-list").append($(`
                 <li style="margin-left:auto" class="nav-item">
-                    <a href="/home/login" class="btn btn-outline-primary my-2 my-sm-0 login-color">Login</a>
+                    <a href="/home/login" class="login-button gradient tertiary-text">Login</a>
                 </li>
             `));
         }
