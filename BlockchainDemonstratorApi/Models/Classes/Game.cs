@@ -123,7 +123,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		}
 
 		/// <summary>
-		/// Makes game Progress to next round
+		/// This is the main function of the Game class. 
+		/// This function progresses the game by triggering functions inside this function.
 		/// </summary>
 		public void Progress()
 		{
@@ -185,6 +186,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		}
 
 		/// <summary>
+		/// Used to setup the game when it first starts.
 		/// Method sets the base variables for each player
 		/// </summary>
 		public void SetupGame()
