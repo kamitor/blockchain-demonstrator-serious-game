@@ -205,9 +205,10 @@ namespace BlockchainDemonstratorApi.Controllers
         public ActionResult<string> CheckInGame([FromBody] string playerId)
         {
             if (playerId == null) return BadRequest();
-            return _context.Games.AsEnumerable()
-                .FirstOrDefault(g => g.Players
-                     .Any(p => p.Id.Equals(playerId))).Id;
+            var game =  _context.Games.AsEnumerable()
+                .FirstOrDefault(g => g != null && g.Players
+                     .Any(p => String.Equals(p.Id, playerId)));
+            return (game != null) ? game.Id : "";
         }
 
         // POST: api/BeerGame/Login
