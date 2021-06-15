@@ -42,32 +42,19 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				.Sum(p => p.Amount);
 		}
 
-		/* Old shite
-		 int backorder = 0;
-		 int maxOrderDay = 0;
-		 if(IncomingOrders.Count != 0) maxOrderDay = IncomingOrders.Max(o => o.OrderDay);
-		 if (IncomingOrders.Count == 1)
-		 {
-			 backorder = IncomingOrders[0].Volume - IncomingOrders[0].Deliveries.Sum(x => x.Volume);
-		 }
-		 else
-		 {
-			 foreach (Order incomingOrder in IncomingOrders)
-			 {
-				 if(incomingOrder.OrderDay != maxOrderDay) backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
-			 } 
-		 }
-		 return backorder;
-		 */
 		[NotMapped]
 		public int Backorder { get; set; }
 
+		/// <summary>
+		/// The order of the current round placed by the player himself.
+		/// </summary>
 		public virtual Order CurrentOrder { get; set; }
 
 		private List<Order> _outgoingOrders;
 
 		/// <summary>
-		/// The orders from the player itself
+		/// The list of orders from the player itself.
+		/// This list is made to keep track of all orders the player has made.
 		/// </summary>
 		[ForeignKey("OutgoingOrderForPlayerId")]
 		public virtual List<Order> OutgoingOrders
@@ -79,7 +66,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		private List<Order> _incomingOrders;
 
 		/// <summary>
-		/// Order sent from your customer
+		/// The list of orders sent from your customer.
+		/// This orders in this list are temporary and are removed from the list after completion.
 		/// </summary>
 		[ForeignKey("IncomingOrderForPlayerId")]
 		public virtual List<Order> IncomingOrders
@@ -162,7 +150,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			Payments = new List<Payment>();
 		}
 
-		//TODO: doc blocks are incorrect
 		/// <summary>Gets list of outgoing deliveries</summary>
 		/// <returns>List of Order objects with available stock</returns>
 		/// <param name="currentDay">integer that specifies the current day</param>
@@ -223,7 +210,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>
 		/// <remarks>Also adds a payment object to the Payments list for each received delivery</remarks>
 		/// <param name="currentDay">integer that specifies the current day</param>
-		public void ProcessDeliveries(int currentDay) //Reworked to new order system
+		public void ProcessDeliveries(int currentDay) 
 		{
 			foreach (Order order in OutgoingOrders)
 			{

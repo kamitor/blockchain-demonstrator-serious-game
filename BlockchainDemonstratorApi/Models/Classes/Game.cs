@@ -319,7 +319,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		#endregion
 
-		/// <summary>Sets IncomingOrder for every actor</summary>
+		/// <summary>
+		/// Prepares the CurrentOrder of every actor
+		/// Places the CurrentOrder into the IncomingOrders list for the actor
+		/// </summary>
 		private void SendOrders()
 		{
 			AddCurrentDay();
@@ -398,13 +401,17 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		///<summary>
 		///Processes and sends through incomingOrders
 		///</summary>
-		private void SendDeliveries() //Reworked to new order system
+		///<remarks>
+		///The farmer gets his deliveries through the manually 
+		///added delivery instead of the GetOutgoingDeliveries, 
+		///because the harvester does not have an player class
+		///</remarks>
+		private void SendDeliveries() 
 		{
 			Retailer.GetOutgoingDeliveries(CurrentDay);
 			Manufacturer.GetOutgoingDeliveries(CurrentDay);
 			Processor.GetOutgoingDeliveries(CurrentDay);
 			Farmer.GetOutgoingDeliveries(CurrentDay);
-			//TODO(Mees): this fixes the delivery problem for the farmer but it is an ugly solution imo
 			Farmer.CurrentOrder.Deliveries = new List<Delivery>()
 			{
 				new Delivery()
@@ -418,7 +425,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		}
 
 		///<summary>
-		///Causes each actor to process their deliveries
+		///Triggers the ProcessDeliveries function of each actor to process their deliveries
 		///</summary>
 		private void ProcessDeliveries()
 		{
