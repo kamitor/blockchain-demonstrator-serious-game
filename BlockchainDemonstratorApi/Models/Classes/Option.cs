@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+    /// <summary>
+    /// This class  represents the supply chain options each role has.
+    /// In total, there are 16 different options, which can be found in the SeedData.
+    /// </summary>
     public class Option
     {
         [Key]

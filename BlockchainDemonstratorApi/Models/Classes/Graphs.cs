@@ -5,8 +5,22 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+    /// <summary>
+    /// This class is used to make creating graphs a lot easier and efficient.
+    /// </summary>
+    /// <remarks>With the end of the development cycle approaching, 
+    /// reconsiderations of this class were thought of. Because the data can be
+    /// send through as JSON objects between the C# code and JS. This would deprecate most of these methods.
+    /// If need be to change the use of the graphs, considering JSON as a form of transportation can be a more suffecient option.
+    /// </remarks>
     public static class Graphs
     {
+        /// <summary>
+        /// This method creates the labels of the graph in rounds.
+        /// </summary>
+        /// <typeparam name="T">The type of the object list</typeparam>
+        /// <param name="list">List of objects used in the graph</param>
+        /// <returns>Returns a Javascript array in the form of a string.</returns>
         public static string CreateLabels<T>(List<T> list)
         {
             string labels = "[";
@@ -19,6 +33,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
             return labels;
         }
 
+        /// <summary>
+        /// This function creates the data array for the graph.
+        /// </summary>
+        /// <typeparam name="T">The type of the object list.</typeparam>
+        /// <param name="list">List of objects used in the graph.</param>
+        /// <returns>Returns a Javascript array in the form of a string.</returns>
         public static string CreateData<T>(List<T> list)
         {
             string data = "[";
@@ -31,6 +51,13 @@ namespace BlockchainDemonstratorApi.Models.Classes
             return data;
         }
 
+        /// <summary>
+        /// This method creates a data set for the graphs. Each dataset is represented as one line in the graph.
+        /// </summary>
+        /// <param name="data">The string of data created with the CreateData function.</param>
+        /// <param name="name">The name that should represent the line.</param>
+        /// <param name="lineColour">The colour of the line in the graph.</param>
+        /// <returns>Returns a dataset object literal in as a string.</returns>
         public static string CreateDataSet(string data, string name, string lineColour)
         {
             return @"{

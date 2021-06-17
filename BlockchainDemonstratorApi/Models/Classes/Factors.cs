@@ -3,6 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+    /// <summary>
+    /// This class is used to store several variables in a static manner.
+    /// The class contains duplicate properties, one of which is static 
+    /// and used in the code and the other not static used to store the variable in the database.
+    /// The reason why the variables are duplicate, is because Entity Framework cannot store static properties.
+    /// With this workaround, many variables can still be used globally, making the development proces less complicated.
+    /// </summary>
     public class Factors
     {
         [Key]

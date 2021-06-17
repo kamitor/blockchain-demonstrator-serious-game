@@ -151,8 +151,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		}
 
 		/// <summary>Gets list of outgoing deliveries</summary>
-		/// <returns>List of Order objects with available stock</returns>
-		/// <param name="currentDay">integer that specifies the current day</param>
+		/// <param name="currentDay">Integer that specifies the current day</param>
 		public void GetOutgoingDeliveries(int currentDay)
 		{
 			Backorder = 0;

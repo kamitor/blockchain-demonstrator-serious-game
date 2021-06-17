@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace Blockchain_Demonstrator_Web_App.Models
 {
+    /// <summary>
+    /// This attribute is used to check the cookie of a request.
+    /// With this attribute, a view or controller can be closed off to only a certain authority, such as the Admin or Game master.
+    /// Use this attribute by calling the constructor with the authority that matches the cookie ID.
+    /// </summary>
     public class AuthorityCookieAttribute : ActionFilterAttribute
     {
         private string _authority;

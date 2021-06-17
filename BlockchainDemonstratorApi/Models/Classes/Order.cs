@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+    /// <summary>
+    /// This class is used to send orders from the customer to the supplier in the supply chain.
+    /// </summary>
     public class Order
     {
         [Key] 
@@ -28,11 +31,17 @@ namespace BlockchainDemonstratorApi.Models.Classes
         /// </summary>
         public int OrderNumber { get; set; }
         
+        /// <summary>
+        /// The day on which the order was sent.
+        /// </summary>
         public int OrderDay { get; set; }
         
         private int _volume;
 
-        [Range(0, double.MaxValue)]
+        /// <summary>
+        /// The volume of the order is what is requested by the customer.
+        /// </summary>
+        [Range(0, int.MaxValue)]
         public int Volume
         {
             get { return _volume; }
@@ -50,6 +59,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
         }
 
         private List<Delivery> _deliveries = new List<Delivery>();
+        /// <summary>
+        /// This list contains all the deliveries sent by the supplier of the given order.
+        /// </summary>
         [ForeignKey("OrderId")]
         public virtual List<Delivery> Deliveries
         {

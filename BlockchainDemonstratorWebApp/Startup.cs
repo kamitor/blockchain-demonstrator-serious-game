@@ -38,13 +38,11 @@ namespace Blockchain_Demonstrator_Web_App
         {
             if (env.IsDevelopment())
             {
-                Config.WebApplicationUrl = "https://localhost:44313";
                 Config.RestApiUrl = "https://localhost:44393";
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                Config.WebApplicationUrl = "http://localhost:5000";
                 Config.RestApiUrl = "http://13.81.37.9:8080";
                 
                 app.UseExceptionHandler("/Home/Error");
