@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
 {
+	[AuthorityCookie("Admin")]
 	public class FactorsController : Controller
 	{
 		public FactorsController()
