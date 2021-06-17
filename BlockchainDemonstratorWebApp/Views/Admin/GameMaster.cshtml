@@ -1,0 +1,105 @@
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@model IEnumerable<GameMaster>
+@{
+    ViewData["Title"] = "Game masters";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/GameMaster.css" />
+</head>
+
+<div class="game-grid">
+    <div class="game-master-list box">
+        <table class="table">
+            <thead class="secondary-text">
+                <tr>
+                    <th>
+                        Game master id
+                    </th>
+                    <th>
+                        Amount of games
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="tertiary-text">
+                @foreach (var item in Model)
+                {
+                    <tr onclick="selectGameMaster(this)">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @item.Games.Count
+                        </td>
+                        <td>
+                            @if (item.Games.Any(g => g.Players.Count == 4 && g.CurrentDay != Factors.RoundIncrement * 8 + 1))
+                            {
+                                <span class="gradient-font">Active</span>
+                            }
+                            else
+                            {
+                                @Html.Raw("Inactive");
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="bottom-buttons-container">
+        <button style="outline:none" id="add-game-master-button" class="box secondary-text gradient bottom-game-button" onclick="addGameMaster()">
+            Add game master
+        </button>
+        <button style="outline: none; filter: grayscale(100%)" id="view-game-master-button" class="box secondary-text gradient bottom-game-button" onclick="viewGameMaster()" disabled>
+            View game master games
+        </button>
+        <button style="outline: none; filter: grayscale(100%)" id="delete-game-master-button" class="box secondary-text gradient bottom-game-button" onclick="deleteGameMaster()" disabled>
+            Delete game master
+        </button>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        let selectGameMaster = (tr) => {
+            $("#chosen-game").removeAttr("id");
+            $(tr).attr("id", "chosen-game");
+            $("#view-game-master-button").attr("disabled", false);
+            $("#view-game-master-button").css("filter", "");
+            $("#delete-game-master-button").attr("disabled", false);
+            $("#delete-game-master-button").css("filter", "");
+        }
+        let addGameMaster = () => {
+            $.ajax({
+                url: `@ViewData["RestApiUrl"]/api/GameMaster/CreateGameMaster`,
+                type: "POST",
+                contentType: "application/JSON",
+                dataType: "text"
+            }).then((result) => {
+                let gameMaster = JSON.parse(result);
+                $("tbody").append($(`<tr onclick="selectGameMaster(this)">
+                                        <td>${gameMaster.Id}</td>
+                                        <td>0</td>
+                                        <td>Inactive</td>
+                                    </tr>`));
+            });
+        }
+        let viewGameMaster = () => {
+            $('body').append($(`<form method="post" id="viewGameMasterForm" action="/admin/index" style="display:none;">
+                                            <input name=gameMasterId type="hidden" value="${$("#chosen-game > td:eq(0)")[0].innerText}"/>
+                                        </form>`));
+            $("#viewGameMasterForm").submit();
+        }
+        let deleteGameMaster = () => {
+            $('body').append($(`<form method="post" id="deleteGameMasterForm" action="/admin/deletegamemaster" style="display:none;">
+                                            <input name=gameMasterId type="hidden" value="${$("#chosen-game > td:eq(0)")[0].innerText}"/>
+                                        </form>`));
+            $("#deleteGameMasterForm").submit();
+        }
+    </script>
+}
+
+

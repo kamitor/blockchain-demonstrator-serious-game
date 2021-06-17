@@ -26,16 +26,6 @@ namespace BlockchainDemonstratorNUnitTest
         }
 
         [Test]
-        public void JoinNullGameTest()
-        {
-            Player player = new Player("FarmerTest");
-            player.Role = new Role("Farmer", 10, Product.Seeds);
-            _game.Farmer = player;
-            _game.Farmer = null;
-            Assert.AreEqual(player, _game.Farmer);
-        }
-
-        [Test]
         public void JoinWrongRoleTest()
         {
             Player player = new Player("FarmerTest");

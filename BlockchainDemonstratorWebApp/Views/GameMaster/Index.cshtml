@@ -1,0 +1,83 @@
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@model IEnumerable<Game>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/GameMaster.css"/>
+</head>
+
+<div class="game-grid">
+    <div class="game-list box">
+        <table class="table">
+            <thead class="secondary-text">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Players)
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="tertiary-text">
+                @foreach (var item in Model)
+                {
+                    <tr onclick="selectGame(this)">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @{
+                                string players = "";
+                                for (int i = 0; i < item.Players.Count; i++)
+                                {
+                                    players += item.Players[i].Name;
+                                    if (i != item.Players.Count - 1) players += ", ";
+                                }
+                                @Html.Raw(players);
+                            }
+                        </td>
+                        <td>
+                            @if (!item.GameStarted)
+                            {@Html.Raw("Waiting for players");
+                        }
+                        else if (item.CurrentDay == Factors.RoundIncrement * 24 + 1)
+                        {@Html.Raw("Done");
+                    }
+                    else
+                    {
+                        <span class="gradient-font">Playing</span>
+                    }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <button style="filter: grayscale(100%)" id="view-game-button" class="box secondary-text gradient view-game-button" onclick="viewGame()" disabled>
+        View game
+    </button>
+</div>
+
+@section Scripts{ 
+    <script>
+        let selectGame = (tr) => {
+            $("#chosen-game").removeAttr("id");
+            $(tr).attr("id", "chosen-game");
+            $("#view-game-button").attr("disabled", false);
+            $("#view-game-button").css("filter", "");
+        }
+        let viewGame = () => {
+            $('body').append($(`<form method="post" id="viewGameForm" action="/gamemaster/beergame" style="display:none;">
+                                            <input name=gameId type="hidden" value="${$("#chosen-game > td:eq(0)")[0].innerText}"/>
+                                        </form>`));
+            $("#viewGameForm").submit();
+        }
+    </script>
+}

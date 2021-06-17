@@ -24,12 +24,22 @@ namespace BlockchainDemonstratorApi.Controllers
         }
 
         [HttpPost("CreateGame")]
-        public ActionResult CreateGame()
+        public ActionResult<Game> CreateGame()
         {
             Game game = new Game(GetUniqueId());
             _context.Games.Add(game);
             _context.SaveChanges();
-            return Ok();
+            return game;
+        }
+
+        [HttpPost("CreateGameWithGameMaster")]
+        public ActionResult<Game> CreateGameWithGameMaster([FromBody] string gameMasterId)
+        {
+            Game game = new Game(GetUniqueId());
+            if (gameMasterId != null) game.GameMasterId = gameMasterId;
+            _context.Games.Add(game);
+            _context.SaveChanges();
+            return game;
         }
 
         /// <summary>Creates a unique id using six numbers</summary>
@@ -172,7 +182,7 @@ namespace BlockchainDemonstratorApi.Controllers
 
         // POST: api/BeerGame/SendOrders
         [HttpPost("SendOrders")]
-        public ActionResult<Game> SendOrders([FromBody] dynamic data) //TODO: make singular later
+        public ActionResult<Game> SendOrders([FromBody] dynamic data)
         {
             if (data.gameId.Value == "") return BadRequest();
 
@@ -190,38 +200,90 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
-        // PUT: api/BeerGame/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutGame(string id, Game game)
+        // POST: api/BeerGame/CheckInGame
+        [HttpPost("CheckInGame")]
+        public ActionResult<string> CheckInGame([FromBody] string playerId)
         {
-            if (id != game.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(game).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GameExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            if (playerId == null) return BadRequest();
+            var game =  _context.Games.AsEnumerable()
+                .FirstOrDefault(g => g != null && g.Players
+                     .Any(p => String.Equals(p.Id, playerId)));
+            return (game != null) ? game.Id : "";
         }
 
+        // POST: api/BeerGame/Login
+        [HttpPost("Login")]
+        public ActionResult<dynamic> Login([FromBody] dynamic data)
+        {
+            if (data.id.Value == "") return BadRequest();
+            string id = (string)data.id;
+            string password = (string)data.password;
+            bool anyGameMaster = _context.GameMasters.Any(gm => gm.Id == id);
+            bool anyAdmin = _context.Admins.AsEnumerable().Any(a => a.Id == id && Cryptography.HashCompare(password, a.Password, a.Salt));
+            string loggedInAs = "";
+            if (anyGameMaster) loggedInAs = "GameMaster";
+            if (anyAdmin) loggedInAs = "Admin";
+            return new {
+                loggedIn = anyGameMaster || anyAdmin,
+                loggedInAs = loggedInAs
+            };
+        }
+
+        [HttpPost("EditGame")]
+        public ActionResult EditGame([FromBody] dynamic data)
+        {
+            if (data.Id.Value == "") return BadRequest();
+            string id = (string)data.Id.Value;
+            int currentDay = (int)data.CurrentDay.Value;
+            bool gameStarted = (bool)data.GameStarted.Value;
+            bool removeRetailer = (bool)data.remove_Retailer.Value;
+            bool removeManufacturer = (bool)data.remove_Manufacturer.Value;
+            bool removeProcessor = (bool)data.remove_Processor.Value;
+            bool removeFarmer = (bool)data.remove_Farmer.Value;
+            string gameMasterId = (string)data.GameMasterId.Value;
+
+            Game game = _context.Games.FirstOrDefault(g => g.Id == id);
+            game.CurrentDay = currentDay;
+            game.GameStarted = gameStarted;
+            game.GameMasterId = gameMasterId;
+            if (removeRetailer)
+            {
+                _context.Orders.RemoveRange(game.Retailer.OutgoingOrders);
+                _context.Orders.RemoveRange(game.Retailer.IncomingOrders);
+                if (game.Retailer.CurrentOrder != null) _context.Orders.Remove(game.Retailer.CurrentOrder);
+                _context.Payments.RemoveRange(game.Retailer.Payments);
+                _context.Players.Remove(game.Retailer);
+            }
+            if (removeManufacturer)
+            {
+                _context.Orders.RemoveRange(game.Manufacturer.OutgoingOrders);
+                _context.Orders.RemoveRange(game.Manufacturer.IncomingOrders);
+                if (game.Manufacturer.CurrentOrder != null) _context.Orders.Remove(game.Manufacturer.CurrentOrder);
+                _context.Payments.RemoveRange(game.Manufacturer.Payments);
+                _context.Players.Remove(game.Manufacturer);
+            }
+            if (removeProcessor)
+            {
+                _context.Orders.RemoveRange(game.Processor.OutgoingOrders);
+                _context.Orders.RemoveRange(game.Processor.IncomingOrders);
+                if(game.Processor.CurrentOrder != null) _context.Orders.Remove(game.Processor.CurrentOrder);
+                _context.Payments.RemoveRange(game.Processor.Payments);
+                _context.Players.Remove(game.Processor);
+            }
+            if (removeFarmer)
+            {
+                _context.Orders.RemoveRange(game.Farmer.OutgoingOrders);
+                _context.Orders.RemoveRange(game.Farmer.IncomingOrders);
+                if (game.Farmer.CurrentOrder != null) _context.Orders.Remove(game.Farmer.CurrentOrder);
+                _context.Payments.RemoveRange(game.Farmer.Payments);
+                _context.Players.Remove(game.Farmer);
+            }
+
+            _context.Games.Update(game);
+            _context.SaveChanges();
+            return Ok();
+        }
+        
         // POST: api/BeerGame
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -256,6 +318,15 @@ namespace BlockchainDemonstratorApi.Controllers
             if (game == null)
             {
                 return NotFound();
+            }
+
+            foreach (Player player in game.Players) //TODO: see if deliveries get removed as well
+            {
+                _context.Orders.RemoveRange(player.OutgoingOrders);
+                _context.Orders.RemoveRange(player.IncomingOrders);
+                if (player.CurrentOrder != null) _context.Orders.Remove(player.CurrentOrder);
+                _context.Payments.RemoveRange(player.Payments);
+                _context.Players.Remove(player);
             }
 
             _context.Games.Remove(game);

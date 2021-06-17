@@ -20,7 +20,7 @@ namespace BlockchainDemonstratorApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://localhost:5002")
+                    webBuilder.UseUrls("http://localhost:5002", "https://localhost:5003")
                     .UseStartup<Startup>();
                 });
     }

@@ -1,5 +1,13 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿/*------------Global elements------------*/
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+    /*line-height: 1.6;*/
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
 a.navbar-brand {
     white-space: normal;
@@ -7,7 +15,6 @@ a.navbar-brand {
     word-break: break-all;
 }
 
-/* Provide sufficient contrast against white background */
 a {
     color: #0366d6;
 }
@@ -61,7 +68,6 @@ html {
 }
 
 body {
-    /* Margin bottom by footer height */
     margin-bottom: 60px;
 }
 
@@ -70,5 +76,924 @@ body {
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
+    line-height: 60px;
+}
+
+.container {
+    max-width: 1366px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0em;
+}
+
+.box {
+    position: relative;
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
+}
+
+    .box:before {
+        position: absolute;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
+        left: -5px;
+        bottom: -8px;
+        opacity: 0.8;
+        border-radius: 10px;
+        background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
+        -webkit-filter: blur(7px);
+        -moz-filter: blur(7px);
+        -o-filter: blur(7px);
+        -ms-filter: blur(7px);
+        filter: blur(7px);
+        content: '';
+    }
+
+.gradient {
+    background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
+}
+
+.gradient-font {
+    display: inline;
+    background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.head-text {
+    font-size: 76px;
+    line-height: 0.8;
+    font-family: 'Segoe UI';
+    color: #525252;
+    font-weight: bold;
+}
+
+.main-text {
+    font-size: 38px;
+    line-height: 1.3;
+    font-family: 'Segoe UI';
+    color: #525252;
+    font-weight: bold;
+}
+
+.secondary-text {
+    font-size: 26px;
+    line-height: 1;
+    font-family: 'Segoe UI';
+    color: #525252;
+    font-weight: bold;
+}
+
+.tertiary-text {
+    font-size: 18px;
+    line-height: 1;
+    font-family: 'Segoe UI';
+    color: #525252;
+    font-weight: bold;
+}
+
+.quarternary-text {
+    font-size: 12px;
+    line-height: 1;
+    font-family: 'Segoe UI';
+    color: #525252;
+    font-weight: bold;
+}
+
+/*------------Specific elements------------*/
+.login-button {
+    height: 100%;
+    width: 75px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border: none;
+    outline: none;
+    color: white;
+    border-radius: 10px;
+}
+
+.game-id {
+    height: auto;
+    width: 25%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 5%;
+}
+
+.input-id {
+    height: 30px;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-align: center;
+    font-size: 30px;
+    height: auto;
+}
+
+.input-button {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    width: 100%;
+    outline: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    height: auto;
+}
+
+.choiceForm {
+    height: 35%;
+    width: 35%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 17.5%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: space-evenly;
+}
+
+.middle-form {
+    height: 45%;
+    width: 35%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 17.5%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.rejoinButton {
+    display: block;
+    width: 45%;
+    border: none;
+    outline: none;
+    color: white;
+    border-radius: 10px;
+}
+
+.endGrid {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
+
+.endText {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.endStatistics {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.login-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.login-form {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-top: 22%;
+    align-items: center;
+}
+
+.login-failed {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+    align-items: center;
+}
+
+.text-input {
+    border: none;
+    outline: none;
+    background-color: lavender;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/*------------Animation elements------------*/
+.lds {
+    position: relative;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 350px;
+    justify-content: center;
+    margin-top: 20%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.cssload-dots {
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    outline: 1px solid red;
+    filter: url(#goo);
+    -o-filter: url(#goo);
+    -ms-filter: url(#goo);
+    -webkit-filter: url(#goo);
+    -moz-filter: url(#goo);
+}
+
+.cssload-dot {
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+    .cssload-dot:before {
+        content: "";
+        width: 32px;
+        height: 32px;
+        border-radius: 46px;
+        background: rgba(50,60,151,0.94);
+        position: absolute;
+        left: 50%;
+        transform: translateY(0);
+        -o-transform: translateY(0);
+        -ms-transform: translateY(0);
+        -webkit-transform: translateY(0);
+        -moz-transform: translateY(0);
+        margin-left: -16.5px;
+        margin-top: -16.5px;
+    }
+
+
+
+    .cssload-dot:nth-child(5):before {
+        z-index: 100;
+        width: 42.5px;
+        height: 42.5px;
+        margin-left: -20.75px;
+        margin-top: -20.75px;
+        animation: cssload-dot-colors 4.6s ease infinite;
+        -o-animation: cssload-dot-colors 4.6s ease infinite;
+        -ms-animation: cssload-dot-colors 4.6s ease infinite;
+        -webkit-animation: cssload-dot-colors 4.6s ease infinite;
+        -moz-animation: cssload-dot-colors 4.6s ease infinite;
+    }
+
+
+    .cssload-dot:nth-child(1) {
+        animation: cssload-dot-rotate-1 4.6s 0s linear infinite;
+        -o-animation: cssload-dot-rotate-1 4.6s 0s linear infinite;
+        -ms-animation: cssload-dot-rotate-1 4.6s 0s linear infinite;
+        -webkit-animation: cssload-dot-rotate-1 4.6s 0s linear infinite;
+        -moz-animation: cssload-dot-rotate-1 4.6s 0s linear infinite;
+    }
+
+        .cssload-dot:nth-child(1):before {
+            background-color: rgb(81,164,202);
+            animation: cssload-dot-move 4.6s 0s ease infinite;
+            -o-animation: cssload-dot-move 4.6s 0s ease infinite;
+            -ms-animation: cssload-dot-move 4.6s 0s ease infinite;
+            -webkit-animation: cssload-dot-move 4.6s 0s ease infinite;
+            -moz-animation: cssload-dot-move 4.6s 0s ease infinite;
+        }
+
+    .cssload-dot:nth-child(2) {
+        animation: cssload-dot-rotate-2 4.6s 1.15s linear infinite;
+        -o-animation: cssload-dot-rotate-2 4.6s 1.15s linear infinite;
+        -ms-animation: cssload-dot-rotate-2 4.6s 1.15s linear infinite;
+        -webkit-animation: cssload-dot-rotate-2 4.6s 1.15s linear infinite;
+        -moz-animation: cssload-dot-rotate-2 4.6s 1.15s linear infinite;
+    }
+
+        .cssload-dot:nth-child(2):before {
+            background-color: rgb(69,125,184);
+            animation: cssload-dot-move 4.6s 1.15s ease infinite;
+            -o-animation: cssload-dot-move 4.6s 1.15s ease infinite;
+            -ms-animation: cssload-dot-move 4.6s 1.15s ease infinite;
+            -webkit-animation: cssload-dot-move 4.6s 1.15s ease infinite;
+            -moz-animation: cssload-dot-move 4.6s 1.15s ease infinite;
+        }
+
+    .cssload-dot:nth-child(3) {
+        animation: cssload-dot-rotate-3 4.6s 2.3s linear infinite;
+        -o-animation: cssload-dot-rotate-3 4.6s 2.3s linear infinite;
+        -ms-animation: cssload-dot-rotate-3 4.6s 2.3s linear infinite;
+        -webkit-animation: cssload-dot-rotate-3 4.6s 2.3s linear infinite;
+        -moz-animation: cssload-dot-rotate-3 4.6s 2.3s linear infinite;
+    }
+
+        .cssload-dot:nth-child(3):before {
+            background-color: rgb(58,88,165);
+            animation: cssload-dot-move 4.6s 2.3s ease infinite;
+            -o-animation: cssload-dot-move 4.6s 2.3s ease infinite;
+            -ms-animation: cssload-dot-move 4.6s 2.3s ease infinite;
+            -webkit-animation: cssload-dot-move 4.6s 2.3s ease infinite;
+            -moz-animation: cssload-dot-move 4.6s 2.3s ease infinite;
+        }
+
+    .cssload-dot:nth-child(4) {
+        animation: cssload-dot-rotate-4 4.6s 3.45s linear infinite;
+        -o-animation: cssload-dot-rotate-4 4.6s 3.45s linear infinite;
+        -ms-animation: cssload-dot-rotate-4 4.6s 3.45s linear infinite;
+        -webkit-animation: cssload-dot-rotate-4 4.6s 3.45s linear infinite;
+        -moz-animation: cssload-dot-rotate-4 4.6s 3.45s linear infinite;
+    }
+
+        .cssload-dot:nth-child(4):before {
+            background-color: rgb(50,58,151);
+            animation: cssload-dot-move 4.6s 3.45s ease infinite;
+            -o-animation: cssload-dot-move 4.6s 3.45s ease infinite;
+            -ms-animation: cssload-dot-move 4.6s 3.45s ease infinite;
+            -webkit-animation: cssload-dot-move 4.6s 3.45s ease infinite;
+            -moz-animation: cssload-dot-move 4.6s 3.45s ease infinite;
+        }
+
+@keyframes cssload-dot-move {
+    0% {
+        transform: translateY(0);
+    }
+
+    18%, 22% {
+        transform: translateY(-65px);
+    }
+
+    40%, 100% {
+        transform: translateY(0);
+    }
+}
+
+@-o-keyframes cssload-dot-move {
+    0% {
+        -o-transform: translateY(0);
+    }
+
+    18%, 22% {
+        -o-transform: translateY(-65px);
+    }
+
+    40%, 100% {
+        -o-transform: translateY(0);
+    }
+}
+
+@-ms-keyframes cssload-dot-move {
+    0% {
+        -ms-transform: translateY(0);
+    }
+
+    18%, 22% {
+        -ms-transform: translateY(-65px);
+    }
+
+    40%, 100% {
+        -ms-transform: translateY(0);
+    }
+}
+
+@-webkit-keyframes cssload-dot-move {
+    0% {
+        -webkit-transform: translateY(0);
+    }
+
+    18%, 22% {
+        -webkit-transform: translateY(-65px);
+    }
+
+    40%, 100% {
+        -webkit-transform: translateY(0);
+    }
+}
+
+@-moz-keyframes cssload-dot-move {
+    0% {
+        -moz-transform: translateY(0);
+    }
+
+    18%, 22% {
+        -moz-transform: translateY(-65px);
+    }
+
+    40%, 100% {
+        -moz-transform: translateY(0);
+    }
+}
+
+@keyframes cssload-dot-colors {
+    0% {
+        background-color: rgb(58,88,165);
+    }
+
+    25% {
+        background-color: rgb(69,125,184);
+    }
+
+    50% {
+        background-color: rgba(81,164,202,0.98);
+    }
+
+    75% {
+        background-color: rgb(89,193,216);
+    }
+
+    100% {
+        background-color: rgb(89,193,216);
+    }
+}
+
+@-o-keyframes cssload-dot-colors {
+    0% {
+        background-color: rgb(58,88,165);
+    }
+
+    25% {
+        background-color: rgb(69,125,184);
+    }
+
+    50% {
+        background-color: rgba(81,164,202,0.98);
+    }
+
+    75% {
+        background-color: rgb(89,193,216);
+    }
+
+    100% {
+        background-color: rgb(89,193,216);
+    }
+}
+
+@-ms-keyframes cssload-dot-colors {
+    0% {
+        background-color: rgb(58,88,165);
+    }
+
+    25% {
+        background-color: rgb(69,125,184);
+    }
+
+    50% {
+        background-color: rgba(81,164,202,0.98);
+    }
+
+    75% {
+        background-color: rgb(89,193,216);
+    }
+
+    100% {
+        background-color: rgb(89,193,216);
+    }
+}
+
+@-webkit-keyframes cssload-dot-colors {
+    0% {
+        background-color: rgb(58,88,165);
+    }
+
+    25% {
+        background-color: rgb(69,125,184);
+    }
+
+    50% {
+        background-color: rgba(81,164,202,0.98);
+    }
+
+    75% {
+        background-color: rgb(89,193,216);
+    }
+
+    100% {
+        background-color: rgb(89,193,216);
+    }
+}
+
+@-moz-keyframes cssload-dot-colors {
+    0% {
+        background-color: rgb(58,88,165);
+    }
+
+    25% {
+        background-color: rgb(69,125,184);
+    }
+
+    50% {
+        background-color: rgba(81,164,202,0.98);
+    }
+
+    75% {
+        background-color: rgb(89,193,216);
+    }
+
+    100% {
+        background-color: rgb(89,193,216);
+    }
+}
+
+@keyframes cssload-dot-rotate-1 {
+    0% {
+        transform: rotate(-105deg);
+    }
+
+    100% {
+        transform: rotate(270deg);
+    }
+}
+
+@-o-keyframes cssload-dot-rotate-1 {
+    0% {
+        -o-transform: rotate(-105deg);
+    }
+
+    100% {
+        -o-transform: rotate(270deg);
+    }
+}
+
+@-ms-keyframes cssload-dot-rotate-1 {
+    0% {
+        -ms-transform: rotate(-105deg);
+    }
+
+    100% {
+        -ms-transform: rotate(270deg);
+    }
+}
+
+@-webkit-keyframes cssload-dot-rotate-1 {
+    0% {
+        -webkit-transform: rotate(-105deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(270deg);
+    }
+}
+
+@-moz-keyframes cssload-dot-rotate-1 {
+    0% {
+        -moz-transform: rotate(-105deg);
+    }
+
+    100% {
+        -moz-transform: rotate(270deg);
+    }
+}
+
+@keyframes cssload-dot-rotate-2 {
+    0% {
+        transform: rotate(165deg);
+    }
+
+    100% {
+        transform: rotate(540deg);
+    }
+}
+
+@-o-keyframes cssload-dot-rotate-2 {
+    0% {
+        -o-transform: rotate(165deg);
+    }
+
+    100% {
+        -o-transform: rotate(540deg);
+    }
+}
+
+@-ms-keyframes cssload-dot-rotate-2 {
+    0% {
+        -ms-transform: rotate(165deg);
+    }
+
+    100% {
+        -ms-transform: rotate(540deg);
+    }
+}
+
+@-webkit-keyframes cssload-dot-rotate-2 {
+    0% {
+        -webkit-transform: rotate(165deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(540deg);
+    }
+}
+
+@-moz-keyframes cssload-dot-rotate-2 {
+    0% {
+        -moz-transform: rotate(165deg);
+    }
+
+    100% {
+        -moz-transform: rotate(540deg);
+    }
+}
+
+@keyframes cssload-dot-rotate-3 {
+    0% {
+        transform: rotate(435deg);
+    }
+
+    100% {
+        transform: rotate(810deg);
+    }
+}
+
+@-o-keyframes cssload-dot-rotate-3 {
+    0% {
+        -o-transform: rotate(435deg);
+    }
+
+    100% {
+        -o-transform: rotate(810deg);
+    }
+}
+
+@-ms-keyframes cssload-dot-rotate-3 {
+    0% {
+        -ms-transform: rotate(435deg);
+    }
+
+    100% {
+        -ms-transform: rotate(810deg);
+    }
+}
+
+@-webkit-keyframes cssload-dot-rotate-3 {
+    0% {
+        -webkit-transform: rotate(435deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(810deg);
+    }
+}
+
+@-moz-keyframes cssload-dot-rotate-3 {
+    0% {
+        -moz-transform: rotate(435deg);
+    }
+
+    100% {
+        -moz-transform: rotate(810deg);
+    }
+}
+
+@keyframes cssload-dot-rotate-4 {
+    0% {
+        transform: rotate(705deg);
+    }
+
+    100% {
+        transform: rotate(1080deg);
+    }
+}
+
+@-o-keyframes cssload-dot-rotate-4 {
+    0% {
+        -o-transform: rotate(705deg);
+    }
+
+    100% {
+        -o-transform: rotate(1080deg);
+    }
+}
+
+@-ms-keyframes cssload-dot-rotate-4 {
+    0% {
+        -ms-transform: rotate(705deg);
+    }
+
+    100% {
+        -ms-transform: rotate(1080deg);
+    }
+}
+
+@-webkit-keyframes cssload-dot-rotate-4 {
+    0% {
+        -webkit-transform: rotate(705deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(1080deg);
+    }
+}
+
+@-moz-keyframes cssload-dot-rotate-4 {
+    0% {
+        -moz-transform: rotate(705deg);
+    }
+
+    100% {
+        -moz-transform: rotate(1080deg);
+    }
+}
+
+.cssload-jumping {
+    position: relative;
+    display: block;
+    margin: 113px auto;
+    width: 124px;
+}
+
+    .cssload-jumping, .cssload-jumping * {
+        box-sizing: border-box;
+    }
+
+        .cssload-jumping span {
+            display: inline-block;
+            height: 17px;
+            width: 17px;
+            background: rgb(255,255,255);
+            border-radius: 563px;
+            background-clip: padding-box;
+            -o-background-clip: padding-box;
+            -ms-background-clip: padding-box;
+            -webkit-background-clip: padding-box;
+            -moz-background-clip: padding-box;
+        }
+
+            .cssload-jumping span:nth-child(1) {
+                animation: scale 1.3s 0.13s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -o-animation: scale 1.3s 0.13s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -ms-animation: scale 1.3s 0.13s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -webkit-animation: scale 1.3s 0.13s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -moz-animation: scale 1.3s 0.13s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+            }
+
+            .cssload-jumping span:nth-child(2) {
+                animation: scale 1.3s 0.26s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -o-animation: scale 1.3s 0.26s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -ms-animation: scale 1.3s 0.26s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -webkit-animation: scale 1.3s 0.26s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -moz-animation: scale 1.3s 0.26s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+            }
+
+            .cssload-jumping span:nth-child(3) {
+                animation: scale 1.3s 0.39s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -o-animation: scale 1.3s 0.39s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -ms-animation: scale 1.3s 0.39s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -webkit-animation: scale 1.3s 0.39s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -moz-animation: scale 1.3s 0.39s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+            }
+
+            .cssload-jumping span:nth-child(4) {
+                animation: scale 1.3s 0.52s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -o-animation: scale 1.3s 0.52s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -ms-animation: scale 1.3s 0.52s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -webkit-animation: scale 1.3s 0.52s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -moz-animation: scale 1.3s 0.52s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+            }
+
+            .cssload-jumping span:nth-child(5) {
+                animation: scale 1.3s 0.65s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -o-animation: scale 1.3s 0.65s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -ms-animation: scale 1.3s 0.65s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -webkit-animation: scale 1.3s 0.65s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+                -moz-animation: scale 1.3s 0.65s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+            }
+
+
+
+@keyframes scale {
+    0% {
+        transform: scale(0);
+    }
+
+    25% {
+        transform: scale(0.9, 0.9);
+        background: rgb(255,255,255);
+    }
+
+    50% {
+        transform: scale(1, 1);
+        margin: 0 3px;
+        background: rgb(255,255,255);
+    }
+
+    100% {
+        transform: scale(0);
+    }
+}
+
+@-o-keyframes scale {
+    0% {
+        -o-transform: scale(0);
+    }
+
+    25% {
+        -o-transform: scale(0.9, 0.9);
+        background: rgb(255,255,255);
+    }
+
+    50% {
+        -o-transform: scale(1, 1);
+        margin: 0 3px;
+        background: rgb(255,255,255);
+    }
+
+    100% {
+        -o-transform: scale(0);
+    }
+}
+
+@-ms-keyframes scale {
+    0% {
+        -ms-transform: scale(0);
+    }
+
+    25% {
+        -ms-transform: scale(0.9, 0.9);
+        background: rgb(255,255,255);
+    }
+
+    50% {
+        -ms-transform: scale(1, 1);
+        margin: 0 3px;
+        background: rgb(255,255,255);
+    }
+
+    100% {
+        -ms-transform: scale(0);
+    }
+}
+
+@-webkit-keyframes scale {
+    0% {
+        -webkit-transform: scale(0);
+    }
+
+    25% {
+        -webkit-transform: scale(0.9, 0.9);
+        background: rgb(255,255,255);
+    }
+
+    50% {
+        -webkit-transform: scale(1, 1);
+        margin: 0 3px;
+        background: rgb(255,255,255);
+    }
+
+    100% {
+        -webkit-transform: scale(0);
+    }
+}
+
+@-moz-keyframes scale {
+    0% {
+        -moz-transform: scale(0);
+    }
+
+    25% {
+        -moz-transform: scale(0.9, 0.9);
+        background: rgb(255,255,255);
+    }
+
+    50% {
+        -moz-transform: scale(1, 1);
+        margin: 0 3px;
+        background: rgb(255,255,255);
+    }
+
+    100% {
+        -moz-transform: scale(0);
+    }
 }

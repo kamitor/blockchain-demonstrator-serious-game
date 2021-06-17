@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
 {
+	[AuthorityCookie("Admin")]
 	public class FactorsController : Controller
 	{
 		public FactorsController()
@@ -37,24 +38,6 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 						ViewData["Roles"] = responseObject.roles.ToObject<List<Role>>();
 						return View(responseObject.defaultFactors.ToObject<Factors>());
 					}
-				}
-			}
-
-			return BadRequest();
-		}
-
-		// GET: Factors/Edit/5
-		public async Task<IActionResult> Edit(string id)
-		{
-			using (var client = new HttpClient())
-			{
-				var response = client.GetAsync(Config.RestApiUrl + "/api/Factors/" + id).Result;
-
-				if (response.IsSuccessStatusCode)
-				{
-					var responseContent = response.Content;
-					var responseString = responseContent.ReadAsStringAsync().Result;
-					if (responseString != null) return View(JsonConvert.DeserializeObject<Factors>(responseString));
 				}
 			}
 

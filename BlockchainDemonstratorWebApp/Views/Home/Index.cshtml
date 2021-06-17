@@ -2,21 +2,17 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to the Blockchain game</h1>
+<a asp-action="EndGame" asp-controller="BeerGame"  asp-route-gameId="745061" asp-route-playerId="0755a688-ab57-4362-ae1d-cfa7ff54510c">asdasd</a>
 
-    <p> <a href="https://localhost:44313/BeerGame/CreateGame">Create game method</a></p>
-    <p> <a href="https://localhost:44313/BeerGame/GamePinView">Join game page</a></p>
-    <p> <a href="https://localhost:44313/BeerGame/BeerGame">Player game page</a></p>
-    <p> <a href="https://localhost:44313/Factors">Game tuning page</a></p>
-    <p> <a href="https://localhost:44313/BeerGame">Game tuning game page</a></p>
-    <p> <a href="https://localhost:44313/Factors/Edit/DefaultFactors">Edit Factors</a></p>
-    <p> <a href="https://localhost:44313/BeerGame/Gamemaster">Gamemaster</a></p>
-    <p> <a href="https://localhost:44313/factors">Factors</a></p>
+<div class="login-grid">
+    <h2 style="margin-top:10%">THE BLOCKCHAIN DEMONSTATOR</h2> @*//TODO: make this look good*@
+    <h1 class="gradient-font">BEERGAME</h1>
+    <form style="padding:0px" id="gameIdBox" class="game-id box" asp-controller="BeerGame" asp-action="ChooseRoleAndName">
+        <input name="gameId" class="input-id" type="text" placeholder="Insert game id..." />
+        <input class="input-button gradient" type="button" value="Join game" onclick="joinGame()" />
+        <div class="gradient-shadow"></div>
+    </form>
 </div>
-
-<a asp-controller="BeerGame" asp-action="Graphs" asp-route-gameId="447127" asp-route-playerId="973f7486-1527-4a80-8f86-6b4416208a80">TESTGRAPHS</a>
-
 @section Scripts
 {
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
@@ -28,9 +24,8 @@
             if (playerId != null) {
                 BeerGame.checkInGame(playerId).then((result) => {
                     let gameId = JSON.parse(result);
-                    console.log(gameId);
                     if (gameId != null) {
-                        $("body").append($(`<form class="choiceForm box" style="flex-direction:row; margin-top:2%" id="join-game-form" action="/beergame/beergame">
+                        $("body").append($(`<form class="choiceForm box" style="flex-direction:row; margin-top:2%" id="join-game-form" action="/beergame">
                             <h4>Seems like you are already part of an ongoing game. Would you like to join this game?</h4>
                             <input class="rejoinButton gradient" type="submit" value="Join game">
                             <input class="rejoinButton gradient" type="button" onclick="(function () { $('#join-game-form').hide() })()" value="Cancel"/>

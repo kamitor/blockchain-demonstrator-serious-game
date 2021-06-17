@@ -27,6 +27,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 						throw new ArgumentException("Given role id does not match the expected role Retailer");
 					_retailer = value;
 				}
+                else
+                {
+					_retailer = value;
+                }
 			}
 		}
 
@@ -41,6 +45,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				{
 					if (value.Role.Id != "Manufacturer")
 						throw new ArgumentException("Given role id does not match the expected role Manufacturer");
+					_manufacturer = value;
+				}
+				else
+				{
 					_manufacturer = value;
 				}
 			}
@@ -59,6 +67,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 						throw new ArgumentException("Given role id does not match the expected role Processor");
 					_processor = value;
 				}
+				else
+				{
+					_processor = value;
+				}
 			}
 		}
 
@@ -73,6 +85,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				{
 					if (value.Role.Id != "Farmer")
 						throw new ArgumentException("Given role id does not match the expected role Farmer");
+					_farmer = value;
+				}
+				else
+				{
 					_farmer = value;
 				}
 			}
@@ -97,6 +113,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		public bool GameStarted { get; set; }
 
+		public string GameMasterId { get; set; }
+
 		public Game(string id)
 		{
 			Id = id;
@@ -105,10 +123,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		}
 
 		/// <summary>
-		/// Makes game Progress to next round
+		/// This is the main function of the Game class. 
+		/// This function progresses the game by triggering functions inside this function.
 		/// </summary>
 		public void Progress()
 		{
+			SaveHistory();
 			ProcessDeliveries();
 			SendDeliveries();
 
@@ -121,7 +141,52 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			CurrentDay += Factors.RoundIncrement;
 		}
 
+        private void SaveHistory()
+        {
+			SaveInventoryHistory();
+			SaveOrderWorthHistory();
+			SaveOverallProfitHistory();
+			SaveGrossProfitHistory();
+        }
+
+        private void SaveInventoryHistory()
+        {
+            foreach(Player player in Players)
+            {
+				List<int> newInventory = new List<int>() { player.Inventory };
+				player.InventoryHistory = player.InventoryHistory.Concat(newInventory).ToList();
+            }
+        }
+
+		private void SaveOrderWorthHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<double> newOrderWorth = new List<double>() { player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) };
+				player.OrderWorthHistory = player.OrderWorthHistory.Concat(newOrderWorth).ToList();
+			}
+		}
+
+		private void SaveOverallProfitHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<double> newOverallProfit = new List<double>() { player.Profit };
+				player.OverallProfitHistory = player.OverallProfitHistory.Concat(newOverallProfit).ToList();
+			}
+		}
+
+		private void SaveGrossProfitHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<double> newGrossProfit = new List<double>() { player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) - player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount) };
+				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
+			}
+		}
+
 		/// <summary>
+		/// Used to setup the game when it first starts.
 		/// Method sets the base variables for each player
 		/// </summary>
 		public void SetupGame()
@@ -254,7 +319,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		#endregion
 
-		/// <summary>Sets IncomingOrder for every actor</summary>
+		/// <summary>
+		/// Prepares the CurrentOrder of every actor
+		/// Places the CurrentOrder into the IncomingOrders list for the actor
+		/// </summary>
 		private void SendOrders()
 		{
 			AddCurrentDay();
@@ -280,7 +348,14 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			// Adding order number
 			foreach (Player player in Players)
 			{
-				player.CurrentOrder.OrderNumber = player.OutgoingOrders.Max(o => o.OrderNumber) + 1;
+				if (player.OutgoingOrders.Count != 0)
+				{
+					player.CurrentOrder.OrderNumber = player.OutgoingOrders.Max(o => o.OrderNumber) + 1;
+				}
+				else
+				{
+					player.CurrentOrder.OrderNumber = 1;
+				}
 			}
 		}
 
@@ -326,13 +401,17 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		///<summary>
 		///Processes and sends through incomingOrders
 		///</summary>
-		private void SendDeliveries() //Reworked to new order system
+		///<remarks>
+		///The farmer gets his deliveries through the manually 
+		///added delivery instead of the GetOutgoingDeliveries, 
+		///because the harvester does not have an player class
+		///</remarks>
+		private void SendDeliveries() 
 		{
 			Retailer.GetOutgoingDeliveries(CurrentDay);
 			Manufacturer.GetOutgoingDeliveries(CurrentDay);
 			Processor.GetOutgoingDeliveries(CurrentDay);
 			Farmer.GetOutgoingDeliveries(CurrentDay);
-			//TODO(Mees): this fixes the delivery problem for the farmer but it is an ugly solution imo
 			Farmer.CurrentOrder.Deliveries = new List<Delivery>()
 			{
 				new Delivery()
@@ -346,7 +425,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		}
 
 		///<summary>
-		///Causes each actor to process their deliveries
+		///Triggers the ProcessDeliveries function of each actor to process their deliveries
 		///</summary>
 		private void ProcessDeliveries()
 		{

@@ -25,19 +25,6 @@ namespace BlockchainDemonstratorApi.Data
         public DbSet<GameMaster> GameMasters { get; set; }
         public DbSet<Admin> Admins { get; set; }
 
-        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.RequestForPlayer)
-                .WithMany(p => p.IncomingOrders);
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.DeliveryToPlayer)
-                .WithMany(p => p.IncomingDeliveries);
-            modelBuilder.Entity<Order>()
-               .HasOne(o => o.HistoryOfPlayer)
-               .WithMany(p => p.OrderHistory);
-        }*/
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies();

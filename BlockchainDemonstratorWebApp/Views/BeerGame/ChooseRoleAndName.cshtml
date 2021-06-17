@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Choose name and role";
+    string playerId = @Guid.NewGuid().ToString();
+}
+
+<form id="choiceForm" class="choiceForm box"  asp-action="Index" asp-controller="BeerGame">
+    <div>
+        <h1>What's your name?</h1>
+        <input id="name" type="text" />
+    </div>
+    <div>
+        <h2>Choose your role</h2>
+        <input name="gameId" id="#gameId" type="hidden" value="@ViewData["GameId"]" />
+        <input name="playerId" id="#playerId" type="hidden" value="@playerId"/>
+        <input type="button" onclick="chooseRole('Retailer')" value="Retailer"/>
+        <input type="button" onclick="chooseRole('Manufacturer')" value="Manufacturer"/>
+        <input type="button" onclick="chooseRole('Processor')" value="Processor"/>
+        <input type="button" onclick="chooseRole('Farmer')" value="Farmer"/>
+    </div>
+</form>
+
+@section Scripts
+{
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/BeerGame.js"></script>
+    <script>
+        let chooseRole;
+        $("document").ready(() => {
+            $("input[type=button]").prop("disabled", true);
+            BeerGame.init("@ViewData["GameId"]", "", "@ViewData["RestApiUrl"]");
+            BeerGame.Signal.startAvailableRolesInterval();
+            chooseRole = (role) => {
+                let name = $("#name").val();
+                BeerGame.Signal.joinGame("@ViewData["GameId"]", role, name, "@playerId").then(() => {
+                    $("#choiceForm").submit();
+                } );
+            }
+        });
+    </script>
+}

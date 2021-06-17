@@ -1,0 +1,142 @@
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@model IEnumerable<Game>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/GameMaster.css" />
+</head>
+
+<div class="game-grid">
+    <div class="game-list box">
+        <table class="table">
+            <thead class="secondary-text">
+                <tr>
+                    <th>
+                        Game id
+                    </th>
+                    <th>
+                        Game master id
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Players)
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="tertiary-text">
+                @foreach (var item in Model)
+                {
+                    <tr onclick="selectGame(this)">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GameMasterId)
+                        </td>
+                        <td>
+                            @{
+                                string players = "";
+                                for (int i = 0; i < item.Players.Count; i++)
+                                {
+                                    players += item.Players[i].Name;
+                                    if (i != item.Players.Count - 1) players += ", ";
+                                }
+                                @Html.Raw(players);
+                            }
+                        </td>
+                        <td>
+                            @if (!item.GameStarted)
+                            {@Html.Raw("Waiting for players");
+                        }
+                        else if (item.CurrentDay == Factors.RoundIncrement * 24 + 1)
+                        {@Html.Raw("Done");
+                    }
+                    else
+                    {
+                        <span class="gradient-font">Playing</span>
+                    }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="bottom-buttons-container">
+        <button style="outline:none" id="add-game-button" class="box secondary-text gradient bottom-game-button" onclick="addGame()">
+            Add game
+        </button>
+        <button style="outline: none; filter: grayscale(100%)" id="view-game-button" class="box secondary-text gradient bottom-game-button" onclick="viewGame()" disabled>
+            View game
+        </button>
+        <button style="outline: none; filter: grayscale(100%)" id="edit-game-button" class="box secondary-text gradient bottom-game-button" onclick="editGame()" disabled>
+            Edit game
+        </button>
+        <button style="outline: none; filter: grayscale(100%)" id="delete-game-button" class="box secondary-text gradient bottom-game-button" onclick="deleteGame()" disabled>
+            Delete game
+        </button>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        let selectGame = (tr) => {
+            $("#chosen-game").removeAttr("id");
+            $(tr).attr("id", "chosen-game");
+            $("#view-game-button").attr("disabled", false);
+            $("#view-game-button").css("filter", "");
+            $("#edit-game-button").attr("disabled", false);
+            $("#edit-game-button").css("filter", "");
+            $("#delete-game-button").attr("disabled", false);
+            $("#delete-game-button").css("filter", "");
+        }
+        let addGame = () => {
+            $.ajax({
+                url: `@ViewData["RestApiUrl"]/api/BeerGame/@if((string)ViewData["GameMasterId"]!=""){@Html.Raw("CreateGameWithGameMaster")}else{@Html.Raw("CreateGame")}`,
+                type: "POST",
+                contentType: "application/JSON",
+                @if((string)ViewData["GameMasterId"]!=""){@Html.Raw("data: JSON.stringify(\""+ViewData["GameMasterId"]+"\"),\n")}
+                dataType: "text"
+            }).then((result) => {
+                let game = JSON.parse(result);
+                let players = "";
+                for (let i = 0; i < game.Players.length; i++) {
+                    players += game.Players[i].Name;
+                    if (i != game.Players.length - 1) players += ", ";
+                }
+                let status = "";
+                if (!game.GameStarted) status = "Waiting for players";
+                else if (item.CurrentDay == Factors.RoundIncrement * 24 + 1) status = "Done";
+                else status = '<span class="gradient-font">Playing</span>'
+                $("tbody").append($(`<tr onclick="selectGame(this)">
+                                        <td>${game.Id}</td>
+                                        <td>${game.GameMasterId}</td>
+                                        <td>${players}</td>
+                                        <td>${status}</td>
+                                    </tr>`));
+            });
+        }
+        let viewGame = () => {
+            $('body').append($(`<form method="post" id="viewGameForm" action="/admin/viewgame" style="display:none;">
+                                            <input name=gameId type="hidden" value="${$("#chosen-game > td:eq(0)")[0].innerText}"/>
+                                        </form>`));
+            $("#viewGameForm").submit();
+        }
+        let editGame = () => {
+            $('body').append($(`<form method="post" id="editGameForm" action="/admin/editgame" style="display:none;">
+                                            <input name=gameId type="hidden" value="${$("#chosen-game > td:eq(0)")[0].innerText}"/>
+                                        </form>`));
+            $("#editGameForm").submit();
+        }
+        let deleteGame = () => {
+            $('body').append($(`<form method="post" id="deleteGameForm" action="/admin/deletegame" style="display:none;">
+                                            <input name=gameId type="hidden" value="${$("#chosen-game > td:eq(0)")[0].innerText}"/>
+                                        </form>`));
+            $("#deleteGameForm").submit();
+        }
+    </script>
+}

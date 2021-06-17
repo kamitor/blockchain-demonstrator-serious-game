@@ -1,32 +1,28 @@
-﻿* {
-    box-sizing: border-box;
-}
-
-body {
-    background-color: white;
-    line-height: 1.6;
+﻿table {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    border-collapse: collapse;
+    width: 100%;
 }
 
-.actor-tab {
-    max-width: 1170px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0em;
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 5px;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
+tr:nth-child(even) {
+    background-color: #daeaf7;
 }
 
-.brand {
-    text-align: center;
+.table-scroll {
+    overflow: scroll;
+    max-height: 200px;
 }
 
-    .brand span {
-        color: #92bde7;
-    }
+.actor-display {
+    display: flex;
+}
 
 .wrapper {
     box-shadow: 0 0 20px 0 rgba(72, 94, 116, 0.7);
@@ -106,38 +102,10 @@ ul {
                 outline: 0;
                 transition: background-color 2s ease-out;
             }
-:root {
-    --purple: #7f00ff;
-    --pink: #e100ff;
-}
 
 .tab {
     padding: 5px;
     box-shadow: 0 0 20px 0 rgba(72,94,116,0.7);
-}
-
-.gradient {
-    background: white;
-    position: absolute;
-    border-radius: 10px;
-    border: 0px;
-}
-
-.gradient-shadow {
-    position: absolute;
-    z-index: -1;
-    height: 41px;
-    width: 143.8px;
-    left: -5px;
-    bottom: -8px;
-    opacity: 0.8;
-    border-radius: 10px;
-    background: -webkit-linear-gradient(top right, #5cc9dc, #2e3192);
-    -webkit-filter: blur(7px);
-    -moz-filter: blur(7px);
-    -o-filter: blur(7px);
-    -ms-filter: blur(7px);
-    filter: blur(7px);
 }
 
 .bottomBar {
@@ -171,55 +139,5 @@ ul {
 
     .company-info h3, .company-info ul, .brand {
         text-align: left;
-    }
-}
-
-.lds {
-    position: relative;
-    margin: auto;
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 350px;
-    justify-content: center;
-    margin-top: 10%;
-}
-
-.lds-ring {
-    width: 200px;
-    height: 200px;
-}
-
-    .lds-ring div {
-        box-sizing: border-box;
-        display: block;
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        margin: 25px;
-        border: 25px solid #fff;
-        border-radius: 50%;
-        animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-        border-color: #c9e6ff transparent transparent transparent;
-    }
-
-        .lds-ring div:nth-child(1) {
-            animation-delay: -0.45s;
-        }
-
-        .lds-ring div:nth-child(2) {
-            animation-delay: -0.3s;
-        }
-
-        .lds-ring div:nth-child(3) {
-            animation-delay: -0.15s;
-        }
-
-@keyframes lds-ring {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
     }
 }

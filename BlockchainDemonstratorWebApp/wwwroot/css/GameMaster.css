@@ -1,0 +1,127 @@
+﻿.game-grid {
+    display:flex;
+    flex-direction:column;
+}
+
+.game-list {
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top:30%;
+    margin-top:8%;
+}
+    .game-list table {
+        display: block;
+        max-height: 300px;
+        overflow-y: auto;
+        table-layout: fixed;
+    }
+
+    .game-list th{
+        width: 1%;
+    }
+
+    .game-list tr:hover{
+        background-color:lavender;
+    }
+
+.game-master-list {
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 30%;
+    margin-top: 8%;
+}
+
+    .game-master-list table {
+        display: block;
+        max-height: 300px;
+        overflow-y: auto;
+        table-layout: fixed;
+    }
+
+    .game-master-list th {
+        width: 1%;
+    }
+
+    .game-master-list tr:hover {
+        background-color: lavender;
+    }
+
+.view-game-button {
+    margin-top: 20px;
+    border: none;
+    outline: none;
+    color: white;
+    width: 30%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.bottom-game-button {
+    border: none;
+    outline: none;
+    color: white;
+    width: 18%;
+}
+
+.bottom-buttons-container {
+    display:flex;
+    flex-direction:row;
+    justify-content:space-evenly;
+    margin-top:20px;
+}
+
+.switch-button {
+    border: none;
+    color: white;
+    align-items: center;
+}
+
+.graphs-grid {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    width: 100%;
+    grid-column-gap: 65px;
+}
+
+.graph-left {
+    max-width: 350px;
+    max-height: 350px;
+    display: inline-block;
+    box-sizing: border-box;
+    height: 350px;
+    width: 350px;
+    justify-self: end;
+}
+
+.graph-right {
+    max-width: 350px;
+    max-height: 350px;
+    display: inline-block;
+    box-sizing: border-box;
+    height: 350px;
+    width: 350px;
+    justify-self: start;
+}
+
+.info-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.latest-info {
+    width: 21%;
+    height: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 17%;
+    margin-bottom: 18.89%;
+}
+
+#chosen-game {
+    background-color:lavender;
+}

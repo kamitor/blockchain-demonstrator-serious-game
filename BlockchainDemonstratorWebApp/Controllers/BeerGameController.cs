@@ -15,54 +15,19 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 {
     public class BeerGameController : Controller
     {
-        public IActionResult Index()
-        {
-            ViewData["RestApiUrl"] = Config.RestApiUrl;
-            return View();
-        }
-        
-        public IActionResult GameView(string gameId)
-        {
-            SetCookie("JoinedGame", gameId, 480);
-            
-            using (var client = new HttpClient())
-            {
-                var stringContent = new StringContent(JsonConvert.SerializeObject(gameId), System.Text.Encoding.UTF8, "application/json");
-                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/GetGame",stringContent).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = response.Content;
-                    string responseString = responseContent.ReadAsStringAsync().Result;
-                    if (responseString != null) 
-                    {
-                        Game game = JsonConvert.DeserializeObject<Game>(responseString);
-                        ViewData["RestApiUrl"] = Config.RestApiUrl;
-                        /*if (game.Retailer != null) game.Retailer.OrderHistory = GetOrdersFromPlayer(game.Retailer.Id);
-                        if (game.Manufacturer != null) game.Manufacturer.OrderHistory = GetOrdersFromPlayer(game.Manufacturer.Id);
-                        if (game.Processor != null) game.Processor.OrderHistory = GetOrdersFromPlayer(game.Processor.Id);
-                        if (game.Farmer != null) game.Farmer.OrderHistory = GetOrdersFromPlayer(game.Farmer.Id);*/
-                        return View(game);
-                    }
-                }
-            }
-
-            return BadRequest();
-        }
-
-        public IActionResult BeerGame(string gameId, string playerId)
+        public IActionResult Index(string gameId, string playerId)
         {
             if (gameId == null)
             {
                 if (Request.Cookies["JoinedGame"] != null) gameId = Request.Cookies["JoinedGame"];
-                else throw new ArgumentNullException("gameId as well as JoinedGame cookie is null");
+                else return RedirectToAction("Index","Home");
             }
             else SetCookie("JoinedGame", gameId, 480);
 
             if(playerId == null)
             {
                 if (Request.Cookies["PlayerId"] != null) playerId = Request.Cookies["PlayerId"];
-                else throw new ArgumentNullException("playerId as well as PlayerId cookie is null");
+                else return RedirectToAction("Index", "Home");
             }
             else SetCookie("PlayerId", playerId, 480);
             
@@ -84,6 +49,11 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                         ViewData["GameId"] = game.Id;
                         ViewData["GameReady"] = game.Players.Count == 4;
                         ViewData["RestApiUrl"] = Config.RestApiUrl;
+                        ViewData["ThirdPhaseNotReady"] = false;
+                        ViewData["Players"] = game.Players;
+                        if (game.Players.Any(p => p.ChosenOption == null) && game.CurrentDay == Factors.RoundIncrement * 16 + 1){
+                            ViewData["ThirdPhaseNotReady"] = true;
+                        }
                         return View(player);
                     }
                 }
@@ -91,56 +61,19 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return BadRequest();
         }
 
-        public IActionResult CreateGame()
-        {
-            using (var client = new HttpClient())
-            {
-                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/CreateGame", null).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return Ok();
-                }
-            }
-            return BadRequest();
-        }
-
-        public IActionResult JoinGame(string gameId, RoleType role, string name)
-        {
-            using (var client = new HttpClient())
-            {
-                var stringContent = new StringContent(JsonConvert.SerializeObject(new { gameId, role, name }), System.Text.Encoding.UTF8, "application/json");
-                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/JoinGame", stringContent).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("GameView", "BeerGame", new { gameid = gameId });
-                }
-            }
-            return BadRequest();
-        }
-
-        public IActionResult GamePinView()
+        public IActionResult ChooseRoleAndName(string gameId)
         {
             ViewData["RestApiUrl"] = Config.RestApiUrl;
+            ViewData["GameId"] = gameId;
             return View();
         }
 
-        public IActionResult GameMaster()
-        {
-            return View();
-        }
-
-        public IActionResult Graphs()
-        {
-            return View();
-        }
-
-        public IActionResult GameIdsView()
+        public IActionResult EndGame(string gameId, string playerId)
         {
             using (var client = new HttpClient())
             {
-                var response = client.GetAsync(Config.RestApiUrl + "/api/BeerGame").Result;
+                var stringContent = new StringContent(JsonConvert.SerializeObject(gameId), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/GetGame", stringContent).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -148,16 +81,21 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                     string responseString = responseContent.ReadAsStringAsync().Result;
                     if (responseString != null)
                     {
-                        List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseString);
-
-                        return View(games);
+                        RemoveCookie("PlayerId");
+                        RemoveCookie("JoinedGame");
+                        Game game = JsonConvert.DeserializeObject<Game>(responseString);
+                        ViewData["Player"] = game.Players.FirstOrDefault(p => p.Id == playerId);
+                        ViewData["RestApiUrl"] = Config.RestApiUrl;
+                        ViewData["GameId"] = gameId;
+                        return View(game);
                     }
                 }
             }
             return BadRequest();
         }
 
-        public void SetCookie(string key, string value, int? expireTime)
+        private void SetCookie(string key, string value, int? expireTime)
+
         {
             CookieOptions option = new CookieOptions();
 
@@ -173,26 +111,9 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             Response.Cookies.Append(key, value, option);
         }
 
-        public void RemoveCookie(string key)
+        private void RemoveCookie(string key)
         {
             Response.Cookies.Delete(key);
         }
-
-        public List<Order> GetOrdersFromPlayer(string playerId)
-        {
-            using (var client = new HttpClient())
-            {
-                var stringContent = new StringContent(JsonConvert.SerializeObject(playerId), System.Text.Encoding.UTF8, "application/json");
-                var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/GetOrders", stringContent).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = response.Content;
-                    string responseString = responseContent.ReadAsStringAsync().Result;
-                    if (responseString != null) return JsonConvert.DeserializeObject<List<Order>>(responseString);
-                }
-            }
-            return null;
-        } 
     }
 }
