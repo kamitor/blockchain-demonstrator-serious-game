@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BlockchainDemonstratorApi.Models.Classes
 {
     /// <summary>
-    /// This class is used to create and update the database as well as store default data in the database.
+    /// The SeedData class is used to create and update the database as well as store default data in the database.
     /// </summary>
     public static class SeedData
     {

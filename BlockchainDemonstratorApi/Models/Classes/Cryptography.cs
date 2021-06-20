@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+    /// <summary>
+    /// The Cryptography class contains methods to generate and compare hashes.
+    /// This class is mainly used for the protection of the admin password.
+    /// </summary>
     public static class Cryptography
     {
         /// <summary>

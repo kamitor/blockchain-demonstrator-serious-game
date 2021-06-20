@@ -8,6 +8,14 @@ using Newtonsoft.Json;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+	/// <summary>
+	/// The Player class represents the players in the beer game.
+	/// This class contains most of the information and functions used to simulate the players properties in the game, such as the name, profit, backorder, etc.
+	/// </summary>
+	/// <remarks>
+	/// A player can only be apart of one game at a time, when a user tries to join a new game, 
+	/// his cookie will be overriden but the old information will stay
+	/// </remarks>
 	public class Player
 	{
 		[Key]

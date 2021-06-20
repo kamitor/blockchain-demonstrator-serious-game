@@ -7,6 +7,10 @@ using BlockchainDemonstratorApi.Models.Classes;
 
 namespace BlockchainDemonstratorApi.Data
 {
+    /// <summary>
+    /// This class represents the BeerGameContext database that will be produced.
+    /// The BeerGameContext contains multiple tables which are represented with the DbSet properties.
+    /// </summary>
     public class BeerGameContext : DbContext
     {
         public BeerGameContext (DbContextOptions<BeerGameContext> options)
@@ -25,6 +29,10 @@ namespace BlockchainDemonstratorApi.Data
         public DbSet<GameMaster> GameMasters { get; set; }
         public DbSet<Admin> Admins { get; set; }
 
+        /// <summary>
+        /// This method is used to override the use of Lazy Loading, enforcing it to be used.
+        /// </summary>
+        /// <param name="optionsBuilder"></param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies();

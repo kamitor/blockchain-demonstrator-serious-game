@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+    /// <summary>
+    /// The Admin class represents the admin account a user can log in as.
+    /// </summary>
     public class Admin
     {
         /// <summary>

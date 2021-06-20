@@ -10,9 +10,17 @@ using Newtonsoft.Json;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
 {
+    /// <summary>
+    /// The AdminController is used for all the front-end functionalities and views for the web application.
+    /// </summary>
     [AuthorityCookie("Admin")]
     public class AdminController : Controller
     {
+        /// <summary>
+        /// This function redirects to the index view of the Admin, also known as the game list view.
+        /// This view can be filtered by a given game master ID.
+        /// </summary>
+        /// <param name="gameMasterId">Filter by optional game master ID.</param>
         public IActionResult Index(string gameMasterId = null)
         {
             using (var client = new HttpClient())
@@ -44,6 +52,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return StatusCode(500);
         }
 
+        /// <summary>
+        /// This function redirects to the old beer game view, which can be used to play games by yourself.
+        /// </summary>
+        /// <param name="gameId">ID of the given game.</param>
         public IActionResult BeerGame(string gameId)
         {
             using (var client = new HttpClient())
@@ -67,6 +79,11 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// This function redirects tot the statical beer game view which the game master also sees.
+        /// </summary>
+        /// <param name="gameId">ID of the given game.</param>
+        /// <returns></returns>
         public IActionResult ViewGame(string gameId)
         {
             if (gameId == null) return StatusCode(400);
@@ -89,6 +106,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return StatusCode(500);
         }
 
+        /// <summary>
+        /// This function redirects to the edit game view.
+        /// </summary>
+        /// <param name="gameId">ID of the given game.</param>
         public IActionResult EditGame(string gameId)
         {
             if (gameId == null) return StatusCode(400);
@@ -111,6 +132,17 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return StatusCode(500);
         }
 
+        /// <summary>
+        /// This function sends the edited game through to the REST API.
+        /// </summary>
+        /// <param name="Id">ID of the edited game.</param>
+        /// <param name="CurrentDay">Current day of the game.</param>
+        /// <param name="GameMasterId">Game master ID coupled with the game.</param>
+        /// <param name="GameStarted">Boolean whether the game has started.</param>
+        /// <param name="remove_Retailer">Boolean whether to kick the retailer from the game.</param>
+        /// <param name="remove_Manufacturer">Boolean whether to kick the manufacturer from the game.</param>
+        /// <param name="remove_Processor">Boolean whether to kick the processor from the game.</param>
+        /// <param name="remove_Farmer">Boolean whether to kick the farmer from the game.</param>
         public IActionResult PutGame(string Id, int CurrentDay, string GameMasterId, bool GameStarted, bool remove_Retailer, bool remove_Manufacturer, bool remove_Processor, bool remove_Farmer)
         {
             if (Id == null) return StatusCode(400);
@@ -132,6 +164,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return StatusCode(500);
         }
 
+        /// <summary>
+        /// This function redirects to the delete game view.
+        /// </summary>
+        /// <param name="gameId">ID of the given game.</param>
         public IActionResult DeleteGame(string gameId)
         {
             if (gameId == null) return StatusCode(400);
@@ -154,6 +190,10 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return StatusCode(500);
         }
 
+        /// <summary>
+        /// This function sends the confirmation to the REST API to delete the game.
+        /// </summary>
+        /// <param name="gameId">ID of the deleted game.</param>
         public IActionResult ConfirmDeleteGame(string gameId)
         {
             if (gameId == null) return StatusCode(400);
@@ -175,6 +215,9 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return StatusCode(500);
         }
 
+        /// <summary>
+        /// This function redirects to the game master list view.
+        /// </summary>
         public IActionResult GameMaster()
         {
             using (var client = new HttpClient())
@@ -195,6 +238,11 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return StatusCode(500);
         }
 
+        /// <summary>
+        /// This function redirects to the delete game master view.
+        /// </summary>
+        /// <param name="gameMasterId"></param>
+        /// <returns></returns>
         public IActionResult DeleteGameMaster(string gameMasterId)
         {
             if (gameMasterId == null) return StatusCode(400);
@@ -217,12 +265,17 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return StatusCode(500);
         }
 
-        public IActionResult ConfirmDeleteGameMaster(string gameId)
+        /// <summary>
+        /// This function sends the confirmation to the REST API to delete the game master.
+        /// </summary>
+        /// <param name="gameMasterId">ID of the deleted game master</param>
+        /// <returns></returns>
+        public IActionResult ConfirmDeleteGameMaster(string gameMasterId)
         {
-            if (gameId == null) return StatusCode(400);
+            if (gameMasterId == null) return StatusCode(400);
             using (var client = new HttpClient())
             {
-                var response = client.DeleteAsync(Config.RestApiUrl + "/api/GameMaster/" + gameId).Result;
+                var response = client.DeleteAsync(Config.RestApiUrl + "/api/GameMaster/" + gameMasterId).Result;
 
                 if (response.IsSuccessStatusCode)
                 {

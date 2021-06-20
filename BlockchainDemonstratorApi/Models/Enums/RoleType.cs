@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Enums
 {
+    /// <summary>
+    /// The RoleType enum is used to enforce the roles in the beer game.
+    /// </summary>
     public enum RoleType
     {
         Retailer,
@@ -12,25 +15,5 @@ namespace BlockchainDemonstratorApi.Models.Enums
         Processor,
         Farmer,
         Customer
-    }
-
-    public static class RoleMethods
-    {
-        public static RoleType DeliverTo(this RoleType role)
-        {
-            switch (role)
-            {
-                case RoleType.Retailer:
-                    return RoleType.Customer;
-                case RoleType.Manufacturer:
-                    return RoleType.Retailer;
-                case RoleType.Processor:
-                    return RoleType.Manufacturer;
-                case RoleType.Farmer:
-                    return RoleType.Processor;
-                default:
-                    return RoleType.Customer;
-            }
-        }
     }
 }

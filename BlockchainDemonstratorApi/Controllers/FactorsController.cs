@@ -13,6 +13,9 @@ using Newtonsoft.Json;
 
 namespace BlockchainDemonstratorApi.Controllers
 {
+	/// <summary>
+	/// The Factors controller is used to handle back-end factor (game tuning) functionalities, such as getting and editting factors.
+	/// </summary>
 	[Route("api/[controller]")]
 	[ApiController]
 	public class FactorsController : ControllerBase
@@ -24,7 +27,9 @@ namespace BlockchainDemonstratorApi.Controllers
 			_context = context;
 		}
 
-		// GET: api/Factors
+		/// <summary>
+		/// GET: api/Factors
+		/// </summary>
 		[HttpGet]
 		public async Task<ActionResult<object>> GetFactors()
 		{
@@ -36,7 +41,9 @@ namespace BlockchainDemonstratorApi.Controllers
 			};
 		}
 
-		// GET: api/Factors/5
+		/// <summary>
+		/// GET: api/Factors/5
+		/// </summary>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Factors>> GetFactors(string id)
 		{
@@ -50,9 +57,9 @@ namespace BlockchainDemonstratorApi.Controllers
 			return factors;
 		}
 
-		// PUT: api/Factors/5
-		// To protect from overposting attacks, enable the specific properties you want to bind to, for
-		// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+		/// <summary>
+		/// PUT: api/Factors/5
+		/// </summary>
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutFactors(string id, Factors factors)
 		{
@@ -82,9 +89,9 @@ namespace BlockchainDemonstratorApi.Controllers
 			return NoContent();
 		}
 
-		// POST: api/Factors
-		// To protect from overposting attacks, enable the specific properties you want to bind to, for
-		// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+		/// <summary>
+		/// POST: api/Factors
+		/// </summary>
 		[HttpPost]
 		public async Task<ActionResult<Factors>> PostFactors(Factors factors)
 		{
@@ -108,7 +115,9 @@ namespace BlockchainDemonstratorApi.Controllers
 			return CreatedAtAction("GetFactors", new {id = factors.Id}, factors);
 		}
 
-		// DELETE: api/Factors/5
+		/// <summary>
+		/// DELETE: api/Factors/5
+		/// </summary>
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<Factors>> DeleteFactors(string id)
 		{
@@ -124,8 +133,11 @@ namespace BlockchainDemonstratorApi.Controllers
 			return factors;
 		}
 
+		/// <summary>
+		/// POST: api/Factors/EditOption
+		/// </summary>
 		[HttpPost("EditOption")]
-		public async Task<IActionResult> EditOptions(dynamic data)
+		public async Task<IActionResult> EditOption(dynamic data)
 		{
 			string roleId = Convert.ToString(data.roleId);
 			string optionName = Convert.ToString(data.optionName);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BlockchainDemonstratorApi.Models.Classes
 {
     /// <summary>
-    /// This class is used to send orders from the customer to the supplier in the supply chain.
+    /// The Order class is used to send orders from the customer to the supplier in the supply chain.
     /// </summary>
     public class Order
     {

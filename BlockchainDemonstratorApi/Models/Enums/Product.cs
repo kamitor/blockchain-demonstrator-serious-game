@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Enums
 {
+    /// <summary>
+    /// This Product enum is used to seperate the product for each role.
+    /// </summary>
     public enum Product
     {
         Beer,

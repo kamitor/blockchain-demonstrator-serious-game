@@ -11,9 +11,12 @@ using Newtonsoft.Json;
 
 namespace BlockchainDemonstratorApi.Hubs
 {
+    /// <summary>
+    /// The GameHub class is used for SignalR real time communication.
+    /// This class contains multiple methods which can be triggered by the client.
+    /// </summary>
     public class GameHub : Hub
     {
-        //TODO: setup heartbeat
         private readonly BeerGameContext _context;
 
         public GameHub(BeerGameContext context)
@@ -21,6 +24,19 @@ namespace BlockchainDemonstratorApi.Hubs
             _context = context;
         }
 
+        /// <summary>
+        /// This method is used to send orders and progress the game.
+        /// </summary>
+        /// <param name="volume">The volume of the sent order</param>
+        /// <param name="gameId">The game ID of the current game</param>
+        /// <param name="playerId">The player ID of the player who sent the order</param>
+        /// <remarks>
+        /// When all four players of the game have sent their order, the game will progress and send a UpdateGame call to the clients.
+        /// When the current round is 8, the game will go into the second phase and send out the PromptOptions call to the clients.
+        /// When the current round is 16, the game will go into the third phase and send out the PromptOptions call to the clients again.
+        /// When the current round is 24, the game will end and send out the EndGame call to the clients.
+        /// After each round the graphs of the game master will also be updated with the UpdateGraphs call to the clients.
+        /// </remarks>
         public async Task SendOrder(string volume, string gameId, string playerId)
         {
             Game game = _context.Games.FirstOrDefault(x => x.Id.Equals(gameId));
@@ -31,10 +47,6 @@ namespace BlockchainDemonstratorApi.Hubs
 
             if (player != null)
                 player.CurrentOrder = new Order(){Volume = Convert.ToInt32(volume)};
-
-            /*game.Manufacturer.CurrentOrder = new Order() { Volume = 15 };
-            game.Processor.CurrentOrder = new Order() { Volume = 15 };
-            game.Farmer.CurrentOrder = new Order() { Volume = 15 };*/
 
             if (game.Players.All(x => x.CurrentOrder != null))
             {
@@ -73,6 +85,14 @@ namespace BlockchainDemonstratorApi.Hubs
             return Groups.AddToGroupAsync(Context.ConnectionId, gameId);
         }
 
+        /// <summary>
+        /// This method is used to join a game with real time communication.
+        /// </summary>
+        /// <param name="gameId">The ID of the requested game to join.</param>
+        /// <param name="role">The requested role to play as.</param>
+        /// <param name="name">The requested name of the player.</param>
+        /// <param name="playerId">The ID of the player</param>
+        /// <returns></returns>
         public async Task JoinGame(string gameId, string role, string name, string playerId)
         {
             Game game = _context.Games.Find(gameId);
@@ -141,6 +161,12 @@ namespace BlockchainDemonstratorApi.Hubs
             await Clients.Group(gameId).SendAsync("PromptOptions");
         }
 
+        /// <summary>
+        /// This method is used by a player to choose a supply chain option.
+        /// </summary>
+        /// <param name="playerId">The ID of the player.</param>
+        /// <param name="option">The option the player has selected.</param>
+        /// <returns></returns>
         public async Task<bool> ChooseOption(string playerId, string option)
         {
             Game game = _context.Games.FirstOrDefault(g => g.Retailer.Id == playerId ||
@@ -192,6 +218,12 @@ namespace BlockchainDemonstratorApi.Hubs
             return !thirdPhase;
         }
 
+        /// <summary>
+        /// This method is used to check avaialable roles.
+        /// </summary>
+        /// <param name="gameId">The ID of the game to check.</param>
+        /// <returns>Returns a list of available roles</returns>
+        /// <remarks>This method could be reworked as it does not fully apply real time communication</remarks>
         public List<string> CheckAvailableRoles(string gameId)
         {
             List<string> availableRoles = new List<string>();
@@ -204,6 +236,14 @@ namespace BlockchainDemonstratorApi.Hubs
             return availableRoles;
         }
 
+        /// <summary>
+        /// This method is used to calculate the most chosen option. 
+        /// This method is mainly used to decide which option will be chosen 
+        /// in the third phase when the players must collectively make a decission.
+        /// </summary>
+        /// <param name="players">The players of the given game</param>
+        /// <returns>Returns the name of the most chosen option.</returns>
+        /// <remarks>If their are multiple most chosen options, a random one of the most chosen will be picked.</remarks>
         private string CalculateMostChosen(List<Player> players)
         {
             Dictionary<string, int> options = new Dictionary<string, int>()

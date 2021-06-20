@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 namespace BlockchainDemonstratorApi.Models.Classes
 {
     /// <summary>
-    /// This class is used to make creating graphs a lot easier and efficient.
+    /// The Graphs class is used to make creating graphs a lot easier and efficient.
     /// </summary>
-    /// <remarks>With the end of the development cycle approaching, 
-    /// reconsiderations of this class were thought of. Because the data can be
-    /// send through as JSON objects between the C# code and JS. This would deprecate most of these methods.
+    /// <remarks>
+    /// With the end of the development cycle approaching, reconsiderations of this class were thought of. 
+    /// Because the data can be send through as JSON objects between the C# code and JS. 
+    /// This would deprecate most of these methods in this class.
     /// If need be to change the use of the graphs, considering JSON as a form of transportation can be a more suffecient option.
     /// </remarks>
     public static class Graphs

@@ -10,6 +10,9 @@ using BlockchainDemonstratorApi.Models.Classes;
 
 namespace BlockchainDemonstratorApi.Controllers
 {
+    /// <summary>
+    /// The admin controller is used to handle back-end admin functionalities, such as creating, getting and logging in as a admin.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -21,21 +24,27 @@ namespace BlockchainDemonstratorApi.Controllers
             _context = context;
         }
 
-        // GET: api/Admin/AdminExists
+        /// <summary>
+        /// GET: api/Admin/AdminExists
+        /// </summary>
         [HttpGet("AdminExists")]
         public async Task<ActionResult<bool>> AdminExists()
         {
             return await _context.Admins.CountAsync() > 0;
         }
 
-        // GET: api/Admin
+        /// <summary>
+        /// GET: api/Admin
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Admin>>> GetAdmins()
         {
             return await _context.Admins.ToListAsync();
         }
 
-        // GET: api/Admin/5
+        /// <summary>
+        /// GET: api/Admin/5
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<Admin>> GetAdmin(string id)
         {
@@ -49,9 +58,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return admin;
         }
 
-        // PUT: api/Admin/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// PUT: api/Admin/5
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAdmin(string id, Admin admin)
         {
@@ -81,9 +90,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Admin
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// POST: api/Admin
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Admin>> PostAdmin(Admin admin)
         {
@@ -113,7 +122,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return CreatedAtAction("GetAdmins", new { id = admin.Id }, admin);
         }
 
-        // POST: api/Admin/Create
+        /// <summary>
+        /// POST: api/Admin/Create
+        /// </summary>
         [HttpPost("Create")]
         public ActionResult Create([FromBody] dynamic data)
         {
@@ -130,7 +141,9 @@ namespace BlockchainDemonstratorApi.Controllers
         }
 
 
-        // DELETE: api/Admin/5
+        /// <summary>
+        /// DELETE: api/Admin/5
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<ActionResult<Admin>> DeleteAdmin(string id)
         {
@@ -146,6 +159,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return admin;
         }
 
+        /// <summary>
+        /// POST: api/Admin/AdminExists
+        /// </summary>
         [HttpPost("AdminExists")]
         public ActionResult<bool> AdminExists([FromBody] string id)
         {

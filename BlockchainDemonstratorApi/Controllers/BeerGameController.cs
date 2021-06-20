@@ -12,6 +12,9 @@ using Newtonsoft.Json;
 
 namespace BlockchainDemonstratorApi.Controllers
 {
+    /// <summary>
+    /// The BeerGame controller is used to handle back-end beer game functionalities, such as creating, getting and joining games.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class BeerGameController : ControllerBase
@@ -23,6 +26,9 @@ namespace BlockchainDemonstratorApi.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// POST: api/BeerGame/CreateGame
+        /// </summary>
         [HttpPost("CreateGame")]
         public ActionResult<Game> CreateGame()
         {
@@ -31,6 +37,9 @@ namespace BlockchainDemonstratorApi.Controllers
             _context.SaveChanges();
             return game;
         }
+        /// <summary>
+        /// POST: api/BeerGame/CreateGameWithGameMaster
+        /// </summary>
 
         [HttpPost("CreateGameWithGameMaster")]
         public ActionResult<Game> CreateGameWithGameMaster([FromBody] string gameMasterId)
@@ -42,25 +51,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
-        /// <summary>Creates a unique id using six numbers</summary>
-        /// <returns>Unique id as string</returns>
-        /// <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>
-        private string GetUniqueId()
-        {
-            List<string> usedIds = _context.Games.Select(g => g.Id).ToList();
-
-            Random r = new Random();
-            while (true)
-            {
-                int id = r.Next(100000, 1000000);
-
-                if (!usedIds.Contains(id.ToString()))
-                {
-                    return id.ToString();
-                }
-            }
-        } 
-
+        /// <summary>
+        /// POST: api/BeerGame/JoinGame
+        /// </summary>
         [HttpPost("JoinGame")]
         public ActionResult JoinGame([FromBody] dynamic data)
         {
@@ -124,6 +117,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// POST: api/BeerGame/ChooseOption
+        /// </summary>
         [HttpPost("ChooseOption")]
         public ActionResult ChooseOption([FromBody] dynamic data)
         {
@@ -147,25 +143,18 @@ namespace BlockchainDemonstratorApi.Controllers
             return Ok();
         }
 
-        [HttpPost("LeaveGame")]
-        public void LeaveGame()
-        {
-            //TODO: add leave game method
-        }
-
-        // GET: api/BeerGame
+        /// <summary>
+        /// GET: api/BeerGame
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Game>>> GetGame()
         {
-            return await _context.Games
-                .Include(g => g.Retailer).ThenInclude(p => p.Role)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.Role)
-                .Include(g => g.Processor).ThenInclude(p => p.Role)
-                .Include(g => g.Farmer).ThenInclude(p => p.Role)
-                .ToListAsync();
+            return await _context.Games.ToListAsync();
         }
 
-        // POST: api/BeerGame/GetGame
+        /// <summary>
+        /// POST: api/BeerGame/GetGame
+        /// </summary>
         [HttpPost("GetGame")]
         public ActionResult<Game> GetGame([FromBody] string gameId)
         {
@@ -180,14 +169,16 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
-        // POST: api/BeerGame/SendOrders
+        /// <summary>
+        /// POST: api/BeerGame/SendOrders
+        /// </summary>
         [HttpPost("SendOrders")]
         public ActionResult<Game> SendOrders([FromBody] dynamic data)
         {
             if (data.gameId.Value == "") return BadRequest();
 
             string gameId = data.gameId;
-            var game = GetGameFromContext(gameId);
+            var game = _context.Games.FirstOrDefault(game => game.Id == gameId);
 
             game.Retailer.CurrentOrder = new Order() {Volume = (data.retailerOrder.Value != "") ? Int32.Parse((string)data.retailerOrder) : 0 };
             game.Manufacturer.CurrentOrder = new Order() {Volume = (data.manufacturerOrder.Value != "") ? Int32.Parse((string)data.manufacturerOrder) : 0 };
@@ -200,7 +191,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
-        // POST: api/BeerGame/CheckInGame
+        /// <summary>
+        /// POST: api/BeerGame/CheckInGame
+        /// </summary>
         [HttpPost("CheckInGame")]
         public ActionResult<string> CheckInGame([FromBody] string playerId)
         {
@@ -211,7 +204,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return (game != null) ? game.Id : "";
         }
 
-        // POST: api/BeerGame/Login
+        /// <summary>
+        /// POST: api/BeerGame/Login
+        /// </summary>
         [HttpPost("Login")]
         public ActionResult<dynamic> Login([FromBody] dynamic data)
         {
@@ -229,6 +224,9 @@ namespace BlockchainDemonstratorApi.Controllers
             };
         }
 
+        /// <summary>
+        /// POST: api/BeerGame/EditGame
+        /// </summary>
         [HttpPost("EditGame")]
         public ActionResult EditGame([FromBody] dynamic data)
         {
@@ -283,10 +281,10 @@ namespace BlockchainDemonstratorApi.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        
-        // POST: api/BeerGame
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+
+        /// <summary>
+        /// POST: api/BeerGame
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Game>> PostGame(Game game)
         {
@@ -310,7 +308,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return CreatedAtAction("GetGame", new { id = game.Id }, game);
         }
 
-        // DELETE: api/BeerGame/5
+        /// <summary>
+        /// DELETE: api/BeerGame/5
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<ActionResult<Game>> DeleteGame(string id)
         {
@@ -335,40 +335,28 @@ namespace BlockchainDemonstratorApi.Controllers
             return game;
         }
 
+        /// <summary>Creates a unique id using six numbers</summary>
+        /// <returns>Unique id as string</returns>
+        /// <remarks>For now it returns a string later on, we might need to change that to an integer</remarks>
+        private string GetUniqueId()
+        {
+            List<string> usedIds = _context.Games.Select(g => g.Id).ToList();
+
+            Random r = new Random();
+            while (true)
+            {
+                int id = r.Next(100000, 1000000);
+
+                if (!usedIds.Contains(id.ToString()))
+                {
+                    return id.ToString();
+                }
+            }
+        }
+
         private bool GameExists(string id)
         {
             return _context.Games.Any(e => e.Id == id);
-        }
-
-        private Game GetGameFromContext(string gameId)
-        {
-            Game game = _context.Games.FirstOrDefault(game => game.Id == gameId);
-            /*Seperated into chunks to reduce load time
-            game.Retailer = _context.Games
-                .Include(g => g.Retailer).ThenInclude(p => p.Role)
-                .Include(g => g.Retailer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Retailer).ThenInclude(p => p.IncomingOrders).ThenInclude(o => o.Deliveries)
-                .Include(g => g.Retailer).ThenInclude(p => p.OutgoingOrders).ThenInclude(o => o.Deliveries)
-                .FirstOrDefault(game => game.Id == gameId).Retailer;
-            game.Manufacturer = _context.Games
-                .Include(g => g.Manufacturer).ThenInclude(p => p.Role)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.IncomingOrders).ThenInclude(o => o.Deliveries)
-                .Include(g => g.Manufacturer).ThenInclude(p => p.OutgoingOrders).ThenInclude(o => o.Deliveries)
-                .FirstOrDefault(game => game.Id == gameId).Manufacturer;
-            game.Processor = _context.Games
-                .Include(g => g.Processor).ThenInclude(p => p.Role)
-                .Include(g => g.Processor).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Processor).ThenInclude(p => p.IncomingOrders).ThenInclude(o => o.Deliveries)
-                .Include(g => g.Processor).ThenInclude(p => p.OutgoingOrders).ThenInclude(o => o.Deliveries)
-                .FirstOrDefault(game => game.Id == gameId).Processor;
-            game.Farmer = _context.Games
-                .Include(g => g.Farmer).ThenInclude(p => p.Role)
-                .Include(g => g.Farmer).ThenInclude(p => p.CurrentOrder)
-                .Include(g => g.Farmer).ThenInclude(p => p.IncomingOrders).ThenInclude(o => o.Deliveries)
-                .Include(g => g.Farmer).ThenInclude(p => p.OutgoingOrders).ThenInclude(o => o.Deliveries)
-                .FirstOrDefault(game => game.Id == gameId).Farmer;*/
-            return game;
         }
     }
 }

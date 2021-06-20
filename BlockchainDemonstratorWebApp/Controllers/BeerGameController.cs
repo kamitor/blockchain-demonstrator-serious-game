@@ -13,8 +13,17 @@ using Microsoft.AspNetCore.Http;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
 {
+    /// <summary>
+    /// The BeerGameController is used for all the front-end beer game related functionalities and views.
+    /// </summary>
     public class BeerGameController : Controller
     {
+        /// <summary>
+        /// This function redirects to the index page of the beer game, also known as beer game page.
+        /// </summary>
+        /// <param name="gameId">ID of the joined beer game.</param>
+        /// <param name="playerId">ID of the joined player.</param>
+        /// <remarks>The parameters can be seen as optional, as they can also be filled in by the cookies.</remarks>
         public IActionResult Index(string gameId, string playerId)
         {
             if (gameId == null)
@@ -61,6 +70,12 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// This function redirects to the choose role and name view.
+        /// This view is used as the intermediary join page, where the user must insert a name and choose a role.
+        /// </summary>
+        /// <param name="gameId">ID of the game the player wants to join.</param>
+        /// <returns></returns>
         public IActionResult ChooseRoleAndName(string gameId)
         {
             ViewData["RestApiUrl"] = Config.RestApiUrl;
@@ -68,6 +83,13 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return View();
         }
 
+        /// <summary>
+        /// This function redirects to the end game page.
+        /// This view is shown after a game ends, containing statistics and other data.
+        /// </summary>
+        /// <param name="gameId">ID of the joined game.</param>
+        /// <param name="playerId">ID of the player.</param>
+        /// <remarks>When the player is redirected to this function, his cookies will be removed to make him leave the game.</remarks>
         public IActionResult EndGame(string gameId, string playerId)
         {
             using (var client = new HttpClient())
@@ -94,6 +116,12 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// This function is used to set a cookie.
+        /// </summary>
+        /// <param name="key">The name/key/id of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
+        /// <param name="expireTime">The expiry time of the cookie.</param>
         private void SetCookie(string key, string value, int? expireTime)
 
         {

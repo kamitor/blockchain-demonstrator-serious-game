@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BlockchainDemonstratorApi.Models.Classes
 {
 	/// <summary>
-	/// This class is used to represent the four roles in the game: Retailer, Manufacturer, Processor and Farmer.
+	/// The Role class is used to represent the four roles in the game: Retailer, Manufacturer, Processor and Farmer.
 	/// </summary>
 	/// <remarks>There are four pre-made objects of this class in the database, 
 	/// containing game data of the roles. The default values of these objects can be found in the SeedData class</remarks>

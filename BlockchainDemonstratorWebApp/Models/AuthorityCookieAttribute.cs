@@ -22,7 +22,11 @@ namespace Blockchain_Demonstrator_Web_App.Models
         {
             _authority = authority;
         }
-
+        /// <summary>
+        /// This function executes before every action, allowing each requests to be checked before being handled further.
+        /// This function checks whether the request has the expected and correct cookie for the action.
+        /// </summary>
+        /// <param name="filterContext">The context of the action, contains information such as the request.</param>
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             string authorityId = filterContext.HttpContext.Request.Cookies[_authority + "Id"];

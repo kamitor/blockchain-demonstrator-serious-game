@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+	/// <summary>
+	/// The Game class represents the beer game, making this one of the most important classes in the REST API.
+	/// This class contains most of the data used during the beer game, such as players and the current day.
+	/// The Game class also contains most of the methods to simulate the beer game, any other functions that simulate the game
+	/// are called from this class as well.
+	/// </summary>
 	public class Game
 	{
 		[Key]

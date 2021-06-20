@@ -10,6 +10,9 @@ using BlockchainDemonstratorApi.Models.Classes;
 
 namespace BlockchainDemonstratorApi.Controllers
 {
+    /// <summary>
+    /// This controller is used to handle back-end game master functionalities, such as creating game master or getting the games of a certain game mastser.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class GameMasterController : ControllerBase
@@ -21,13 +24,18 @@ namespace BlockchainDemonstratorApi.Controllers
             _context = context;
         }
 
-        // POST: api/GameMaster/GetGames
+        /// <summary>
+        /// POST: api/GameMaster/GetGames
+        /// </summary>
         [HttpPost("GetGames")]
         public async Task<ActionResult<IEnumerable<Game>>> GetGames([FromBody] string gameMasterId)
         {
             return await _context.Games.Where(g => g.GameMasterId == gameMasterId).ToListAsync();
         }
 
+        /// <summary>
+        /// POST: api/GameMaster/CreateGameMaster
+        /// </summary>
         [HttpPost("CreateGameMaster")]
         public ActionResult<GameMaster> CreateGameMaster()
         {
@@ -37,31 +45,19 @@ namespace BlockchainDemonstratorApi.Controllers
             return gameMaster;
         }
 
-        private string GetUniqueId()
-        {
-            List<string> usedIds = _context.GameMasters.Select(g => g.Id).ToList();
 
-            Random r = new Random();
-            while (true)
-            {
-                int id = r.Next(100000, 1000000);
-
-                if (!usedIds.Contains(id.ToString()))
-                {
-                    return id.ToString();
-                }
-            }
-        }
-
-
-        // GET: api/GameMaster
+        /// <summary>
+        /// GET: api/GameMaster
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GameMaster>>> GetGameMasters()
         {
             return await _context.GameMasters.ToListAsync();
         }
 
-        // POST: api/BeerGame/GetGameMaster
+        /// <summary>
+        /// POST: api/BeerGame/GetGameMaster
+        /// </summary>
         [HttpPost("GetGameMaster")]
         public ActionResult<GameMaster> GetGameMaster([FromBody] string gameMasterId)
         {
@@ -76,7 +72,9 @@ namespace BlockchainDemonstratorApi.Controllers
             return gameMaster;
         }
 
-        // DELETE: api/GameMaster/5
+        /// <summary>
+        /// DELETE: api/GameMaster/5
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<ActionResult<GameMaster>> DeleteGameMaster(string id)
         {
@@ -92,10 +90,33 @@ namespace BlockchainDemonstratorApi.Controllers
             return gameMaster;
         }
 
+        /// <summary>
+        /// POST: api/GameMaster/GameMasterExists
+        /// </summary>
         [HttpPost("GameMasterExists")]
         public ActionResult<bool> GameMasterExists([FromBody] string id)
         {
             return GameMasterExistsFunc(id);
+        }
+
+        /// <summary>
+        /// This method is used to generate a unique ID for a game master.
+        /// </summary>
+        /// <returns>The returned ID ranges between 100000 - 999999</returns>
+        private string GetUniqueId()
+        {
+            List<string> usedIds = _context.GameMasters.Select(g => g.Id).ToList();
+
+            Random r = new Random();
+            while (true)
+            {
+                int id = r.Next(100000, 1000000);
+
+                if (!usedIds.Contains(id.ToString()))
+                {
+                    return id.ToString();
+                }
+            }
         }
 
         private bool GameMasterExistsFunc(string id)

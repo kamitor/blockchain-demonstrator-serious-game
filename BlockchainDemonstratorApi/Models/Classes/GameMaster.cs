@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+    /// <summary>
+    /// The GameMaster class represents the game master account a user can log in as.
+    /// </summary>
     public class GameMaster
     {
         [Key]

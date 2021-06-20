@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlockchainDemonstratorWebApp", "BlockchainDemonstratorWebApp\BlockchainDemonstratorWebApp.csproj", "{B7653249-C68B-43D6-8C9A-EA8DCA9701D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeerGameConsoleApp", "BeerGameConsoleApp\BeerGameConsoleApp.csproj", "{CB34F386-B9E3-4655-839A-622C1EBC6E0F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlockchainDemonstratorApi", "BlockchainDemonstratorApi\BlockchainDemonstratorApi.csproj", "{2CA91C7F-26AA-438F-AC4E-E66A5C0B83D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockchainDemonstratorNUnitTest", "BlockchainDemonstratorNUnitTest\BlockchainDemonstratorNUnitTest.csproj", "{8CC7BF6A-3EC9-4FD2-8F5B-E8B92AA4C062}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlockchainDemonstratorNUnitTest", "BlockchainDemonstratorNUnitTest\BlockchainDemonstratorNUnitTest.csproj", "{8CC7BF6A-3EC9-4FD2-8F5B-E8B92AA4C062}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		{B7653249-C68B-43D6-8C9A-EA8DCA9701D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7653249-C68B-43D6-8C9A-EA8DCA9701D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7653249-C68B-43D6-8C9A-EA8DCA9701D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB34F386-B9E3-4655-839A-622C1EBC6E0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB34F386-B9E3-4655-839A-622C1EBC6E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB34F386-B9E3-4655-839A-622C1EBC6E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB34F386-B9E3-4655-839A-622C1EBC6E0F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CA91C7F-26AA-438F-AC4E-E66A5C0B83D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2CA91C7F-26AA-438F-AC4E-E66A5C0B83D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CA91C7F-26AA-438F-AC4E-E66A5C0B83D2}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
+    /// <summary>
+    /// The Delivery class represents the deliveries sent from the supplier back to the customer.
+    /// </summary>
     public class Delivery
     {
         [Key]
@@ -20,9 +23,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
         [Required]
         public int Volume { get; set; }
 
-       /// <summary>
-       /// The day on which the delivery was sent.
-       /// </summary>
+        /// <summary>
+        /// The day on which the delivery was sent.
+        /// </summary>
         [Required]
         public int SendDeliveryDay { get; set; }
 

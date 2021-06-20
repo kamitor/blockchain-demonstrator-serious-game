@@ -13,19 +13,19 @@ using Newtonsoft.Json;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
 {
+	/// <summary>
+	/// The FactorsController is used for all the front-end factors related functionalities and views
+	/// </summary>
 	[AuthorityCookie("Admin")]
 	public class FactorsController : Controller
 	{
-		public FactorsController()
-		{
-		}
-
-		// GET: Factors
+		/// <summary>
+		/// This function redirects the admin to the index page of the factors, also known as the factors list view.
+		/// </summary>
 		public async Task<IActionResult> Index()
 		{
 			using (var client = new HttpClient())
 			{
-				//ello
 				var response = client.GetAsync(Config.RestApiUrl + "/api/Factors/").Result;
 				if (response.IsSuccessStatusCode)
 				{
@@ -44,9 +44,11 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 			return BadRequest();
 		}
 
-		// POST: Factors/Edit/5
-		// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-		// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+		/// <summary>
+		/// This function sends the edited factors to the REST API.
+		/// </summary>
+		/// <param name="id">ID of the edited factors</param>
+		/// <param name="factors">Binded parameters of the factors</param>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(string id,
@@ -69,6 +71,18 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 			return BadRequest();
 		}
 
+		/// <summary>
+		/// This method edits a single option.
+		/// </summary>
+		/// <param name="roleId">ID of the option's correlating role.</param>
+		/// <param name="optionName">Name of the option.</param>
+		/// <param name="costStartup">Value of the (edited) cost of statup.</param>
+		/// <param name="costMaintenance">Value of the (edited) cost of maintenance.</param>
+		/// <param name="transportOneTrip">Value of the (edited) transport cost of one trip.</param>
+		/// <param name="transportPerDay">Value of the (edited) transport cost per day.</param>
+		/// <param name="leadTime">Value of the (edited) lead time.</param>
+		/// <param name="flexibility">Value of the (edited) flexibility.</param>
+		/// <param name="penalty">Value of the (edited) penalty.</param>
 		[HttpPost]
 		public async Task<IActionResult> EditOption(string roleId, string optionName, string costStartup,
 			string costMaintenance, string transportOneTrip, string transportPerDay, string leadTime,
