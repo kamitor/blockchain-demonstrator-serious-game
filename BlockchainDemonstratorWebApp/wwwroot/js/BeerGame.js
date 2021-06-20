@@ -373,22 +373,22 @@ const BeerGame = (() => {
                 <h3 class='option-prompt--text'>Choose your supplychain setup</h3>
                 <div id="YouProvide" class="option-prompt-div">
                     <button class='option-prompt--button gradient' type='button' onclick='BeerGame.Signal.chooseOption("YouProvide")'><h5>You provide</h5></button>
-                    <h6 style="display:inline-block;padding-left:10px">Description alksdkjlasd jlkadjlkasdjkla djlk asdjklas djkl;as djlk;adjklasd</h6>
+                    <h6 style="display:inline-block;padding-left:10px">You are managing your own transportation system. You own the vehicles. You need to ensure the support staff and handle the administration yourself as an organization.</h6>
                     <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
                 <div id="YouProvideWithHelp" class="option-prompt-div">
                     <button class='option-prompt--button gradient' type='button' onclick='BeerGame.Signal.chooseOption("YouProvideWithHelp")'><h5>You provide with help</h5></button>
-                    <h6 style="display:inline-block;padding-left:10px">Description alksdkjlasd jlkadjlkasdjkla djlk asdjklas djkl;as djlk;adjklasd</h6>
+                    <h6 style="display:inline-block;padding-left:10px">You are leveraging a transportation company. Your order is priority. You own a few vehicles, yet the bigger part of the shipment is handled by an outside company. You partly handle the administration of the shipments.</h6>
                     <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
                 <div id="TrustedParty" class="option-prompt-div">
                     <button class='option-prompt--button gradient' type='button' onclick='BeerGame.Signal.chooseOption("TrustedParty")'><h5>Trusted party</h5></button>
-                    <h6 style="display:inline-block;padding-left:10px">Description alksdkjlasd jlkadjlkasdjkla djlk asdjklas djkl;as djlk;adjklasd</h6>
+                    <h6 style="display:inline-block;padding-left:10px">With another name, third party logistics. You hire a third company to handle your orders this way you outsource the responsibility a hiring a support and administration staff. You do not own vehicles for shipping. You partly handle the administration of this shipments.</h6>
                     <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
                 <div id="DLT" class="option-prompt-div">
                     <button class='option-prompt--button gradient' type='button' onclick='BeerGame.Signal.chooseOption("DLT")'><h5>DLT</h5></button>
-                    <h6 style="display:inline-block;padding-left:10px">Description alksdkjlasd jlkadjlkasdjkla djlk asdjklas djkl;as djlk;adjklasd</h6>
+                    <h6 style="display:inline-block;padding-left:10px">The distributed Ledger technology speed up the information flow in the supply chain. The transportation of the shipment is outsourced. Documentation between the stakeholders, authorities, and your own organization works as real time data. This way the cost can be reduced by 15 to 20% and the lead time can be decreased by 40%.</h6>
                     <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
             </section>`);
