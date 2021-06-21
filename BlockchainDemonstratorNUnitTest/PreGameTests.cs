@@ -45,8 +45,6 @@ namespace BlockchainDemonstratorNUnitTest
             _game.Retailer = retailer;
 
             Assert.AreEqual(2, _game.Players.Count);
-        }
-
-        
+        }  
     }
 }

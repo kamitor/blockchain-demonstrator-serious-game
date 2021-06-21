@@ -47,11 +47,12 @@ namespace BlockchainDemonstratorNUnitTest
             _game.Processor.CurrentOrder = new Order { Volume = 12 };
             _game.Farmer.CurrentOrder = new Order { Volume = 13 };
         }
+
         [Test]
         public void ProgressIncomingOrdersTests()
         {
             _game.Progress();
-           
+
             Assert.Multiple(() =>
             {
                 Assert.IsTrue(_game.Retailer.IncomingOrders[0].Volume >= 5 && _game.Retailer.IncomingOrders[0].Volume <= 15);
@@ -99,7 +100,7 @@ namespace BlockchainDemonstratorNUnitTest
         {
             _game.Progress();
 
-            _game.Retailer.CurrentOrder = new Order() {Volume = 0 };
+            _game.Retailer.CurrentOrder = new Order() { Volume = 0 };
             _game.Manufacturer.CurrentOrder = new Order() { Volume = 0 };
             _game.Processor.CurrentOrder = new Order() { Volume = 0 };
             _game.Farmer.CurrentOrder = new Order() { Volume = 0 };
@@ -110,7 +111,7 @@ namespace BlockchainDemonstratorNUnitTest
             int farmerInventory = _game.Farmer.Inventory;
 
             _game.Progress();
-            
+
             Assert.Multiple(() =>
             {
                 Assert.IsTrue(_game.Retailer.Inventory != retailerInventory);
@@ -121,18 +122,18 @@ namespace BlockchainDemonstratorNUnitTest
         }
 
         [Test]
-        public void OrderFailedToDeliverFullVolume_ExcessAddedToBackorder() 
+        public void OrderFailedToDeliverFullVolume_ExcessAddedToBackorder()
         {
             _game.Manufacturer.Inventory = 10;
-            _game.Manufacturer.IncomingOrders.Add(new Order() {Volume = 20, OrderDay = -1});
-            
+            _game.Manufacturer.IncomingOrders.Add(new Order() { Volume = 20, OrderDay = -1 });
+
             _game.Manufacturer.GetOutgoingDeliveries(1);
 
             int result = _game.Manufacturer.Backorder;
-            
+
             Assert.AreEqual(10, result);
         }
-      
+
         [Test]
         public void OrderPriceSubtractedFromBalance_expectTrue()
         {
@@ -142,35 +143,91 @@ namespace BlockchainDemonstratorNUnitTest
                 Volume = 20,
                 Price = 2000
             });
-            
+
             Order order = new Order()
             {
                 Volume = 20,
                 Deliveries = deliveries
             };
-            
+
             _game.Manufacturer.OutgoingOrders.Add(order);
-            
+
             _game.Manufacturer.ProcessDeliveries(1);
             _game.Manufacturer.UpdateBalance(8);
-            
+
             Assert.AreEqual(-2000, _game.Manufacturer.Balance);
         }
-        
+
         [Test]
         [Repeat(25)]
-        public void OrderPriceAddedToBalance_expectTrue() 
+        public void OrderPriceAddedToBalance_expectTrue()
         {
-            
-            _game.Manufacturer.IncomingOrders.Add(new Order() {Volume = 10});
-            
+
+            _game.Manufacturer.IncomingOrders.Add(new Order() { Volume = 10 });
+
             _game.Manufacturer.GetOutgoingDeliveries(1);
-            
+
             _game.Manufacturer.UpdateBalance(26);
 
             int expected = Factors.ManuProductPrice * 10;
             Assert.AreEqual(expected, _game.Manufacturer.Balance);
-            
+
+        }
+
+        [Test]
+        public void RandomDeliverLeadTime()
+        {
+            double leadTime = _game.Manufacturer.Role.LeadTime;
+            _game.Progress();
+            _game.Progress();
+            double actualLeadTime = _game.Retailer.OutgoingOrders[0].Deliveries[0].ArrivalDay - _game.Retailer.OutgoingOrders[0].Deliveries[0].SendDeliveryDay;
+            Assert.IsTrue(actualLeadTime - leadTime >= Factors.OrderLeadTimeRandomMinimum && actualLeadTime - leadTime <= Factors.OrderLeadTimeRandomMaximum + leadTime);
+        }
+
+        [Test]
+        public void HarvesterInfiniteStock()
+        {
+            int farmerOrder = 99999;
+            _game.Farmer.CurrentOrder.Volume = farmerOrder;
+            _game.Progress();
+            int harvesterDelivery = _game.Farmer.OutgoingOrders[0].Deliveries[0].Volume;
+            Assert.AreEqual(farmerOrder, harvesterDelivery);
+        }
+
+        [Test]
+        public void CustomerStaticOrders()
+        {
+            _game.Progress();
+            int customerVolume = _game.Retailer.IncomingOrders[0].Volume;
+            Assert.IsTrue(customerVolume >= Factors.RetailerOrderVolumeRandomMinimum &&
+                customerVolume < Factors.RetailerOrderVolumeRandomMaximum);
+        }
+
+        [Test]
+        public void PenalizePlayer()
+        {
+            _game.Retailer.CurrentOrder = new Order() { Volume = 1 };
+            _game.Progress();
+            Assert.IsTrue(_game.Retailer.Payments.Any(p => p.Topic == "Penalty"));
+        }
+
+        [Test]
+        public void HigherTransportionCost()
+        {
+            _game.Progress();
+            _game.Retailer.CurrentOrder = new Order { Volume = 0};
+            _game.Progress();
+            double basicAmount = _game.Retailer.Payments.FirstOrDefault(p => p.Topic == "Transport").Amount;
+            _game.Retailer.Payments.Clear();
+
+            _game.Retailer.ChosenOption = new Option("DLT", 30000, 350, 1484, 1448, 1.025, 200, 600);
+            _game.Retailer.CurrentOrder = new Order { Volume = 10};
+            _game.Progress();
+            _game.Retailer.CurrentOrder = new Order { Volume = 0 };
+            _game.Progress();
+            double dltAmount = _game.Retailer.Payments.FirstOrDefault(p => p.Topic == "Transport").Amount;
+
+            Assert.IsTrue(basicAmount > dltAmount);
         }
     }
 }
