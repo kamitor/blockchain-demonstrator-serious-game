@@ -28,46 +28,45 @@ This will redirect all traffic towards the server using port 8080 to the REST AP
 
 We used Nginx to handle the redirections. Our /etc/nginx/sites-available/default file looks like this.\
 
->server {
->listen 80 default_server;
->listen [::]:80 default_server;
->
->        root /home/BlockchainDemonstrator/Webapp;
->
->        index index.html index.htm index.nginx-debian.html;
->
->        server_name _;
->
->        location / {
->
->                proxy_pass         http://0.0.0.0:5000/;
->                proxy_http_version 1.1;
->                proxy_set_header   Upgrade $http_upgrade;
->                proxy_set_header   Connection keep-alive;
->                proxy_set_header   Host $host;
->                proxy_cache_bypass $http_upgrade;
->                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
->                proxy_set_header   X-Forwarded-Proto $scheme;
->        }
->}
->
->server {
->listen 8080;
->listen [::]:8080;
->
->        server_name _;
->
->        root /home/BlockchainDemonstrator/Api;
->
->        location / {
->        proxy_pass         http://0.0.0.0:5002/;
->        proxy_http_version 1.1;
->        proxy_set_header   Upgrade $http_upgrade;
->        proxy_set_header   Connection keep-alive;
->        proxy_set_header   Host $host;
->        proxy_cache_bypass $http_upgrade;
->        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
->        proxy_set_header   X-Forwarded-Proto $scheme;
->    }
->}
+    server {
+    listen 80 default_server;\
+    listen [::]:80 default_server;
 
+        root /home/BlockchainDemonstrator/Webapp;
+
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+        location / {
+
+                proxy_pass         http://0.0.0.0:5000/;
+                proxy_http_version 1.1;
+                proxy_set_header   Upgrade $http_upgrade;
+                proxy_set_header   Connection keep-alive;
+                proxy_set_header   Host $host;
+                proxy_cache_bypass $http_upgrade;
+                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header   X-Forwarded-Proto $scheme;
+        }
+    }
+
+    server {
+    listen 8080;
+    listen [::]:8080;
+
+        server_name _;
+
+        root /home/BlockchainDemonstrator/Api;
+
+        location / {
+        proxy_pass         http://0.0.0.0:5002/;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection keep-alive;
+        proxy_set_header   Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        }
+    }
