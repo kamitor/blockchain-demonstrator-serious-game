@@ -176,6 +176,12 @@ body {
     border-radius: 10px;
 }
 
+.nav-button {
+    height: 100%;
+    color: white;
+    border-radius: 10px;
+}
+
 .game-id {
     height: auto;
     width: 25%;

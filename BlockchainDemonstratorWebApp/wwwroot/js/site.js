@@ -13,29 +13,29 @@ Site = (() => {
         if (getCookie("AdminId") != null) {
             $("#navbar-list").append($(`
                 <li style="margin-left:20px" class="nav-item">
-                    <a href="/admin" class="btn btn-outline-primary my-2 my-sm-0 login-color">Games</a>
-                    <a href="/admin/gamemaster" class="btn btn-outline-primary my-2 my-sm-0 login-color">Game masters</a>
-                    <a href="/factors" class="btn btn-outline-primary my-2 my-sm-0 login-color">Game tuning</a>
+                    <button style="border:none; outline:none;" class="nav-button gradient tertiary-text" onclick="window.location.href='/admin'">Games</button>
+                    <button style="border:none; outline:none;" class="nav-button gradient tertiary-text" onclick="window.location.href='/admin/gamemaster'">Game masters</button>
+                    <button style="border:none; outline:none;" class="nav-button gradient tertiary-text" onclick="window.location.href='/factors'">Game tuning</button>
                 </li>
                 <li style="margin-left:auto" class="nav-item">
-                    <a href="/home/logout" class="btn btn-outline-primary my-2 my-sm-0 login-color">Log out</a>
+                    <button style="border:none; outline:none;" class="nav-button gradient tertiary-text" onclick="window.location.href='/home/logout'">Logout</button>
                 </li>
             `));
         }
         else if (getCookie("GameMasterId") != null) {
             $("#navbar-list").append($(`
                 <li style="margin-left:20px" class="nav-item">
-                    <a href="/gamemaster" class="btn btn-outline-primary my-2 my-sm-0 login-color">Games</a>
+                    <button style="border:none; outline:none;" class="nav-button gradient tertiary-text" onclick="window.location.href='/gamemaster'">Games</button>
                 </li>
                 <li style="margin-left:auto" class="nav-item">
-                    <a href="/home/logout" class="btn btn-outline-primary my-2 my-sm-0 login-color">Log out</a>
+                    <button style="border:none; outline:none;" class="nav-button gradient tertiary-text" onclick="window.location.href='/home/logout'">Logout</button>
                 </li>
             `));
         }
         else {
             $("#navbar-list").append($(`
                 <li style="margin-left:auto" class="nav-item">
-                    <a href="/home/login" class="login-button gradient tertiary-text">Login</a>
+                    <button style="border:none; outline:none;" class="nav-button gradient tertiary-text" onclick="window.location.href='/home/login'">Login</button>
                 </li>
             `));
         }
