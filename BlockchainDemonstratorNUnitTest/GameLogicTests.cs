@@ -23,22 +23,22 @@ namespace BlockchainDemonstratorNUnitTest
 
 
             Player retailer = new Player("RetailerTest");
-            retailer.Role = new Role("Retailer", 1.7083333, Product.Beer);
+            retailer.Role = new Role("Retailer", Product.Beer);
             retailer.ChosenOption = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
             _game.Retailer = retailer;
 
             Player manufacturer = new Player("ManufacturerTest");
-            manufacturer.Role = new Role("Manufacturer", 1.375, Product.Packs);
+            manufacturer.Role = new Role("Manufacturer", Product.Packs);
             manufacturer.ChosenOption = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
             _game.Manufacturer = manufacturer;
 
             Player processor = new Player("ProcessorTest");
-            processor.Role = new Role("Processor", 17.166667, Product.Barley);
+            processor.Role = new Role("Processor", Product.Barley);
             processor.ChosenOption = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
             _game.Processor = processor;
 
             Player farmer = new Player("FarmerTest");
-            farmer.Role = new Role("Farmer", 22.333333, Product.Seeds);
+            farmer.Role = new Role("Farmer", Product.Seeds);
             farmer.ChosenOption = new Option("Basic", 75000, 3500, 710, 516, 1.375, 0, 750);
             _game.Farmer = farmer;
 
@@ -177,7 +177,7 @@ namespace BlockchainDemonstratorNUnitTest
         [Test]
         public void RandomDeliverLeadTime()
         {
-            double leadTime = _game.Manufacturer.Role.LeadTime;
+            double leadTime = _game.Manufacturer.ChosenOption.LeadTime;
             _game.Progress();
             _game.Progress();
             double actualLeadTime = _game.Retailer.OutgoingOrders[0].Deliveries[0].ArrivalDay - _game.Retailer.OutgoingOrders[0].Deliveries[0].SendDeliveryDay;
@@ -227,6 +227,103 @@ namespace BlockchainDemonstratorNUnitTest
             _game.Progress();
             double dltAmount = _game.Retailer.Payments.FirstOrDefault(p => p.Topic == "Transport").Amount;
 
+            Assert.IsTrue(basicAmount > dltAmount);
+        }
+    
+        [Test]
+        public void DelayInPayingTest()
+        {
+            int currentday = 1;
+            Order o = new Order() {Volume = 10, OrderDay = currentday};
+            o.Deliveries.Add(new Delivery() {ArrivalDay = currentday, Price = 40000, Volume = 10});
+            _game.Retailer.OutgoingOrders.Add(o);
+            _game.Retailer.ProcessDeliveries(currentday);
+            
+            Assert.AreEqual(currentday + Factors.RoundIncrement, _game.Retailer.Payments.FirstOrDefault(x => x.Topic == "Order").DueDay);
+        }
+
+        [Test]
+        public void PayHoldingCostTest()
+        {
+            _game.Progress();
+            
+            Assert.IsNotNull(_game.Retailer.Payments.FirstOrDefault(x => x.Topic == "Holding cost"));
+        }
+
+        [Test]
+        public void PayMaintenanceCostTest()
+        {
+            _game.Retailer.AddMaintenanceCost(1, 2);
+            
+            Assert.IsNotNull(_game.Retailer.Payments.FirstOrDefault(x => x.Topic == "Maintenance"));
+        }
+
+        [Test]
+        public void PayTransportCostTest()
+        {
+            _game.Progress();
+            _game.Progress();
+            
+            Assert.IsNotNull(_game.Retailer.Payments.FirstOrDefault(x => x.Topic == "Transport"));
+        }
+
+        [Test]
+        public void DelayInGettingPaidTest()
+        {
+            int currentday = 1;
+            Order o = new Order() {Volume = 10, OrderDay = currentday};
+            _game.Retailer.IncomingOrders.Add(o);
+            _game.Retailer.GetOutgoingDeliveries(currentday);
+
+            int payday = (int)_game.Retailer.Payments.FirstOrDefault(x => x.Topic == "Delivery").DueDay;
+            
+            Assert.IsTrue(currentday + Factors.RoundIncrement * 2 <= payday &&  currentday + _game.Retailer.ChosenOption.LeadTime + Factors.RoundIncrement * 3 >= payday);
+        }
+
+        [Test]
+        public void PayGuaranteedCapPenaltyTest()
+        {
+            _game.Retailer.CurrentOrder = new Order() {Volume = Option.MinimumGuaranteedCapacity - 1, OrderDay = 1};
+            
+            _game.Progress();
+            
+            Assert.IsNotNull(_game.Retailer.Payments.FirstOrDefault(x => x.Topic == "Penalty"));
+        }
+
+        [Test]
+        public void SetupCostChanges()
+        {
+            double basicAmount = _game.Retailer.ChosenOption.CostOfStartUp;
+
+            _game.Retailer.ChosenOption = new Option("DLT", 30000, 350, 1484, 1448, 1.025, 200, 600);
+            
+            double dltAmount = _game.Retailer.ChosenOption.CostOfStartUp;
+
+            Assert.IsTrue(basicAmount > dltAmount);
+        }
+
+        [Test]
+        public void FlexibilityCostChanges()
+        {
+            double basicAmount = _game.Retailer.ChosenOption.Flexibility;
+
+            _game.Retailer.ChosenOption = new Option("DLT", 30000, 350, 1484, 1448, 1.025, 200, 600);
+            
+            double dltAmount = _game.Retailer.ChosenOption.Flexibility;
+            
+            Assert.IsTrue(basicAmount < dltAmount);
+        }
+
+        [Test]
+        [Repeat(25)]
+        public void MaintenanceCostChanges()
+        {
+            double basicAmount = _game.Retailer.ChosenOption.CostOfMaintenance;
+
+            _game.Retailer.ChosenOption = new Option("DLT", 30000, 350, 1484, 1448, 1.025, 200, 600);
+            
+            double dltAmount = _game.Retailer.ChosenOption.CostOfMaintenance;
+            
             Assert.IsTrue(basicAmount > dltAmount);
         }
     }

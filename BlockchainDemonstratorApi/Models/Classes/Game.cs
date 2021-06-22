@@ -33,10 +33,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 						throw new ArgumentException("Given role id does not match the expected role Retailer");
 					_retailer = value;
 				}
-                else
-                {
+				else
+				{
 					_retailer = value;
-                }
+				}
 			}
 		}
 
@@ -100,7 +100,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			}
 		}
 
-		//TODO: has bug where it is initialized twice, once during getting from database and second when serialized in web controller
 		[NotMapped]
 		public virtual List<Player> Players
 		{
@@ -147,28 +146,29 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			CurrentDay += Factors.RoundIncrement;
 		}
 
-        private void SaveHistory()
-        {
+		private void SaveHistory()
+		{
 			SaveInventoryHistory();
 			SaveOrderWorthHistory();
 			SaveOverallProfitHistory();
 			SaveGrossProfitHistory();
-        }
+		}
 
-        private void SaveInventoryHistory()
-        {
-            foreach(Player player in Players)
-            {
-				List<int> newInventory = new List<int>() { player.Inventory };
+		private void SaveInventoryHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<int> newInventory = new List<int>() {player.Inventory};
 				player.InventoryHistory = player.InventoryHistory.Concat(newInventory).ToList();
-            }
-        }
+			}
+		}
 
 		private void SaveOrderWorthHistory()
 		{
 			foreach (Player player in Players)
 			{
-				List<double> newOrderWorth = new List<double>() { player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) };
+				List<double> newOrderWorth = new List<double>()
+					{player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price))};
 				player.OrderWorthHistory = player.OrderWorthHistory.Concat(newOrderWorth).ToList();
 			}
 		}
@@ -177,7 +177,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			foreach (Player player in Players)
 			{
-				List<double> newOverallProfit = new List<double>() { player.Profit };
+				List<double> newOverallProfit = new List<double>() {player.Profit};
 				player.OverallProfitHistory = player.OverallProfitHistory.Concat(newOverallProfit).ToList();
 			}
 		}
@@ -186,7 +186,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			foreach (Player player in Players)
 			{
-				List<double> newGrossProfit = new List<double>() { player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) - player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount) };
+				List<double> newGrossProfit = new List<double>()
+				{
+					player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) -
+					player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount)
+				};
 				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
 			}
 		}
@@ -235,42 +239,42 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
 		private void SetSetupDeliveries() //Reworked to new order system
 		{
-			for (int i = 0; i < (int) Math.Ceiling(Manufacturer.Role.LeadTime / (double) Factors.RoundIncrement); i++)
+			for (int i = 0; i < (int) Math.Ceiling(Manufacturer.ChosenOption.LeadTime / (double) Factors.RoundIncrement); i++)
 			{
 				Order order = new Order() {Volume = Factors.SetupDeliveryVolume};
 				order.Deliveries.Add(new Delivery()
 				{
 					Volume = Factors.SetupDeliveryVolume,
 					SendDeliveryDay =
-						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Manufacturer.Role.LeadTime)),
+						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Manufacturer.ChosenOption.LeadTime)),
 					ArrivalDay = Factors.RoundIncrement * i + 1,
 					Price = Factors.ManuProductPrice * Factors.SetupDeliveryVolume
 				});
 				Retailer.OutgoingOrders.Add(order);
 			}
 
-			for (int i = 0; i < (int) Math.Ceiling(Processor.Role.LeadTime / (double) Factors.RoundIncrement); i++)
+			for (int i = 0; i < (int) Math.Ceiling(Processor.ChosenOption.LeadTime / (double) Factors.RoundIncrement); i++)
 			{
 				Order order = new Order() {Volume = Factors.SetupDeliveryVolume};
 				order.Deliveries.Add(new Delivery()
 				{
 					Volume = Factors.SetupDeliveryVolume,
 					SendDeliveryDay =
-						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Processor.Role.LeadTime)),
+						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Processor.ChosenOption.LeadTime)),
 					ArrivalDay = Factors.RoundIncrement * i + 1,
 					Price = Factors.ProcProductPrice * Factors.SetupDeliveryVolume
 				});
 				Manufacturer.OutgoingOrders.Add(order);
 			}
 
-			for (int i = 0; i < (int) Math.Ceiling(Farmer.Role.LeadTime / (double) Factors.RoundIncrement); i++)
+			for (int i = 0; i < (int) Math.Ceiling(Farmer.ChosenOption.LeadTime / (double) Factors.RoundIncrement); i++)
 			{
 				Order order = new Order() {Volume = Factors.SetupDeliveryVolume};
 				order.Deliveries.Add(new Delivery()
 				{
 					Volume = Factors.SetupDeliveryVolume,
 					SendDeliveryDay =
-						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Farmer.Role.LeadTime)),
+						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Farmer.ChosenOption.LeadTime)),
 					ArrivalDay = Factors.RoundIncrement * i + 1,
 					Price = Factors.FarmerProductPrice * Factors.SetupDeliveryVolume
 				});
@@ -337,7 +341,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		}
 
 		/// <summary>Adds current day to each actors current order</summary>
-		private  void AddCurrentDay()
+		private void AddCurrentDay()
 		{
 			// Adding current day
 			Retailer.CurrentOrder.OrderDay = CurrentDay;
@@ -372,7 +376,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			Retailer.IncomingOrders.Add(new Order()
 			{
-				OrderNumber = Convert.ToInt32(Math.Ceiling((double)CurrentDay / Factors.RoundIncrement)),
+				OrderNumber = Convert.ToInt32(Math.Ceiling((double) CurrentDay / Factors.RoundIncrement)),
 				OrderDay = CurrentDay,
 				Volume = new Random().Next(Factors.RetailerOrderVolumeRandomMinimum,
 					Factors.RetailerOrderVolumeRandomMaximum + 1)
@@ -412,7 +416,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		///added delivery instead of the GetOutgoingDeliveries, 
 		///because the harvester does not have an player class
 		///</remarks>
-		private void SendDeliveries() 
+		private void SendDeliveries()
 		{
 			Retailer.GetOutgoingDeliveries(CurrentDay);
 			Manufacturer.GetOutgoingDeliveries(CurrentDay);

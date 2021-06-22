@@ -43,13 +43,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			set { _chosenOption = value; }
 		}
 
-		public double MarginCalculator(int currentDay)
-		{
-			return Margin = Payments
-				.Where(p => p.FromPlayer && p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement)
-				.Sum(p => p.Amount);
-		}
-
 		[NotMapped]
 		public int Backorder { get; set; }
 
@@ -100,42 +93,64 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			get
 			{
-				//TODO: Change to new formula
-				//running cost= (volume of inventory* holding cost factor)+ (backorder factor* backorder* holding cost)+ (incoming order* holding cost) 
-				return (Inventory * Factors.HoldingFactor) +
-				       (Factors.HoldingFactor * 2 * Backorder) /*+ (IncomingOrder.Volume * holdingFactor)*/;
+				return (Inventory * Factors.HoldingFactor * Role.ProductPrice) +
+				       (Factors.HoldingFactor * 2 * Backorder * Role.ProductPrice);
 			}
 		}
 
 		public string InventoryHistoryJson { get; set; }
+
 		[NotMapped]
 		public List<int> InventoryHistory
-        {
-            get { return (InventoryHistoryJson == null) ? new List<int>() : JsonConvert.DeserializeObject<List<int>>(InventoryHistoryJson); }
-            set { InventoryHistoryJson = JsonConvert.SerializeObject(value); }
-        }
+		{
+			get
+			{
+				return (InventoryHistoryJson == null)
+					? new List<int>()
+					: JsonConvert.DeserializeObject<List<int>>(InventoryHistoryJson);
+			}
+			set { InventoryHistoryJson = JsonConvert.SerializeObject(value); }
+		}
 
 		public string OrderWorthHistoryJson { get; set; }
+
 		[NotMapped]
 		public List<double> OrderWorthHistory
 		{
-			get { return (OrderWorthHistoryJson == null) ? new List<double>() : JsonConvert.DeserializeObject<List<double>>(OrderWorthHistoryJson); }
+			get
+			{
+				return (OrderWorthHistoryJson == null)
+					? new List<double>()
+					: JsonConvert.DeserializeObject<List<double>>(OrderWorthHistoryJson);
+			}
 			set { OrderWorthHistoryJson = JsonConvert.SerializeObject(value); }
 		}
 
 		public string OverallProfitHistoryJson { get; set; }
+
 		[NotMapped]
 		public List<double> OverallProfitHistory
 		{
-			get { return (OverallProfitHistoryJson == null) ? new List<double>() : JsonConvert.DeserializeObject<List<double>>(OverallProfitHistoryJson); }
+			get
+			{
+				return (OverallProfitHistoryJson == null)
+					? new List<double>()
+					: JsonConvert.DeserializeObject<List<double>>(OverallProfitHistoryJson);
+			}
 			set { OverallProfitHistoryJson = JsonConvert.SerializeObject(value); }
 		}
 
 		public string GrossProfitHistoryJson { get; set; }
+
 		[NotMapped]
 		public List<double> GrossProfitHistory
 		{
-			get { return (GrossProfitHistoryJson == null) ? new List<double>() : JsonConvert.DeserializeObject<List<double>>(GrossProfitHistoryJson); }
+			get
+			{
+				return (GrossProfitHistoryJson == null)
+					? new List<double>()
+					: JsonConvert.DeserializeObject<List<double>>(GrossProfitHistoryJson);
+			}
 			set { GrossProfitHistoryJson = JsonConvert.SerializeObject(value); }
 		}
 
@@ -158,6 +173,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			Payments = new List<Payment>();
 		}
 
+		//TODO: change name this one is incorrect
 		/// <summary>Gets list of outgoing deliveries</summary>
 		/// <param name="currentDay">Integer that specifies the current day</param>
 		public void GetOutgoingDeliveries(int currentDay)
@@ -175,7 +191,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 					{
 						Volume = pendingVolume,
 						SendDeliveryDay = currentDay,
-						ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + leadTimeRand,
+						ArrivalDay = currentDay + ChosenOption.LeadTime + leadTimeRand,
 						Price = pendingVolume * Role.ProductPrice
 					};
 					IncomingOrders[i].Deliveries.Add(delivery);
@@ -194,11 +210,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
 					{
 						Volume = Inventory,
 						SendDeliveryDay = currentDay,
-						ArrivalDay = currentDay + Role.LeadTime + ChosenOption.LeadTime + leadTimeRand,
+						ArrivalDay = currentDay + ChosenOption.LeadTime + leadTimeRand,
 						Price = Inventory * Role.ProductPrice
 					};
 					IncomingOrders[i].Deliveries.Add(delivery);
-					
+
 
 					GetPaidForDelivery(delivery);
 					AddTransportCost(currentDay, leadTimeRand);
@@ -207,7 +223,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 					Inventory = 0;
 				}
 			}
-			
+
 			foreach (Order incomingOrder in IncomingOrders)
 			{
 				Backorder += incomingOrder.Volume - incomingOrder.Deliveries.Sum(x => x.Volume);
@@ -217,7 +233,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// <summary>Adds the volume of incoming deliveries to inventory where arrival day is in the current round</summary>
 		/// <remarks>Also adds a payment object to the Payments list for each received delivery</remarks>
 		/// <param name="currentDay">integer that specifies the current day</param>
-		public void ProcessDeliveries(int currentDay) 
+		public void ProcessDeliveries(int currentDay)
 		{
 			foreach (Order order in OutgoingOrders)
 			{
@@ -328,7 +344,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		/// <summary>Adds a holding cost payment to the Payments list </summary>
 		/// <param name="currentDay">integer that specifies the current day</param>
-		//TODO: HoldingCost can be zero (adds extra records in database)
 		public void SetHoldingCost(int currentDay)
 		{
 			if (HoldingCosts > 0)

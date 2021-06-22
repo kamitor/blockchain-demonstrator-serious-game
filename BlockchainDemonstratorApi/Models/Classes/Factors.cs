@@ -25,17 +25,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int SetupOrderVolume { get; set; } = 5;
         public static int SetupDeliveryVolume { get; set; } = 5;
         #endregion
-        
-        #region Transport factors
-        //TODO: these are not used
-        public static int RetailTransport { get; set; } = 1086;
-        public static int ManuTransport { get; set; } = 516;
-        public static int ProcTransport { get; set; } = 73;
-        public static int FarmerTransport { get; set; } = 177;
-        #endregion
 
         #region Player factors
-        public static double HoldingFactor { get; set; } = 0.5;
+        public static double HoldingFactor { get; set; } = 0.25;
         public static int RetailerOrderVolumeRandomMinimum { get; set; } = 5;
         public static int RetailerOrderVolumeRandomMaximum { get; set; } = 15;
         public static int DefaultInventory { get; set; } = 20;
@@ -48,17 +40,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int FarmerProductPrice { get; set; } = 2050;
         public static int HarvesterProductPrice { get; set; } = 2000;
         #endregion
-        //TODO: Change to three static numbers it chooses randomly between, 0 45% 7 35% 14 20%
         #region Order factors 
         public static int OrderLeadTimeRandomMinimum { get; set; } = 5;
         public static int OrderLeadTimeRandomMaximum { get; set; } = 7;
         #endregion
 
         #region Database properties
-        public int retailTransport { get { return RetailTransport; } set { RetailTransport = value; } }
-        public int manuTransport { get { return ManuTransport; } set { ManuTransport = value; } }
-        public int procTransport { get { return ProcTransport; } set { ProcTransport = value; } }
-        public int farmerTransport { get { return FarmerTransport; } set { FarmerTransport = value; } }
         public double holdingFactor { get { return HoldingFactor; } set { HoldingFactor = value; } }
         public int roundIncrement { get { return RoundIncrement; } set { RoundIncrement = value; } }
         public int retailProductPrice { get { return RetailProductPrice; } set { RetailProductPrice = value; } }

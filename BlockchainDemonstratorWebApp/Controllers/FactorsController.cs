@@ -53,7 +53,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(string id,
 			[Bind(
-				"Id,test,retailTransport,manuTransport,procTransport,farmerTransport,holdingFactor,roundIncrement,retailProductPrice,manuProductPrice,procProductPrice,farmerProductPrice,harvesterProductPrice,setupCost,initialCapital")]
+				"Id,test,holdingFactor,roundIncrement,retailProductPrice,manuProductPrice,procProductPrice,farmerProductPrice,harvesterProductPrice,setupCost,initialCapital")]
 			Factors factors)
 		{
 			using (var client = new HttpClient())

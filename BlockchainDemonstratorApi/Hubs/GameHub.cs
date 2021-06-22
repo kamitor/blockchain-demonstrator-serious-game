@@ -80,6 +80,14 @@ namespace BlockchainDemonstratorApi.Hubs
             await Clients.Group(gameId).SendAsync("EndGame");
         }
 
+        /// <summary>
+        /// Adds player to a group
+        /// </summary>
+        /// <remarks>
+        /// The player gets added to a group with a name corresponding to the gameId
+        /// </remarks>
+        /// <param name="gameId">string specifying the gameId</param>
+        /// <returns></returns>
         public Task JoinGroup(string gameId)
         {
             return Groups.AddToGroupAsync(Context.ConnectionId, gameId);
@@ -150,12 +158,20 @@ namespace BlockchainDemonstratorApi.Hubs
             }
         }
 
+        /// <summary>
+        /// Updates the game page for each player in group
+        /// </summary>
+        /// <param name="gameId">string specifying the gameId</param>
         public async Task UpdateGame(string gameId)
         {
             await Clients.Group(gameId)
                 .SendAsync("UpdateGame", JsonConvert.SerializeObject(_context.Games.FirstOrDefault(x => x.Id.Equals(gameId))) );
         }
 
+        /// <summary>
+        /// Show the choose option prompt to each player in group
+        /// </summary>
+        /// <param name="gameId">string specifying the gameId</param>
         public async Task PromptOptions(string gameId)
         {
             await Clients.Group(gameId).SendAsync("PromptOptions");

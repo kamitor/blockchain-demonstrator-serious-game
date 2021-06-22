@@ -19,9 +19,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		public string Id { get; set; }
 
 		[Required]
-		public double LeadTime { get; set; }
-
-		[Required]
 		public Product Product { get; set; }
 
 		[Required]
@@ -54,10 +51,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		[Required]
 		public virtual List<Option> Options { get; set; } = new List<Option>(4);
 
-		public Role(string id, double leadTime, Product product)
+		public Role(string id, Product product)
 		{
 			Id = id;
-			LeadTime = leadTime;
 			Product = product;
 		}
 	}

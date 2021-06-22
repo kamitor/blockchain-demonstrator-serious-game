@@ -339,9 +339,6 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("LeadTime")
-                        .HasColumnType("float");
-
                     b.Property<int>("Product")
                         .HasColumnType("int");
 
@@ -366,7 +363,7 @@ namespace BlockchainDemonstratorApi.Migrations
                         .HasForeignKey("FarmerId");
 
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.GameMaster", null)
-                        .WithMany("Game")
+                        .WithMany("Games")
                         .HasForeignKey("GameMasterId");
 
                     b.HasOne("BlockchainDemonstratorApi.Models.Classes.Player", "Manufacturer")

@@ -20,7 +20,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
         [Required]
         public double CostOfStartUp { get; set; }
         [Required]
-        //TODO: this is never used
         public double CostOfMaintenance { get; set; }
         [Required]
         public double TransportCostOneTrip { get; set; }
