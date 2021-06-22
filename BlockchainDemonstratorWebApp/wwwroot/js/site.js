@@ -15,6 +15,7 @@ Site = (() => {
                 <li style="margin-left:20px" class="nav-item">
                     <a href="/admin" class="btn btn-outline-primary my-2 my-sm-0 login-color">Games</a>
                     <a href="/admin/gamemaster" class="btn btn-outline-primary my-2 my-sm-0 login-color">Game masters</a>
+                    <a href="/factors" class="btn btn-outline-primary my-2 my-sm-0 login-color">Factors</a>
                 </li>
                 <li style="margin-left:auto" class="nav-item">
                     <a href="/home/logout" class="btn btn-outline-primary my-2 my-sm-0 login-color">Log out</a>
