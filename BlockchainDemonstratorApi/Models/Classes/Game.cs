@@ -168,7 +168,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			foreach (Player player in Players)
 			{
 				List<double> newOrderWorth = new List<double>()
-					{player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price))};
+					{player.CurrentOrder.Volume * player.Role.ProductPrice};
 				player.OrderWorthHistory = player.OrderWorthHistory.Concat(newOrderWorth).ToList();
 			}
 		}

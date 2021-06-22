@@ -87,8 +87,10 @@
         let selectGame = (tr) => {
             $("#chosen-game").removeAttr("id");
             $(tr).attr("id", "chosen-game");
-            $("#view-game-button").attr("disabled", false);
-            $("#view-game-button").css("filter", "");
+            if (!$(tr).children().eq(3).text().includes("Waiting for players")) {
+                $("#view-game-button").attr("disabled", false);
+                $("#view-game-button").css("filter", "");
+            }
             $("#edit-game-button").attr("disabled", false);
             $("#edit-game-button").css("filter", "");
             $("#delete-game-button").attr("disabled", false);

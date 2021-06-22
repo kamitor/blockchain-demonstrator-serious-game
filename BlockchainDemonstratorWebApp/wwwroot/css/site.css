@@ -180,6 +180,7 @@ body {
     height: 100%;
     color: white;
     border-radius: 10px;
+    margin-left:10px;
 }
 
 .game-id {
