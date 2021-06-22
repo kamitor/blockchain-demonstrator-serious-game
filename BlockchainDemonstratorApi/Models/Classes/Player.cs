@@ -42,8 +42,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			get { return _chosenOption; }
 			set { _chosenOption = value; }
 		}
-
-		[NotMapped]
+		
 		public int Backorder { get; set; }
 
 		/// <summary>

@@ -243,12 +243,12 @@ const BeerGame = (() => {
             return player.Id == configMap.playerId;
         })
 
-        $("#first-player-role").text(game.Players[(0 >= modelIndex) ? 1 : 0].Name);
-        $("#second-player-role").text(game.Players[(0 >= modelIndex) ? 2 : 1].Name);
-        $("#third-player-role").text(game.Players[(0 >= modelIndex) ? 3 : 2].Name);
-        $("#first-player-name").text(game.Players[(0 >= modelIndex) ? 1 : 0].Role.Id);
-        $("#second-player-name").text(game.Players[(0 >= modelIndex) ? 2 : 1].Role.Id);
-        $("#third-player-name").text(game.Players[(0 >= modelIndex) ? 3 : 2].Role.Id);
+        $("#first-player-name").text(game.Players[(0 >= modelIndex) ? 1 : 0].Name);
+        $("#second-player-name").text(game.Players[(1 >= modelIndex) ? 2 : 1].Name);
+        $("#third-player-name").text(game.Players[(2 >= modelIndex) ? 3 : 2].Name);
+        $("#first-player-role").text(game.Players[(0 >= modelIndex) ? 1 : 0].Role.Id);
+        $("#second-player-role").text(game.Players[(1 >= modelIndex) ? 2 : 1].Role.Id);
+        $("#third-player-role").text(game.Players[(2 >= modelIndex) ? 3 : 2].Role.Id);
     }
 
     const updateGamePlayerBackorder = (game) => {
@@ -278,7 +278,7 @@ const BeerGame = (() => {
             let incomingDelivery = 0;
             player.OutgoingOrders.forEach(order => {
                 order.Deliveries.forEach(delivery => {
-                    if (delivery.ArrivalDay >= game.CurrentDay && delivery.ArrivalDay < game.CurrentDay + 7) incomingDelivery += delivery.Volume;
+                    if (delivery.ArrivalDay <= game.CurrentDay && delivery.ArrivalDay > game.CurrentDay - 7) incomingDelivery += delivery.Volume;
                 });
             });
             $(`#incoming-delivery-${player.Role.Id}`).text(incomingDelivery);

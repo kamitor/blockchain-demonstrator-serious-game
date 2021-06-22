@@ -122,7 +122,7 @@
             <span style="text-align:center" class="secondary-text">Inventory</span>
         </div>
         <div class="incoming-delivery-value">
-            <span id="incoming-delivery-@Model.Role.Id" style="margin-bottom:5%" class="head-text">@Model.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay >= currentDay && d.ArrivalDay < currentDay + Factors.RoundIncrement).Sum(d => d.Volume))</span>
+            <span id="incoming-delivery-@Model.Role.Id" style="margin-bottom:5%" class="head-text">@Model.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay <= currentDay && d.ArrivalDay > currentDay - Factors.RoundIncrement).Sum(d => d.Volume))</span>
         </div>
         <div class="incoming-delivery-text">
             <span id="incoming-delivery-@Model.Role.Id" style="text-align:center" class="secondary-text">Incoming delivery</span>

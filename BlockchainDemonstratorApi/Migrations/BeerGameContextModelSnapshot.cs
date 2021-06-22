@@ -78,9 +78,6 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("farmerProductPrice")
                         .HasColumnType("int");
 
-                    b.Property<int>("farmerTransport")
-                        .HasColumnType("int");
-
                     b.Property<int>("harvesterProductPrice")
                         .HasColumnType("int");
 
@@ -93,9 +90,6 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("manuProductPrice")
                         .HasColumnType("int");
 
-                    b.Property<int>("manuTransport")
-                        .HasColumnType("int");
-
                     b.Property<int>("orderLeadTimeRandomMaximum")
                         .HasColumnType("int");
 
@@ -105,13 +99,7 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("procProductPrice")
                         .HasColumnType("int");
 
-                    b.Property<int>("procTransport")
-                        .HasColumnType("int");
-
                     b.Property<int>("retailProductPrice")
-                        .HasColumnType("int");
-
-                    b.Property<int>("retailTransport")
                         .HasColumnType("int");
 
                     b.Property<int>("retailerOrderVolumeRandomMaximum")
@@ -288,6 +276,9 @@ namespace BlockchainDemonstratorApi.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Backorder")
+                        .HasColumnType("int");
 
                     b.Property<double>("Balance")
                         .HasColumnType("float");
