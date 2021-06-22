@@ -67,8 +67,8 @@
     <script src="~/js/BeerGame.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
     <script>
-        BeerGame.init("@Model.Id", "", "@ViewData["RestApiUrl"]");
         $("document").ready(() => {
+            BeerGame.init("@Model.Id", "", "@ViewData["RestApiUrl"]");
             BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.InventoryHistory)), @Html.Raw(Graphs.CreateInventoryDataSets(Model.Players)), "inventoryChart", "Inventory");
             BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OrderWorthHistory)), @Html.Raw(Graphs.CreateOrderWorthDataSets(Model.Players)), "orderWorthChart", "Order worth");
             BeerGame.Graphs.drawMultipleChart(@Html.Raw(Graphs.CreateLabels(Model.Retailer.OverallProfitHistory)), @Html.Raw(Graphs.CreateOverallProfitDataSets(Model.Players)), "overallProfitChart", "Overall profit");

@@ -84,8 +84,12 @@ namespace BlockchainDemonstratorApi.Controllers
                 return NotFound();
             }
 
+            for (int i = 0; i < gameMaster.Games.Count; i++)
+            {
+                BeerGameController.RemoveGame(gameMaster.Games[i], _context);
+            }
             _context.GameMasters.Remove(gameMaster);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return gameMaster;
         }

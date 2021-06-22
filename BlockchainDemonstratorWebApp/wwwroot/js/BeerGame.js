@@ -713,7 +713,6 @@ BeerGame.Graphs = (() => {
         drawMultipleChart(createLabels(game.Retailer.OrderWorthHistory), createInventoryDataSets(game.Players), "orderWorthChart","Order worth");
         drawMultipleChart(createLabels(game.Retailer.OverallProfitHistory), createInventoryDataSets(game.Players), "overallProfitChart","Overall profit");
         drawMultipleChart(createLabels(game.Retailer.GrossProfitHistory), createInventoryDataSets(game.Players), "grossProfitChart", "Gross profit");
-
     }
 
     return {

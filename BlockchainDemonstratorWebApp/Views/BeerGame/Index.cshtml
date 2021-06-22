@@ -157,8 +157,8 @@
         <span class="secondary-text">Round</span>
     </div>
     <div style="padding:0px" class="bottom-canvas box">
-        <input id="place-order-text" name="order" class="input secondary-text" type="number" placeholder="Insert order..." min="0" oninput="validity.valid||(value='');">
-        <input id="place-order-button" style="color:white" class="order-button gradient secondary-text" type="button" value="Place order">
+        <input id="place-order-text" name="order" class="input secondary-text" type="number" placeholder="Insert order..." min="0" oninput="validity.valid||(value='');" onkeyup="insertOrder()">
+        <input id="place-order-button" style="color:white;filter:grayscale(100%);" class="order-button gradient secondary-text" type="button" value="Place order" disabled>
         <div style="position: absolute; top: -44px; left: 108px;display:none"class="cssload-jumping">
             <span></span><span></span><span></span><span></span><span></span>
         </div>
@@ -209,5 +209,14 @@
                 $(".cssload-jumping").show();
             }
         });
+        function insertOrder() {
+            if ($("#place-order-text").val() === "") {
+                $("#place-order-button").prop("disabled", true);
+                $("#place-order-button").css("filter", "grayscale(100%)");
+            } else {
+                $("#place-order-button").prop("disabled", false);
+                $("#place-order-button").css("filter", "");
+            }
+        }
     </script>
 }

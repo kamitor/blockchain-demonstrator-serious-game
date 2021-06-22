@@ -320,17 +320,7 @@ namespace BlockchainDemonstratorApi.Controllers
                 return NotFound();
             }
 
-            foreach (Player player in game.Players) //TODO: see if deliveries get removed as well
-            {
-                _context.Orders.RemoveRange(player.OutgoingOrders);
-                _context.Orders.RemoveRange(player.IncomingOrders);
-                if (player.CurrentOrder != null) _context.Orders.Remove(player.CurrentOrder);
-                _context.Payments.RemoveRange(player.Payments);
-                _context.Players.Remove(player);
-            }
-
-            _context.Games.Remove(game);
-            await _context.SaveChangesAsync();
+            RemoveGame(game, _context);
 
             return game;
         }
@@ -352,6 +342,22 @@ namespace BlockchainDemonstratorApi.Controllers
                     return id.ToString();
                 }
             }
+        }
+
+        [NonAction]
+        public static void RemoveGame(Game game, BeerGameContext context)
+        {
+            foreach (Player player in game.Players)
+            {
+                context.Orders.RemoveRange(player.OutgoingOrders);
+                context.Orders.RemoveRange(player.IncomingOrders);
+                if (player.CurrentOrder != null) context.Orders.Remove(player.CurrentOrder);
+                context.Payments.RemoveRange(player.Payments);
+                context.Players.Remove(player);
+            }
+
+            context.Games.Remove(game);
+            context.SaveChanges();
         }
 
         private bool GameExists(string id)
