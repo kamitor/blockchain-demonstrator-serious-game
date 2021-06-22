@@ -311,7 +311,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// Adds a standard payment for the setup costs to each actors payment list
 		/// </summary>
 		/// <remarks>Only needs to be called once, at the start of each phase</remarks>
-		//TODO: make sure this method is called when new phase starts
 		private void SetSetupPayment()
 		{
 			foreach (Player player in Players)
