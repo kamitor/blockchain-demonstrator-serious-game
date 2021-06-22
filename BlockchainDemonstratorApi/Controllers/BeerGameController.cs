@@ -212,7 +212,7 @@ namespace BlockchainDemonstratorApi.Controllers
         {
             if (data.id.Value == "") return BadRequest();
             string id = (string)data.id;
-            string password = (string)data.password;
+            string password = (data.password != null) ? (string)data.password : "";
             bool anyGameMaster = _context.GameMasters.Any(gm => gm.Id == id);
             bool anyAdmin = _context.Admins.AsEnumerable().Any(a => a.Id == id && Cryptography.HashCompare(password, a.Password, a.Salt));
             string loggedInAs = "";

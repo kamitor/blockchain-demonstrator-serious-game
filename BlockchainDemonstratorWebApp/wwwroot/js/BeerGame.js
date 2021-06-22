@@ -476,7 +476,8 @@ BeerGame.Signal = (() => {
             $(".option-prompt").append(`<h2>Chosen supplychain setup: <span class=gradient-font>${mostChosenOption.replace(/([A-Z])/g, ' $1').trim()}</span></h2>`);
             setTimeout(() => {
                 $(".option-prompt").remove();
-                $(".actor-tab").show();
+                $(".top-container").show();
+                $(".bottom-container").show();
             }, 3000);
         });
 
