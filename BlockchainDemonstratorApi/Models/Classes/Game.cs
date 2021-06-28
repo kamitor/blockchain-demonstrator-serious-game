@@ -188,7 +188,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			{
 				List<double> newGrossProfit = new List<double>()
 				{
-					player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) -
+					player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) +
 					player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount)
 				};
 				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
