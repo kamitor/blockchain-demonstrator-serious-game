@@ -14,8 +14,11 @@ namespace Blockchain_Demonstrator_Web_App
     {
         public static void Main(string[] args)
         {
-            if (args.Count() != 0) Config.ServerIp = args[0];
-            args[0] = null;
+            if (args.Count() > 0)
+            {
+                Config.ServerIp = args[0];
+                args = args.Skip(1).ToArray();
+            }
             CreateHostBuilder(args).Build().Run();
         }
 
