@@ -173,9 +173,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		}
 
 		//TODO: change name this one is incorrect
-		/// <summary>Gets list of outgoing deliveries</summary>
+		/// <summary>
+		///	Adds deliveries to Order objects to the list IncomingOrders
+		/// </summary>
 		/// <param name="currentDay">Integer that specifies the current day</param>
-		public void GetOutgoingDeliveries(int currentDay)
+		public void AddOutgoingDeliveries(int currentDay)
 		{
 			Backorder = 0;
 			for (int i = 0; i < IncomingOrders.Count; i++)
@@ -331,14 +333,17 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		/// <param name="currentDay">The current day</param>
 		public void AddPenalty(int currentDay)
 		{
-			Payments.Add(new Payment()
+			if (CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
 			{
-				Amount = ChosenOption.GuaranteedCapacityPenalty * -1,
-				DueDay = currentDay,
-				FromPlayer = false,
-				PlayerId = this.Id,
-				Topic = "Penalty"
-			});
+				Payments.Add(new Payment()
+				{
+					Amount = ChosenOption.GuaranteedCapacityPenalty * -1,
+					DueDay = currentDay,
+					FromPlayer = false,
+					PlayerId = this.Id,
+					Topic = "Penalty"
+				});
+			}
 		}
 
 		/// <summary>Adds a holding cost payment to the Payments list </summary>

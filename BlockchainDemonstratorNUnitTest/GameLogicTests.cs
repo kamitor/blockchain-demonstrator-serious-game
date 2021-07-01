@@ -127,7 +127,7 @@ namespace BlockchainDemonstratorNUnitTest
             _game.Manufacturer.Inventory = 10;
             _game.Manufacturer.IncomingOrders.Add(new Order() { Volume = 20, OrderDay = -1 });
 
-            _game.Manufacturer.GetOutgoingDeliveries(1);
+            _game.Manufacturer.AddOutgoingDeliveries(1);
 
             int result = _game.Manufacturer.Backorder;
 
@@ -165,7 +165,7 @@ namespace BlockchainDemonstratorNUnitTest
 
             _game.Manufacturer.IncomingOrders.Add(new Order() { Volume = 10 });
 
-            _game.Manufacturer.GetOutgoingDeliveries(1);
+            _game.Manufacturer.AddOutgoingDeliveries(1);
 
             _game.Manufacturer.UpdateBalance(26);
 
@@ -273,7 +273,7 @@ namespace BlockchainDemonstratorNUnitTest
             int currentday = 1;
             Order o = new Order() {Volume = 10, OrderDay = currentday};
             _game.Retailer.IncomingOrders.Add(o);
-            _game.Retailer.GetOutgoingDeliveries(currentday);
+            _game.Retailer.AddOutgoingDeliveries(currentday);
 
             int payday = (int)_game.Retailer.Payments.FirstOrDefault(x => x.Topic == "Delivery").DueDay;
             

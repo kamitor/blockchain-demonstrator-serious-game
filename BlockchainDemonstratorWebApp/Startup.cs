@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockchain_Demonstrator_Web_App.Models;
+using BlockchainDemonstratorApi.Models;
+using BlockchainDemonstratorApi.Models.Classes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -43,7 +45,7 @@ namespace Blockchain_Demonstrator_Web_App
             }
             else
             {
-                Config.RestApiUrl = "http://ScriptPlaceholder:8080";
+                Config.RestApiUrl = $"http://{Config.ServerIp}:8080";
                 
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.

@@ -95,7 +95,7 @@
         @foreach (var option in options.Where(x => x.RoleId == role.Id))
         {
             <div id="@role.Id-@option.Name" class="tabs--content--options-content">
-                <form asp-action="EditOption">
+                <form asp-action="EditOption" asp-controller="Factors" method="post">
                     <input type="hidden" name="roleId" value="@role.Id"/>
                     <input type="hidden" name="optionName" value="@option.Name"/>
                     <div>

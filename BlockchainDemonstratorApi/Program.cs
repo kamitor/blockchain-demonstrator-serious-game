@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlockchainDemonstratorApi.Models.Classes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,9 @@ namespace BlockchainDemonstratorApi
     {
         public static void Main(string[] args)
         {
+            if (args.Count() != 0) Config.ServerIp = args[0];
+            args[0] = null;
+            
             CreateHostBuilder(args).Build().Run();
         }
 

@@ -9,6 +9,7 @@ using BlockchainDemonstratorApi.Data;
 using BlockchainDemonstratorApi.Models.Classes;
 using System.Net.Http;
 using Blockchain_Demonstrator_Web_App.Models;
+using BlockchainDemonstratorApi.Models;
 using Newtonsoft.Json;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
@@ -76,7 +77,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 		/// </summary>
 		/// <param name="roleId">ID of the option's correlating role.</param>
 		/// <param name="optionName">Name of the option.</param>
-		/// <param name="costStartup">Value of the (edited) cost of statup.</param>
+		/// <param name="costStartup">Value of the (edited) cost of startup.</param>
 		/// <param name="costMaintenance">Value of the (edited) cost of maintenance.</param>
 		/// <param name="transportOneTrip">Value of the (edited) transport cost of one trip.</param>
 		/// <param name="transportPerDay">Value of the (edited) transport cost per day.</param>
@@ -99,7 +100,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 						penalty
 					}), System.Text.Encoding.UTF8, "application/json");
 				
-				var response = client.PostAsync(Config.RestApiUrl + "/api/Factors/EditOption", stringContent).Result;
+				var response = client.PostAsync(Config.RestApiUrl + "/api/NewFactors/EditOption", stringContent).Result;
 				
 				if (response.IsSuccessStatusCode)
 				{

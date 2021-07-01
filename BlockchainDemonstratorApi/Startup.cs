@@ -49,7 +49,7 @@ namespace BlockchainDemonstratorApi
                     {
                         builder.WithOrigins("https://localhost:44313").AllowAnyHeader()
                             .AllowAnyMethod().AllowCredentials();
-                        builder.WithOrigins("http://ScriptPlaceholder").AllowAnyHeader()
+                        builder.WithOrigins("http://" + Config.ServerIp).AllowAnyHeader()
                             .AllowAnyMethod().AllowCredentials();
                     });
             });

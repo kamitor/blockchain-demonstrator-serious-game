@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Blockchain_Demonstrator_Web_App.Models;
 using System.Net.Http;
+using BlockchainDemonstratorApi.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using BlockchainDemonstratorApi.Models.Classes;

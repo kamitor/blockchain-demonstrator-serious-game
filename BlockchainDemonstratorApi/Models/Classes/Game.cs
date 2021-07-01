@@ -239,21 +239,26 @@ namespace BlockchainDemonstratorApi.Models.Classes
          */
 		private void SetSetupDeliveries() //Reworked to new order system
 		{
-			for (int i = 0; i < (int) Math.Ceiling(Manufacturer.ChosenOption.LeadTime / (double) Factors.RoundIncrement); i++)
+			for (int i = 0;
+				i < (int) Math.Ceiling(Manufacturer.ChosenOption.LeadTime / (double) Factors.RoundIncrement);
+				i++)
 			{
 				Order order = new Order() {Volume = Factors.SetupDeliveryVolume};
 				order.Deliveries.Add(new Delivery()
 				{
 					Volume = Factors.SetupDeliveryVolume,
 					SendDeliveryDay =
-						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 - Manufacturer.ChosenOption.LeadTime)),
+						Convert.ToInt32(Math.Floor(Factors.RoundIncrement * i + 1 -
+						                           Manufacturer.ChosenOption.LeadTime)),
 					ArrivalDay = Factors.RoundIncrement * i + 1,
 					Price = Factors.ManuProductPrice * Factors.SetupDeliveryVolume
 				});
 				Retailer.OutgoingOrders.Add(order);
 			}
 
-			for (int i = 0; i < (int) Math.Ceiling(Processor.ChosenOption.LeadTime / (double) Factors.RoundIncrement); i++)
+			for (int i = 0;
+				i < (int) Math.Ceiling(Processor.ChosenOption.LeadTime / (double) Factors.RoundIncrement);
+				i++)
 			{
 				Order order = new Order() {Volume = Factors.SetupDeliveryVolume};
 				order.Deliveries.Add(new Delivery()
@@ -400,10 +405,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			foreach (Player player in Players)
 			{
-				if (player.CurrentOrder.Volume <= Option.MinimumGuaranteedCapacity)
-				{
-					player.AddPenalty(CurrentDay);
-				}
+				player.AddPenalty(CurrentDay);
 			}
 		}
 
@@ -417,10 +419,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		///</remarks>
 		private void SendDeliveries()
 		{
-			Retailer.GetOutgoingDeliveries(CurrentDay);
-			Manufacturer.GetOutgoingDeliveries(CurrentDay);
-			Processor.GetOutgoingDeliveries(CurrentDay);
-			Farmer.GetOutgoingDeliveries(CurrentDay);
+			Retailer.AddOutgoingDeliveries(CurrentDay);
+			Manufacturer.AddOutgoingDeliveries(CurrentDay);
+			Processor.AddOutgoingDeliveries(CurrentDay);
+			Farmer.AddOutgoingDeliveries(CurrentDay);
 			Farmer.CurrentOrder.Deliveries = new List<Delivery>()
 			{
 				new Delivery()

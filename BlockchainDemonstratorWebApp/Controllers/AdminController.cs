@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Blockchain_Demonstrator_Web_App.Models;
+using BlockchainDemonstratorApi.Models;
 using BlockchainDemonstratorApi.Models.Classes;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

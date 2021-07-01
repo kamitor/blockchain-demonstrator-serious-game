@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using BlockchainDemonstratorApi.Models;
+using BlockchainDemonstratorApi.Models.Classes;
 
 namespace Blockchain_Demonstrator_Web_App.Models
 {

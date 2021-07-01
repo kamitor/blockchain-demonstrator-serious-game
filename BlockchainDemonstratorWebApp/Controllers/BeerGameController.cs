@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Blockchain_Demonstrator_Web_App.Models;
+using BlockchainDemonstratorApi.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace Blockchain_Demonstrator_Web_App.Controllers
