@@ -153,7 +153,7 @@ namespace BlockchainDemonstratorApi.Hubs
                     if(game.Players.Count == 4)
                     {
                         game.SetupGame();
-                        await Clients.Group(gameId).SendAsync("ShowGame", game);
+                        await Clients.Group(gameId).SendAsync("ShowGame", JsonConvert.SerializeObject(game));
                     }
                     _context.Games.Update(game);
                     _context.SaveChanges();
