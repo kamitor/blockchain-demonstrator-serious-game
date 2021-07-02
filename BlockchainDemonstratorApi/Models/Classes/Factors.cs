@@ -13,7 +13,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
     /// </summary>
     public class Factors
     {
-        //TODO: Add database context. (when used by code this class does not use the database, but the static values below)
         [Key]
         public string Id { get; set; } = "DefaultFactors";
         

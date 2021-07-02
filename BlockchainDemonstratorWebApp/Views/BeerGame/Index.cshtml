@@ -179,7 +179,7 @@
             $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
 
             if (@if(thirdPhaseNotReady){@Html.Raw("true || ");}@currentDay == 7 * 8 + 1 && "@if(Model.ChosenOption != null){@Html.Raw(Model.ChosenOption.Name);}else{@Html.Raw("null");}" == "Basic") {
-                BeerGame.promptOptions(); //TODO: get promptoptions working
+                BeerGame.promptOptions();
                 @foreach(Player player in players)
                 {
                     if (player.ChosenOption != null) @Html.Raw($"BeerGame.updatePromptOptions('{JsonConvert.SerializeObject(player)}');\n");

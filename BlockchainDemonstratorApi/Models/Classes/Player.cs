@@ -172,7 +172,6 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			Payments = new List<Payment>();
 		}
 
-		//TODO: change name this one is incorrect
 		/// <summary>
 		///	Adds deliveries to Order objects to the list IncomingOrders
 		/// </summary>

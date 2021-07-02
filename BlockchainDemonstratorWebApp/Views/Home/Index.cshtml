@@ -40,9 +40,6 @@
 
             BeerGame.Signal.checkFull(gameId).then((result) => {
                 if (result.length != 0) $("#gameIdBox").submit();
-                else {
-                    //TODO: make small popup that warns that the game is full
-                }
             });
         }
     </script>
