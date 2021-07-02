@@ -43,12 +43,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int HarvesterProductPrice { get; set; } = 2000;
         #endregion
         #region Order factors 
-        public static int RatioALeadtime { get; set; }
-        public static int RatioAChance { get; set; }
-        public static int RatioBLeadtime { get; set; }
-        public static int RatioBChance { get; set; }
-        public static int RatioCLeadtime { get; set; }
-        public static int RatioCChance { get; set; }
+        public static int RatioALeadtime { get; set; } = 0;
+        public static int RatioAChance { get; set; } = 50;
+        public static int RatioBLeadtime { get; set; } = 7;
+        public static int RatioBChance { get; set; } = 35;
+        public static int RatioCLeadtime { get; set; } = 14;
+        public static int RatioCChance { get; set; } = 15;
         
         public static int WeightedRandom()
         {

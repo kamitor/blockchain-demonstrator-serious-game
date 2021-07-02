@@ -4,6 +4,7 @@ sudo apt-get update
 
 #Get code from repository
 echo "V--------------------Getting code from repository--------------------V"
+[ -d "~/Beer-Game" ] && sudo rm -r ~/Beer-Game
 git clone https://github.com/Hogeschool-Windesheim/Beer-Game.git ~/Beer-Game
 
 #Change appsettings.json connection string
