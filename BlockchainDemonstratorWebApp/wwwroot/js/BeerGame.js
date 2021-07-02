@@ -454,6 +454,7 @@ BeerGame.Signal = (() => {
         connection.on("ShowGame", function (game) {
             $(".lds").hide();
             $(".top-container").show();
+            $(".bottom-container").show();
             if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
             else if (document.title == "BeerGame Admin - Blockchain Demonstrator") BeerGame.updateGameTuningPage(game);
         });
