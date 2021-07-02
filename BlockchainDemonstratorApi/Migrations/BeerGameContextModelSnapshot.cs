@@ -90,13 +90,25 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("manuProductPrice")
                         .HasColumnType("int");
 
-                    b.Property<int>("orderLeadTimeRandomMaximum")
-                        .HasColumnType("int");
-
-                    b.Property<int>("orderLeadTimeRandomMinimum")
-                        .HasColumnType("int");
-
                     b.Property<int>("procProductPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ratioAChance")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ratioALeadtime")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ratioBChance")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ratioBLeadtime")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ratioCChance")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ratioCLeadtime")
                         .HasColumnType("int");
 
                     b.Property<int>("retailProductPrice")

@@ -181,7 +181,7 @@ namespace BlockchainDemonstratorNUnitTest
             _game.Progress();
             _game.Progress();
             double actualLeadTime = _game.Retailer.OutgoingOrders[0].Deliveries[0].ArrivalDay - _game.Retailer.OutgoingOrders[0].Deliveries[0].SendDeliveryDay;
-            Assert.IsTrue(actualLeadTime - leadTime >= Factors.OrderLeadTimeRandomMinimum && actualLeadTime - leadTime <= Factors.OrderLeadTimeRandomMaximum + leadTime);
+            Assert.IsTrue(actualLeadTime - leadTime >= Factors.RatioALeadtime && actualLeadTime - leadTime <= Factors.RatioCLeadtime + leadTime);
         }
 
         [Test]

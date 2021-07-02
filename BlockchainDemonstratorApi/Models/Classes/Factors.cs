@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
@@ -12,6 +13,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
     /// </summary>
     public class Factors
     {
+        //TODO: Add database context. (when used by code this class does not use the database, but the static values below)
         [Key]
         public string Id { get; set; } = "DefaultFactors";
         
@@ -41,8 +43,30 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public static int HarvesterProductPrice { get; set; } = 2000;
         #endregion
         #region Order factors 
-        public static int OrderLeadTimeRandomMinimum { get; set; } = 5;
-        public static int OrderLeadTimeRandomMaximum { get; set; } = 7;
+        public static int RatioALeadtime { get; set; }
+        public static int RatioAChance { get; set; }
+        public static int RatioBLeadtime { get; set; }
+        public static int RatioBChance { get; set; }
+        public static int RatioCLeadtime { get; set; }
+        public static int RatioCChance { get; set; }
+        
+        public static int WeightedRandom()
+        {
+            int total = RatioAChance + RatioBChance + RatioCChance;
+            int x = new Random().Next(0, total + 1);
+
+            if (x >= total - RatioAChance )
+            {
+                return RatioALeadtime;
+            }
+
+            if (x >= total - RatioAChance - RatioBChance)
+            {
+                return RatioBLeadtime;
+            }
+
+            return RatioCLeadtime;
+        }
         #endregion
 
         #region Database properties
@@ -60,8 +84,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
         public int retailerOrderVolumeRandomMinimum { get { return RetailerOrderVolumeRandomMinimum; } set { RetailerOrderVolumeRandomMinimum = value; } }
         public int retailerOrderVolumeRandomMaximum { get { return RetailerOrderVolumeRandomMaximum; } set { RetailerOrderVolumeRandomMaximum = value; } }
         public int defaultInventory { get { return DefaultInventory; } set { DefaultInventory = value; } }
-        public int orderLeadTimeRandomMinimum { get { return OrderLeadTimeRandomMinimum; } set { OrderLeadTimeRandomMinimum = value; } }
-        public int orderLeadTimeRandomMaximum { get { return OrderLeadTimeRandomMaximum; } set { OrderLeadTimeRandomMaximum = value; } }
+        public int ratioALeadtime { get {return RatioALeadtime;} set {RatioALeadtime = value;} }
+        public int ratioBLeadtime { get {return RatioBLeadtime;} set {RatioBLeadtime = value;} }
+        public int ratioCLeadtime { get {return RatioCLeadtime;} set {RatioCLeadtime = value;} }
+        public int ratioAChance { get { return RatioAChance;} set { RatioAChance = value; } }
+        public int ratioBChance { get { return RatioBChance;} set { RatioBChance = value; } }
+        public int ratioCChance { get { return RatioCChance;} set { RatioCChance = value; } }
         #endregion
     }
 }
