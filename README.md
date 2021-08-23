@@ -43,7 +43,7 @@ Finally, to run the script use the following command.
 
 It is important to both use sudo and the ./ otherwise the script will not work.
 ## Github actions
-The steps below will take you through the installation process using GitHub actions.
+The steps below will take you through the installation process using GitHub actions. <ins>The GitHub actions process has not been fully finished</ins>, for that reason we recommend you to use the installation script instead which can be found above. The steps below are to help you get started with Github actions. 
 ### Step 1:
 Setup GitHub actions runner on your server. Go to settings > actions > runners and click add runner. 
 Follow the steps provided by Github
