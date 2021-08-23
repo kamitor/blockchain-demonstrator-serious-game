@@ -10,7 +10,7 @@ on your server.
 ## Installation script
 The steps below will take you through the installation process using an installation script.
 ### Prerequisite 
-You have downloaded the installation script form the GitHub page
+You have downloaded the installation script from the GitHub repository. Don't mind the Build & Test project.yml & Continious Intergration and Deployment failing as that does not matter for this installation process.
 ### Step 1
 After the virtual machine has been set up, you should first make sure the following ports are open: 80 and 8080. Because 
 these are needed for the web application to work
