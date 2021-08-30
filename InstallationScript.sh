@@ -18,10 +18,16 @@ sudo apt install nginx -y
 
 #Setup database
 echo "V--------------------Setting up database--------------------V"
-sudo docker pull mcr.microsoft.com/mssql/server:2019-latest
-sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=B33rgam3" \
-   -p 1433:1433 --name database -h database \
-   -d mcr.microsoft.com/mssql/server:2019-latest
+if [[ $(docker ps -a | grep 'Exited.*database') ]]; then
+        sudo docker start database
+elif ! [[ $(docker ps -a | grep 'database') ]]; then
+   sudo docker pull mcr.microsoft.com/mssql/server:2019-latest
+   sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=B33rgam3" \
+      -p 1433:1433 --name database -h database \
+      -d mcr.microsoft.com/mssql/server:2019-latest
+else
+	echo "Database had already been succesfully set up"
+fi
 
 #Setup nginx
 echo "server {
