@@ -105,6 +105,7 @@
                 dataType: "text"
             }).then((result) => {
                 let game = JSON.parse(result);
+                if (game.GameMasterId == null) game.GameMasterId = "";
                 let players = "";
                 for (let i = 0; i < game.Players.length; i++) {
                     players += game.Players[i].Name;
@@ -113,7 +114,7 @@
                 let status = "";
                 if (!game.GameStarted) status = "Waiting for players";
                 else if (item.CurrentDay == Factors.RoundIncrement * 24 + 1) status = "Done";
-                else status = '<span class="gradient-font">Playing</span>'
+                else status = '<span class="gradient-font">Playing</span>';
                 $("tbody").append($(`<tr onclick="selectGame(this)">
                                         <td>${game.Id}</td>
                                         <td>${game.GameMasterId}</td>

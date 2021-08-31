@@ -3,7 +3,8 @@ const BeerGame = (() => {
     const configMap = {
         baseUrl: "",
         gameId: "",
-        playerId: ""
+        playerId: "",
+        waiting: false
     }
 
     const init = (gameId, playerId, baseUrl) => {
@@ -233,9 +234,8 @@ const BeerGame = (() => {
 
         $("#place-order-text").val("");
         $(".cssload-jumping").hide();
-        $("#place-order-button").prop("disabled", false);
-        $("#place-order-button").css("filter", "");
         $("#place-order-button").val("Place order");
+        configMap.waiting = false;
     }
 
     const updateGamePlayers = (game) => {
@@ -419,7 +419,8 @@ const BeerGame = (() => {
         updateGameTuningPage: updateGameTuningPage,
         checkInGame: checkInGame,
         updatePromptOptions: updatePromptOptions,
-        updateGamePlayerPage: updateGamePlayerPage
+        updateGamePlayerPage: updateGamePlayerPage,
+        waiting: configMap.waiting
     }
 })();
 
@@ -460,6 +461,7 @@ BeerGame.Signal = (() => {
         });
 
         connection.on("UpdateGame", function (game) {
+            BeerGame.waiting = false;
             if (document.title == "BeerGame - Blockchain Demonstrator" || document.title == "BeerGame Game master - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
             else if (document.title == "BeerGame Admin - Blockchain Demonstrator") BeerGame.updateGameTuningPage(game);
         });
@@ -506,6 +508,7 @@ BeerGame.Signal = (() => {
         $("#place-order-button").prop("disabled", true);
         $("#place-order-button").css("filter", "grayscale(100%)");
         $("#place-order-button").val("");
+        BeerGame.waiting = true;
         $(".cssload-jumping").show();
     }
 
