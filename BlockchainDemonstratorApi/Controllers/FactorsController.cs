@@ -90,6 +90,38 @@ namespace BlockchainDemonstratorApi.Controllers
 		}
 
 		/// <summary>
+		/// PUT: api/Factors/Option/5
+		/// </summary>
+		[HttpPut("Option/{id}")]
+		public async Task<IActionResult> PutFactors(string id, Option option)
+		{
+			if (id != option.Id)
+			{
+				return BadRequest();
+			}
+
+			_context.Entry(option).State = EntityState.Modified;
+
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!OptionExists(id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			return NoContent();
+		}
+
+		/// <summary>
 		/// POST: api/Factors
 		/// </summary>
 		[HttpPost]
@@ -133,45 +165,14 @@ namespace BlockchainDemonstratorApi.Controllers
 			return factors;
 		}
 
-		/// <summary>
-		/// POST: api/Factors/EditOption
-		/// </summary>
-		[HttpPost("EditOption")]
-		public async Task<IActionResult> EditOption(dynamic data)
-		{
-			string roleId = Convert.ToString(data.roleId);
-			string optionName = Convert.ToString(data.optionName);
-			double costStartup = Convert.ToDouble(data.costStartup);
-			double costMaintenance = Convert.ToDouble(data.costMaintenance);
-			double transportOneTrip = Convert.ToDouble(data.transportOneTrip);
-			double transportPerDay = Convert.ToDouble(data.transportPerDay);
-			double leadTime = Convert.ToDouble(data.leadTime);
-			double flexibility = Convert.ToDouble(data.flexibility);
-			double penalty = Convert.ToDouble(data.penalty);
-
-			if ( string.IsNullOrEmpty(roleId) || string.IsNullOrEmpty(optionName)) return BadRequest();
-			var option = _context.Options.FirstOrDefault(x => x.RoleId == roleId && x.Name == optionName);
-			if (option == null)
-			{
-				return NotFound();
-			}
-
-			option.CostOfStartUp = costStartup;
-			option.CostOfMaintenance = costMaintenance;
-			option.TransportCostOneTrip = transportOneTrip;
-			option.TransportCostPerDay = transportPerDay;
-			option.LeadTime = leadTime;
-			option.Flexibility = flexibility;
-			option.GuaranteedCapacityPenalty = penalty;
-
-			_context.Options.Update(option);
-			_context.SaveChanges();
-			return Ok();
-		}
-
 		private bool FactorsExists(string id)
 		{
 			return _context.Factors.Any(e => e.Id == id);
+		}
+
+		private bool OptionExists(string id)
+		{
+			return _context.Options.Any(e => e.Id == id);
 		}
 	}
 }

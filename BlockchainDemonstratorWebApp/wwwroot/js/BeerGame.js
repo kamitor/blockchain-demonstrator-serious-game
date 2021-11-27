@@ -532,6 +532,26 @@ BeerGame.Signal = (() => {
         });
     }
 
+    let flushInventory = () => {
+        connection.invoke("FlushInventory", configMap.gameId, configMap.playerId);
+        flushOrder();
+    }
+
+    let flushOrder = () => {
+        connection.invoke("SendOrder",
+            0,
+            BeerGame.Cookie.getCookie('JoinedGame'),
+            BeerGame.Cookie.getCookie('PlayerId'))
+            .catch(function (err) {
+                return console.error(err.toString())
+            });
+        $("#place-order-button").prop("disabled", true);
+        $("#place-order-button").css("filter", "grayscale(100%)");
+        $("#place-order-button").val("");
+        BeerGame.waiting = true;
+        $(".cssload-jumping").show();
+    }
+
     let checkAvailableRoles = () => {
         if (configMap.ready) {
             connection.invoke("CheckAvailableRoles", configMap.gameId).then((result) => {
@@ -568,7 +588,8 @@ BeerGame.Signal = (() => {
         joinGame: joinGame,
         chooseOption: chooseOption,
         startAvailableRolesInterval: startAvailableRolesInterval,
-        checkFull: checkFull
+        checkFull: checkFull,
+        flushInventory: flushInventory
     }
 })();
 

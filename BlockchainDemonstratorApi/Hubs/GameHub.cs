@@ -75,6 +75,15 @@ namespace BlockchainDemonstratorApi.Hubs
             _context.Games.Update(game);
             _context.SaveChanges();
         }
+
+        public async Task FlushInventory(string gameId, string playerId)
+        {
+            Game game = _context.Games.FirstOrDefault(x => x.Id.Equals(gameId));
+            if (game == null) return;
+
+            game.FlushInventory(playerId);
+        }
+        
         public async Task EndGame(string gameId)
         {
             await Clients.Group(gameId).SendAsync("EndGame");

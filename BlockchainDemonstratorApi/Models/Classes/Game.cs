@@ -348,10 +348,10 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		private void AddCurrentDay()
 		{
 			// Adding current day
-			Retailer.CurrentOrder.OrderDay = CurrentDay;
-			Manufacturer.CurrentOrder.OrderDay = CurrentDay;
-			Processor.CurrentOrder.OrderDay = CurrentDay;
-			Farmer.CurrentOrder.OrderDay = CurrentDay;
+			foreach (Player player in Players)
+			{
+				player.CurrentOrder.OrderDay = CurrentDay;
+			}
 		}
 
 		/// <summary>
@@ -429,7 +429,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				{
 					Volume = Farmer.CurrentOrder.Volume,
 					SendDeliveryDay = CurrentDay,
-					ArrivalDay = CurrentDay + Factors.RoundIncrement * 2 + new Random().Next(0, 4),
+					ArrivalDay = CurrentDay + 1/* + Factors.RoundIncrement * 2 + new Random().Next(0, 4)*/,
 					Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume
 				}
 			};
@@ -475,6 +475,24 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			{
 				player.AddFlexibility(CurrentDay);
 			}
+		}
+
+		public void FlushInventory(string playerId)
+		{
+			Player pl = Players.FirstOrDefault(x => x.Id == playerId);
+			pl?.FlushInvetory(CurrentDay);
+		}
+
+		public override string ToString()
+		{
+			string result = "";
+			
+			foreach (Player player in Players)
+			{
+				result += player.ToString();
+			}
+
+			return result;
 		}
 	}
 }

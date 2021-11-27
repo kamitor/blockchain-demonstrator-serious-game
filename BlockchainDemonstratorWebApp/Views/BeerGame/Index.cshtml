@@ -102,7 +102,6 @@
         <div class="harvester-text">
             <span style="text-align:center" class="tertiary-text">Harvester</span>
         </div>
-
         <div class="backorder-value">
             <span id="backorder-@Model.Role.Id" style="margin-bottom:5%" class="head-text">@Model.Backorder</span>
         </div>
@@ -120,6 +119,9 @@
         </div>
         <div class="inventory-text">
             <span style="text-align:center" class="secondary-text">Inventory</span>
+        </div>
+        <div class="inventory-flush">
+            <button class="flush-button gradient tertiary-text" style="color:white" id="flushButton">Flush</button>
         </div>
         <div class="incoming-delivery-value">
             <span id="incoming-delivery-@Model.Role.Id" style="margin-bottom:5%" class="head-text">@Model.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay <= currentDay && d.ArrivalDay > currentDay - Factors.RoundIncrement).Sum(d => d.Volume))</span>
@@ -169,6 +171,8 @@
     </div>
 </div>
 
+
+
 @section Scripts{
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/BeerGame.js"></script>
@@ -178,12 +182,25 @@
             BeerGame.waiting = @waiting;
 
             $("#place-order-button").on('click', BeerGame.Signal.sendOrder);
+            $("#flushButton").on('click', BeerGame.Signal.flushInventory);
 
-            if (@if(thirdPhaseNotReady){@Html.Raw("true || ");}@currentDay == 7 * 8 + 1 && "@if(Model.ChosenOption != null){@Html.Raw(Model.ChosenOption.Name);}else{@Html.Raw("null");}" == "Basic") {
+            if (@if (thirdPhaseNotReady)
+                {@Html.Raw("true || ")
+                    ;
+                }
+    @currentDay == 7 * 8 + 1 && "@if (Model.ChosenOption != null)
+                                 {@Html.Raw(Model.ChosenOption.Name)
+                                     ;
+                                 }
+                                 else
+                                 {@Html.Raw("null")
+                                     ;
+                                 }" == "Basic") {
                 BeerGame.promptOptions();
-                @foreach(Player player in players)
+                @foreach (Player player in players)
                 {
-                    if (player.ChosenOption != null) @Html.Raw($"BeerGame.updatePromptOptions('{JsonConvert.SerializeObject(player)}');\n");
+                    if (player.ChosenOption != null) @Html.Raw($"BeerGame.updatePromptOptions('{JsonConvert.SerializeObject(player)}');\n")
+                    ;
                 }
             }
 
@@ -208,6 +225,12 @@
                 $("#place-order-button").css("filter", "grayscale(100%)");
                 $("#place-order-button").val("");
                 $(".cssload-jumping").show();
+            }
+            
+            if (@Model.Inventory < 1) {
+                $("#flushButton").prop("disabled", true);
+                $("#flushButton").css("filter", "grayscale(100%)");
+                $("#flushButton").val("");
             }
 
             function insertOrder() {

@@ -42,7 +42,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			get { return _chosenOption; }
 			set { _chosenOption = value; }
 		}
-		
+
 		public int Backorder { get; set; }
 
 		/// <summary>
@@ -367,12 +367,52 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		{
 			for (int i = 0; i < Payments.Count; i++)
 			{
-				if ((int) Payments[i].DueDay <= currentDay &&
-				    (int) Payments[i].DueDay > currentDay - Factors.RoundIncrement)
+				if ((int)Payments[i].DueDay <= currentDay &&
+				    (int)Payments[i].DueDay > currentDay - Factors.RoundIncrement)
 				{
 					Balance += Payments[i].Amount;
 				}
 			}
+		}
+
+		public void FlushInvetory(int currentDay)
+		{
+			Payments.Add(new Payment()
+			{
+				Amount = Factors.FlushInventoryPrice * -1,
+				DueDay = currentDay,
+				FromPlayer = false,
+				PlayerId = this.Id,
+				Topic = "Flushing Inventory"
+			});
+			Inventory = 0;
+		}
+		
+		public void SimulateCurrentOrder()
+		{
+			CurrentOrder = new Order() { Volume = GetSimuVolume() };
+		}
+
+		private int GetIoTotalAmount()
+		{
+			int result = 0;
+			
+			foreach (Order order in IncomingOrders)
+			{
+				result += order.Volume;
+			}
+
+			return result;
+		}
+
+		private int GetSimuVolume()
+		{
+			return 20 - (Inventory - GetIoTotalAmount());
+		}
+
+		public override string ToString()
+		{
+			return $"{Name}, inventory: {Inventory}, current order volume: {CurrentOrder.Volume}, incoming order total: {GetIoTotalAmount()}\n\r";
 		}
 	}
 }

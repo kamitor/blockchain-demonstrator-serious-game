@@ -47,7 +47,7 @@
 
 .main-canvas {
     border-radius: 18px;
-    height: 550px;
+    height: 600px;
     margin-right: 2em;
 }
 
@@ -127,7 +127,19 @@
     position: absolute;
     height: 7%;
     width: 14.5%;
-    top: 91.9%;
+    top: 87.5%;
+    left: 50.65%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.inventory-flush {
+    position: absolute;
+    height: 7%;
+    width: 14.5%;
+    top: 93%;
     left: 50.65%;
     display: flex;
     flex-direction: column;
@@ -221,7 +233,7 @@
 .right-canvas {
     border-radius: 18px;
     width: 100%;
-    height: 434px;
+    height: 484px;
     display: grid;
     grid-template-rows: 1.5fr 3fr 3fr;
 }
@@ -268,6 +280,18 @@
     text-align: center;
 }
 
+.flush-button {
+    border-radius: 10px;
+    width: auto;
+    outline: none;
+    border: none;
+    height: 30px;
+}
+
+.flush-button:hover {
+    filter: saturate(0.5)
+}
+
 .order-button {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -275,4 +299,8 @@
     outline: none;
     border: none;
     height: 50px;
+}
+
+.order-button:hover {
+    filter: saturate(0.5)
 }

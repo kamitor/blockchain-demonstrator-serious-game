@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Options;
 
 namespace BlockchainDemonstratorApi.Models.Classes
 {
@@ -47,5 +48,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
             Flexibility = flexibility;
             GuaranteedCapacityPenalty = guaranteedCapacityPenalty;
         }
+        
+        public Option(){}
     }
 }

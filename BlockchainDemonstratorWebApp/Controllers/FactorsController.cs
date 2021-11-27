@@ -54,7 +54,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(string id,
 			[Bind(
-				"Id,test,holdingFactor,roundIncrement,retailProductPrice,manuProductPrice,procProductPrice,farmerProductPrice,harvesterProductPrice,setupCost,initialCapital,ratioALeadtime,ratioBLeadtime,ratioCLeadtime,ratioAChance,ratioBChance,ratioCChance")]
+				"Id,test,holdingFactor,roundIncrement,retailProductPrice,manuProductPrice,procProductPrice,farmerProductPrice,harvesterProductPrice,setupCost,initialCapital,ratioALeadtime,ratioBLeadtime,ratioCLeadtime,ratioAChance,ratioBChance,ratioCChance,flushInventoryPrice")]
 			Factors factors)
 		{
 			using (var client = new HttpClient())
@@ -65,6 +65,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 
 				if (response.IsSuccessStatusCode)
 				{
+					//this is a reason why uncommitted changes are discarded when changing tab
 					return RedirectToAction("Index", "Factors");
 				}
 			}
@@ -73,35 +74,23 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 		}
 
 		/// <summary>
-		/// This method edits a single option.
+		/// This function sends the edited factors to the REST API.
 		/// </summary>
-		/// <param name="roleId">ID of the option's correlating role.</param>
-		/// <param name="optionName">Name of the option.</param>
-		/// <param name="costStartup">Value of the (edited) cost of startup.</param>
-		/// <param name="costMaintenance">Value of the (edited) cost of maintenance.</param>
-		/// <param name="transportOneTrip">Value of the (edited) transport cost of one trip.</param>
-		/// <param name="transportPerDay">Value of the (edited) transport cost per day.</param>
-		/// <param name="leadTime">Value of the (edited) lead time.</param>
-		/// <param name="flexibility">Value of the (edited) flexibility.</param>
-		/// <param name="penalty">Value of the (edited) penalty.</param>
+		/// <param name="id">ID of the edited factors</param>
+		/// <param name="option">Binded parameters of the option</param>
 		[HttpPost]
-		public async Task<IActionResult> EditOption(string roleId, string optionName, string costStartup,
-			string costMaintenance, string transportOneTrip, string transportPerDay, string leadTime,
-			string flexibility, string penalty)
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditOption(string id,
+			[Bind(
+				"Id,Name,CostOfStartUp,CostOfMaintenance,TransportCostOneTrip,TransportCostPerDay,LeadTime,Flexibility,GuaranteedCapacityPenalty,RoleId,MinimumGuaranteedCapacity")]
+			Option option)
 		{
 			using (var client = new HttpClient())
 			{
-				var stringContent = new StringContent(
-					JsonConvert.SerializeObject(new
-					{
-						roleId, optionName, costStartup,
-						costMaintenance, transportOneTrip,
-						transportPerDay, leadTime, flexibility,
-						penalty
-					}), System.Text.Encoding.UTF8, "application/json");
-				
-				var response = client.PostAsync(Config.RestApiUrl + "/api/NewFactors/EditOption", stringContent).Result;
-				
+				var stringContent = new StringContent(JsonConvert.SerializeObject(option), System.Text.Encoding.UTF8,
+					"application/json");
+				var response = client.PutAsync(Config.RestApiUrl + "/api/Factors/Option/" + id, stringContent).Result;
+
 				if (response.IsSuccessStatusCode)
 				{
 					return RedirectToAction("Index", "Factors");

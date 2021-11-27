@@ -78,6 +78,9 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("farmerProductPrice")
                         .HasColumnType("int");
 
+                    b.Property<int>("flushInventoryPrice")
+                        .HasColumnType("int");
+
                     b.Property<int>("harvesterProductPrice")
                         .HasColumnType("int");
 
