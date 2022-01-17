@@ -62,8 +62,6 @@ namespace Blockchain_Demonstrator_Web_App
 
             app.UseRouting();
 
-            
-            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -99,5 +99,30 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 
 			return BadRequest();
 		}
+
+		[HttpGet]
+		public IActionResult Simulation(int orderAmount, string chosenOption)
+		{
+			if (orderAmount != 0 || chosenOption != "")
+			{
+				using (var client = new HttpClient())
+				{
+					var response = client.GetAsync(Config.RestApiUrl + $"/api/Factors/{orderAmount}/{chosenOption}")
+						.Result;
+
+					if (response.IsSuccessStatusCode)
+					{
+						var responseContent = response.Content;
+						string responseString = responseContent.ReadAsStringAsync().Result;
+						if (responseString != null)
+						{
+							return View(JsonConvert.DeserializeObject<Game>(responseString));
+						}
+					}
+				}
+			}
+
+			return View();
+		}
 	}
 }

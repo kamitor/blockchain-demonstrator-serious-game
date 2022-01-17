@@ -10,7 +10,9 @@
 <link rel="stylesheet" href="~/css/GameTuning.css"/>
 
 <h1>Game tuning</h1>
-
+<form method="get" asp-action="Simulation">
+    <input type="submit" value="Simulate a game" class="btn btn-primary"/>
+</form>
 <div class="tabs">
     <button id="Factors-button" class="tabs--button" onclick="openTab('Factors');clickTab('Factors-button','tabs--button')">Factors</button>
     <button id="Retailer-button" class="tabs--button" onclick="openTab('Retailer');clickTab('Retailer-button','tabs--button')">Retailer</button>

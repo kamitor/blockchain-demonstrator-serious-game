@@ -152,6 +152,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			SaveOrderWorthHistory();
 			SaveOverallProfitHistory();
 			SaveGrossProfitHistory();
+			SaveBalanceHistory();
+			SaveBackorderHistory();
 		}
 
 		private void SaveInventoryHistory()
@@ -160,6 +162,24 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			{
 				List<int> newInventory = new List<int>() {player.Inventory};
 				player.InventoryHistory = player.InventoryHistory.Concat(newInventory).ToList();
+			}
+		}
+
+		private void SaveBalanceHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<double> newBalance = new List<double>() {player.Balance};
+				player.BalanceHistory = player.BalanceHistory.Concat(newBalance).ToList();
+			}
+		}
+		
+		private void SaveBackorderHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<double> newBackorder = new List<double>() {player.Backorder};
+				player.BackorderHistory = player.BackorderHistory.Concat(newBackorder).ToList();
 			}
 		}
 
@@ -194,6 +214,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
 			}
 		}
+		
+		
 
 		/// <summary>
 		/// Used to setup the game when it first starts.
@@ -429,7 +451,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				{
 					Volume = Farmer.CurrentOrder.Volume,
 					SendDeliveryDay = CurrentDay,
-					ArrivalDay = CurrentDay + 1/* + Factors.RoundIncrement * 2 + new Random().Next(0, 4)*/,
+					ArrivalDay = CurrentDay + 1 + Factors.RoundIncrement * 2 + new Random().Next(0, 4),
 					Price = Factors.HarvesterProductPrice * Farmer.CurrentOrder.Volume
 				}
 			};
@@ -480,7 +502,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 		public void FlushInventory(string playerId)
 		{
 			Player pl = Players.FirstOrDefault(x => x.Id == playerId);
-			pl?.FlushInvetory(CurrentDay);
+			pl?.FlushInventory(CurrentDay);
 		}
 
 		public override string ToString()

@@ -1,0 +1,75 @@
+﻿@using BlockchainDemonstratorApi.Models.Classes
+@model BlockchainDemonstratorApi.Models.Classes.Game
+
+@{
+    ViewBag.Title = "Simulate Game";
+    Layout = "_Layout";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (Model != null)
+{
+    <form>
+        <input type="submit" value="Reset" class="btn btn-primary"/>
+    </form>
+    
+    <table class="table">
+        <tr>
+            <thead>
+            <th scope="col">Round</th>
+            <th scope="col">Player</th>
+            <th scope="col">Inventory</th>
+            <th scope="col">Balance</th>
+            <th scope="col">Backorder</th>
+            </thead>
+        </tr>
+        <tbody>
+        @for (int i = 0; i < Model.Players[0].InventoryHistory.Count; i++)
+        {
+            for (int x = 0; x < Model.Players.Count; x++)
+            {
+                if (x % 2 == 1)
+                {
+                    <tr style="background-color: lightgray">
+                        <th style="background-color: lightgray" scope="row">@(i + 1)</th>
+                        <td style="background-color: lightgray">@Model.Players[x].Name</td>
+                        <td style="background-color: lightgray">@Model.Players[x].InventoryHistory[i]</td>
+                        <td style="background-color: lightgray">@Model.Players[x].BalanceHistory[i]</td>
+                        <td style="background-color: lightgray">@Model.Players[x].BackorderHistory[i]</td>
+                    </tr>    
+                }
+                else
+                {
+                    <tr>
+                        <th scope="row">@(i + 1)</th>
+                        <td>@Model.Players[x].Name</td>
+                        <td>@Model.Players[x].InventoryHistory[i]</td>
+                        <td>@Model.Players[x].BalanceHistory[i]</td>
+                        <td>@Model.Players[x].BackorderHistory[i]</td>
+                    </tr>
+                }
+                if (x == Model.Players.Count - 1)
+                {
+                    <tr style="height: 20px"></tr>
+                }
+            }
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <form>
+        <label>Order amount</label>
+        <input type="number" name="orderAmount">
+        <select name="chosenOption">
+            <option value="Basic">Basic</option>
+            <option value="DLT">DLT</option>
+            <option value="YouProvide">YouProvide</option>
+            <option value="YouProvideWithHelp">YouProvideWithHelp</option>
+            <option value="TrustedParty">TrustedParty</option>
+        </select>
+        <input type="submit" value="Simulate">
+    </form>
+}

@@ -295,8 +295,14 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<int>("Backorder")
                         .HasColumnType("int");
 
+                    b.Property<string>("BackorderHistoryJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Balance")
                         .HasColumnType("float");
+
+                    b.Property<string>("BalanceHistoryJson")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ChosenOptionId")
                         .HasColumnType("nvarchar(450)");

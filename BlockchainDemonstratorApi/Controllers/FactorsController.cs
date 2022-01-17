@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BlockchainDemonstratorApi.Data;
 using BlockchainDemonstratorApi.Models.Classes;
+using BlockchainDemonstratorApi.Models.Enums;
 using Newtonsoft.Json;
 
 namespace BlockchainDemonstratorApi.Controllers
@@ -163,6 +164,45 @@ namespace BlockchainDemonstratorApi.Controllers
 			await _context.SaveChangesAsync();
 
 			return factors;
+		}
+
+		[HttpGet("{amount}/{option}")] 
+		public ActionResult<Game> SimulateGame(int amount, string option)
+		{
+			Game _game = new Game("SimulateGame"); 
+			
+			Player retailer = new Player("Retailer-Sim");
+			retailer.Role = new Role("Retailer", Product.Beer);
+			retailer.ChosenOption = _context.Options.FirstOrDefault(x => x.Name.Equals(option));
+			_game.Retailer = retailer;
+
+			Player manufacturer = new Player("Manufacturer-Sim");
+			manufacturer.Role = new Role("Manufacturer", Product.Packs);
+			manufacturer.ChosenOption = _context.Options.FirstOrDefault(x => x.Name.Equals(option));
+			_game.Manufacturer = manufacturer;
+
+			Player processor = new Player("Processor-Sim");
+			processor.Role = new Role("Processor", Product.Barley);
+			processor.ChosenOption = _context.Options.FirstOrDefault(x => x.Name.Equals(option));
+			_game.Processor = processor;
+
+			Player farmer = new Player("Farmer-Sim");
+			farmer.Role = new Role("Farmer", Product.Seeds);
+			farmer.ChosenOption = _context.Options.FirstOrDefault(x => x.Name.Equals(option));
+			_game.Farmer = farmer;
+			
+			_game.SetupGame();
+			
+			while (_game.CurrentDay != Factors.RoundIncrement * 24 + 1)
+			{
+				foreach (Player player in _game.Players)
+				{
+					player.CurrentOrder = new Order() { Volume = amount };
+				}
+				_game.Progress();
+			}
+
+			return _game;
 		}
 
 		private bool FactorsExists(string id)

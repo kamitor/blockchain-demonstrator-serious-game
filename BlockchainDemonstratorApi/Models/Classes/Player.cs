@@ -153,6 +153,35 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			set { GrossProfitHistoryJson = JsonConvert.SerializeObject(value); }
 		}
 
+		public string BalanceHistoryJson { get; set; }
+
+		[NotMapped]
+		public List<double> BalanceHistory
+		{
+			get
+			{
+				return (BalanceHistoryJson == null)
+					? new List<double>()
+					: JsonConvert.DeserializeObject<List<double>>(BalanceHistoryJson);
+			}
+			set { BalanceHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
+		public string BackorderHistoryJson { get; set; }
+
+		[NotMapped]
+		public List<double> BackorderHistory
+		{
+			get
+			{
+				return (BackorderHistoryJson == null)
+					? new List<double>()
+					: JsonConvert.DeserializeObject<List<double>>(BackorderHistoryJson);
+			}
+			set { BackorderHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
+
 		public Player(string name)
 		{
 			Id = Guid.NewGuid().ToString();
@@ -375,7 +404,7 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			}
 		}
 
-		public void FlushInvetory(int currentDay)
+		public void FlushInventory(int currentDay)
 		{
 			Payments.Add(new Payment()
 			{
@@ -387,32 +416,15 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			});
 			Inventory = 0;
 		}
-		
+
 		public void SimulateCurrentOrder()
 		{
-			CurrentOrder = new Order() { Volume = GetSimuVolume() };
-		}
-
-		private int GetIoTotalAmount()
-		{
-			int result = 0;
-			
-			foreach (Order order in IncomingOrders)
-			{
-				result += order.Volume;
-			}
-
-			return result;
-		}
-
-		private int GetSimuVolume()
-		{
-			return 20 - (Inventory - GetIoTotalAmount());
+			CurrentOrder = new Order() { Volume = 10 };
 		}
 
 		public override string ToString()
 		{
-			return $"{Name}, inventory: {Inventory}, current order volume: {CurrentOrder.Volume}, incoming order total: {GetIoTotalAmount()}\n\r";
+			return $"{Name}, balance: {Balance}, inventory: {Inventory}, backorder: {Backorder}\n\r";
 		}
 	}
 }
