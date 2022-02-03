@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "V--------------------Updating VM--------------------V"
 sudo apt-get update
+sudo install git -y
 
 #Get code from repository
 echo "V--------------------Getting code from repository--------------------V"
@@ -12,6 +13,7 @@ sudo sed -i 's/Server=(localdb)\\\\mssqllocaldb;Database=BeerGameContext;Trusted
 
 #Install dependencies
 echo "V--------------------Installing dependencies--------------------V"
+sudo apt install snapd
 sudo snap install docker
 sudo snap install dotnet-sdk --classic --channel=3.1
 sudo apt install nginx -y
