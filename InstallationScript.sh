@@ -13,7 +13,7 @@ sudo sed -i 's/Server=(localdb)\\\\mssqllocaldb;Database=BeerGameContext;Trusted
 
 #Install dependencies
 echo "V--------------------Installing dependencies--------------------V"
-sudo apt install snapd
+sudo apt install snapd -y 
 sudo snap install docker
 sudo snap install dotnet-sdk --classic --channel=3.1
 sudo apt install nginx -y
