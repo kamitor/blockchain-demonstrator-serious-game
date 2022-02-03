@@ -47,7 +47,6 @@ namespace BlockchainDemonstratorApi
                 options.AddPolicy(name: BlockchainDemonstratorWebApp,
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:44313").AllowAnyHeader()
                             .AllowAnyMethod().AllowCredentials();
                         builder.WithOrigins("http://" + Config.ServerIp).AllowAnyHeader()
                             .AllowAnyMethod().AllowCredentials();
