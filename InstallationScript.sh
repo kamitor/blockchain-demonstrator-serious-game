@@ -2,6 +2,7 @@
 echo "V--------------------Updating VM--------------------V"
 sudo apt-get update
 sudo install git -y
+sudo apt-get install dnsutils -y
 
 #Get code from repository
 echo "V--------------------Getting code from repository--------------------V"
