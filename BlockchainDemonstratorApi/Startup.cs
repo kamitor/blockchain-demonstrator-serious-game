@@ -51,6 +51,8 @@ namespace BlockchainDemonstratorApi
                             .AllowAnyMethod().AllowCredentials();
                         builder.WithOrigins("https://" + Config.ServerIp).AllowAnyHeader()
                             .AllowAnyMethod().AllowCredentials();
+                        builder.WithOrigins("http://" + Config.ServerIp).AllowAnyHeader()
+                            .AllowAnyMethod().AllowCredentials();
                     });
             });
             
