@@ -23,6 +23,7 @@ sudo apt install nginx -y
 echo "V--------------------Setting up database--------------------V"
 if [[ $(docker ps -a | grep 'database') ]]; then
         sudo docker image rm database
+	sudo docker rm -f database
 	echo "Removed old database"
 fi
 sudo docker pull mcr.microsoft.com/mssql/server:2019-latest
