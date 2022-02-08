@@ -6,11 +6,9 @@ sudo apt-get install dnsutils -y
 
 #Get code from repository
 echo "V--------------------Getting code from repository--------------------V"
-sudo rm -rf ~/Beer-Game
-git clone https://github.com/Hogeschool-Windesheim/Beer-Game.git ~/Beer-Game
 
 #Change appsettings.json connection string
-sudo sed -i 's/Server=(localdb)\\\\mssqllocaldb;Database=BeerGameContext;Trusted_Connection=True;MultipleActiveResultSets=true/Server=172.17.0.2;Database=BeerGameContext;Trusted_Connection=True;MultipleActiveResultSets=true;User id=sa;Password=B33rgam3;Integrated Security=false/g' ~/Beer-Game/BlockchainDemonstratorApi/appsettings.json
+sudo sed -i 's/Server=(localdb)\\\\mssqllocaldb;Database=BeerGameContext;Trusted_Connection=True;MultipleActiveResultSets=true/Server=172.17.0.2;Database=BeerGameContext;Trusted_Connection=True;MultipleActiveResultSets=true;User id=sa;Password=B33rgam3;Integrated Security=false/g' ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorApi/appsettings.json
 
 #Install dependencies
 echo "V--------------------Installing dependencies--------------------V"
@@ -37,7 +35,7 @@ echo "server {
 listen 80 default_server;
 listen [::]:80 default_server;
 
-    root ~/Beer-Game/BlockchainDemonstratorWebApp;
+    root ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorWebApp;
 
     index index.html index.htm index.nginx-debian.html;
 
@@ -62,7 +60,7 @@ listen [::]:8080;
 
     server_name _;
 
-    root ~/Beer-Game/BlockchainDemonstratorApi;
+    root ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorApi;
 
     location / {
     proxy_pass         http://0.0.0.0:5002/;
@@ -80,15 +78,15 @@ sudo service nginx restart
 
 #Build REST API and web app
 echo "V--------------------Building REST API and web app--------------------V"
-dotnet publish ~/Beer-Game/BlockchainDemonstratorApi
-dotnet publish ~/Beer-Game/BlockchainDemonstratorWebApp
+dotnet publish ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorApi
+dotnet publish ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorWebApp
 
 #Run REST API and web app
 echo "V--------------------Running REST API and web app--------------------V"
 url=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
-(cd ~/Beer-Game/BlockchainDemonstratorApi/bin/Debug/netcoreapp3.1/publish/
+(cd ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorApi/bin/Debug/netcoreapp3.1/publish/
 dotnet BlockchainDemonstratorApi.dll $url) &
 (
-cd ~/Beer-Game/BlockchainDemonstratorWebApp/bin/Debug/netcoreapp3.1/publish
+cd ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorWebApp/bin/Debug/netcoreapp3.1/publish
 dotnet BlockchainDemonstratorWebApp.dll $url)
