@@ -20,7 +20,7 @@ sudo apt install nginx -y
 #Setup database
 echo "V--------------------Setting up database--------------------V"
 if [[ $(docker ps -a | grep 'database') ]]; then
-        sudo docker image rm database
+#        sudo docker image rm database
 	sudo docker rm -f database
 	echo "Removed old database"
 fi
