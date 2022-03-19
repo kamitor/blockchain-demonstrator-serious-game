@@ -20,31 +20,28 @@ these are needed for the web application to work
 
 ### Step 2
 
-The second step is to get the installation script on the new virtual machine. 
-The installation script can be found in the root folder of the project code. 
-To get the script on the virtual machine, use the following command (and fill in the blanks)
+The second step is to get the project code on the new virtual machine. 
+To download the project code on the virtual machine, use the following command.
 
-`scp -r [folder path to install script]/InstallationScript.sh [user]@[IP of VM]:/home/[user]/InstallationScript.sh`
-
-As an example, see how we would fill in this command below.
-
-`scp -r -i .\PrivateKey.pem ./InstallationScript.sh dev@20.71.193.193:/home/dev/InstallationScript.sh`
-
-In this example a private key is also used to authenticate myself with the -i parameter.
+`git clone https://github.com/Hogeschool-Windesheim/blockchain-demonstrator-serious-game.git`
 
 ### Step 3
 
-After the installation script is on the virtual machine, it needs permission in to be able to be run. This can be given with the following command.
+After the project code is on the virtual machine, it next to needs to be installed. 
+In order to install the project code, the installation script requires permission to be able to be run
+This can be given with the following command.
 
-`chmod a+x InstallationScript.sh`
+`chmod a+x install.sh`
 
 ### Step 4
 
-Finally, to run the script use the following command.
+Finally, to install the project code, use the following command.
 
-`sudo ./InstallationScript.sh`
+`sudo ./install.sh`
 
 It is important to both use sudo and the ./ otherwise the script will not work.
+Step 3 and 4 can also be performed on the start and exit script.
+
 ## Github actions
 The steps below will take you through the installation process using GitHub actions. <ins>The GitHub actions process has not been fully finished</ins>, for that reason we recommend you to use the installation script instead which can be found above. The steps below are to help you get started with Github actions. 
 ### Step 1:
@@ -71,7 +68,7 @@ We coupled our server port 80 to 0.0.0.0:5000. When the proxy is set up this wil
 to the docker container containing the web application. For the REST API we couple port 8080 to 0.0.0.0:5002. 
 This will redirect all traffic towards the server using port 8080 to the REST API.
 
-We used Nginx to handle the redirections. Our /etc/nginx/sites-available/default file looks like this.\
+We used Nginx to handle the redirections. Our /etc/nginx/sites-available/default file looks like this.
 
     server {
     listen 80 default_server;
