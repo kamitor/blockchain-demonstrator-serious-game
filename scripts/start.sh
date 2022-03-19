@@ -1,4 +1,9 @@
 #!/bin/bash
+
+#Run database
+echo "V--------------------Running database--------------------V"
+docker start database
+
 #Run REST API and web app
 echo "V--------------------Running REST API and web app--------------------V"
 url=$(dig +short myip.opendns.com @resolver1.opendns.com)
