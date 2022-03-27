@@ -539,11 +539,11 @@ BeerGame.Signal = (() => {
 
     let flushOrder = () => {
         connection.invoke("SendOrder",
-            0,
+            "0",
             BeerGame.Cookie.getCookie('JoinedGame'),
             BeerGame.Cookie.getCookie('PlayerId'))
             .catch(function (err) {
-                return console.error(err.toString())
+                return console.error(err.toString());
             });
         $("#place-order-button").prop("disabled", true);
         $("#place-order-button").css("filter", "grayscale(100%)");
