@@ -239,11 +239,13 @@ namespace BlockchainDemonstratorApi.Controllers
             bool removeProcessor = (bool)data.remove_Processor.Value;
             bool removeFarmer = (bool)data.remove_Farmer.Value;
             string gameMasterId = (string)data.GameMasterId.Value;
+            bool noOptions = (bool)data.NoOptions.Value;
 
             Game game = _context.Games.FirstOrDefault(g => g.Id == id);
             game.CurrentDay = currentDay;
             game.GameStarted = gameStarted;
             game.GameMasterId = gameMasterId;
+            game.noOptions = noOptions;
             if (removeRetailer)
             {
                 _context.Orders.RemoveRange(game.Retailer.OutgoingOrders);

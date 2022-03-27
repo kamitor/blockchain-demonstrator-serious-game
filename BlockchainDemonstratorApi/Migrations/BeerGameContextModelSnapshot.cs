@@ -166,6 +166,9 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<string>("RetailerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("noOptions")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FarmerId");
