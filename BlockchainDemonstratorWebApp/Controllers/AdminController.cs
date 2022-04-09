@@ -144,7 +144,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         /// <param name="remove_Manufacturer">Boolean whether to kick the manufacturer from the game.</param>
         /// <param name="remove_Processor">Boolean whether to kick the processor from the game.</param>
         /// <param name="remove_Farmer">Boolean whether to kick the farmer from the game.</param>
-        public IActionResult PutGame(string Id, int CurrentDay, string GameMasterId, bool GameStarted, bool ResetGame, bool NoOptions, bool NoOptionsVal, bool remove_Retailer, bool remove_Manufacturer, bool remove_Processor, bool remove_Farmer)
+        public IActionResult PutGame(string Id, int CurrentDay, string GameMasterId, bool GameStarted, bool ResetGame, bool HasOptions, bool NoOptionsVal, bool remove_Retailer, bool remove_Manufacturer, bool remove_Processor, bool remove_Farmer)
         {
             if (Id == null) return StatusCode(400);
             using (var client = new HttpClient())
@@ -153,8 +153,12 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
                 {
                     CurrentDay = 1;
                     GameStarted = false;
+                    remove_Retailer = true;
+                    remove_Manufacturer = true;
+                    remove_Processor= true;
+                    remove_Farmer = true;
                 }
-                var stringContent = new StringContent(JsonConvert.SerializeObject(new { Id = Id, CurrentDay = CurrentDay, GameMasterId = GameMasterId, GameStarted = GameStarted, NoOptions = NoOptions, remove_Retailer = remove_Retailer, remove_Manufacturer = remove_Manufacturer, remove_Processor = remove_Processor, remove_Farmer = remove_Farmer }), System.Text.Encoding.UTF8, "application/json");
+                var stringContent = new StringContent(JsonConvert.SerializeObject(new { Id = Id, CurrentDay = CurrentDay, GameMasterId = GameMasterId, GameStarted = GameStarted, HasOptions = HasOptions, remove_Retailer = remove_Retailer, remove_Manufacturer = remove_Manufacturer, remove_Processor = remove_Processor, remove_Farmer = remove_Farmer }), System.Text.Encoding.UTF8, "application/json");
                 var response = client.PostAsync(Config.RestApiUrl + "/api/BeerGame/EditGame", stringContent).Result;
 
                 if (response.IsSuccessStatusCode)
