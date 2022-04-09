@@ -398,7 +398,7 @@ const BeerGame = (() => {
                 <canvas id="overallProfitChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
                 <canvas id="grossProfitChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
             </div>`);
-        let players = JSON.parse(playersJson);
+        let players = JSON.parse(playersJson); //unexpected token error
         players.forEach(player => {
             if (player.Id == configMap.playerId) {
                 BeerGame.Graphs.drawChart(Graphs.createLabels(player.InventoryHistory), Graphs.createData(player.InventoryHistory), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
