@@ -53,14 +53,14 @@ namespace BlockchainDemonstratorApi.Hubs
                 game.Progress();
                 await Clients.Group(gameId).SendAsync("UpdateGame", JsonConvert.SerializeObject(game));
                 
-                if (game.HasOptions && game.CurrentDay == Factors.RoundIncrement * 8 + 1) await PromptOptions(gameId);
+                if (game.HasOptions && game.CurrentDay == Factors.RoundIncrement * 8 + 1) await PromptOptions(gameId, game.Players);
                 if (game.HasOptions && game.CurrentDay == Factors.RoundIncrement * 16 + 1)
                 {
                     foreach(Player gamePlayer in game.Players)
                     {
                         gamePlayer.ChosenOption = null;
                     }
-                    await PromptOptions(gameId);
+                    await PromptOptions(gameId, game.Players);
                 }
 
                 if (game.CurrentDay == Factors.RoundIncrement * 24 + 1) await EndGame(gameId);
@@ -184,9 +184,9 @@ namespace BlockchainDemonstratorApi.Hubs
         /// Show the choose option prompt to each player in group
         /// </summary>
         /// <param name="gameId">string specifying the gameId</param>
-        public async Task PromptOptions(string gameId)
+        public async Task PromptOptions(string gameId, List<Player> player)
         {
-            await Clients.Group(gameId).SendAsync("PromptOptions");
+            await Clients.Group(gameId).SendAsync("PromptOptions", JsonConvert.SerializeObject(player));
         }
 
         /// <summary>

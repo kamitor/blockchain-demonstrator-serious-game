@@ -365,7 +365,7 @@ const BeerGame = (() => {
         return +(Math.round(num + "e+2") + "e-2");
     }
 
-    const promptOptions = () => {
+    const promptOptions = (playersJson) => {
         $(".top-container").hide();
         $(".bottom-container").hide();
         $("body").append(`
@@ -391,7 +391,22 @@ const BeerGame = (() => {
                     <h6 style="display:inline-block;padding-left:10px">The distributed Ledger technology speed up the information flow in the supply chain. The transportation of the shipment is outsourced. Documentation between the stakeholders, authorities, and your own organization works as real time data. This way the cost can be reduced by 15 to 20% and the lead time can be decreased by 40%.</h6>
                     <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
-            </section>`);
+            </section>
+            <div class="endStatistics box">
+                <canvas id="inventoryChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
+                <canvas id="orderWorthChart" style="max-width:350px;max-height:350px;display:inline-block;"></canvas>
+                <canvas id="overallProfitChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
+                <canvas id="grossProfitChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
+            </div>`);
+        let players = JSON.parse(playersJson); //unexpected token error
+        players.forEach(player => {
+            if (player.Id == configMap.playerId) {
+                BeerGame.Graphs.drawChart(Graphs.createLabels(player.InventoryHistory), Graphs.createData(player.InventoryHistory), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(Graphs.createLabels(player.OrderWorthHistory), Graphs.createData(player.OrderWorthHistory), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(Graphs.createLabels(player.OverallProfitHistory), Graphs.createData(player.OverallProfitHistory), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(Graphs.createLabels(player.GrossProfitHistory), Graphs.createData(player.GrossProfitHistory), "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
+            }
+        });
     }
 
     const updatePromptOptions = (playerJson) => {
@@ -466,8 +481,8 @@ BeerGame.Signal = (() => {
             else if (document.title == "BeerGame Admin - Blockchain Demonstrator") BeerGame.updateGameTuningPage(game);
         });
 
-        connection.on("PromptOptions", function () {
-            if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.promptOptions();
+        connection.on("PromptOptions", function (playersJson) {
+            if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.promptOptions(playersJson);
         });
 
         connection.on("UpdatePromptOptions", function (playerJson) {
