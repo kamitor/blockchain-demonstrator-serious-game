@@ -157,6 +157,9 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<bool>("GameStarted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("HasOptions")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ManufacturerId")
                         .HasColumnType("nvarchar(450)");
 
@@ -165,9 +168,6 @@ namespace BlockchainDemonstratorApi.Migrations
 
                     b.Property<string>("RetailerId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("noOptions")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
