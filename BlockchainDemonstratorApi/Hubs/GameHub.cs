@@ -220,21 +220,29 @@ namespace BlockchainDemonstratorApi.Hubs
                 await Clients.Group(game.Id).SendAsync("UpdatePromptOptions", JsonConvert.SerializeObject(player));
                 if (game.Players.All(p => p.ChosenOption != null))
                 {
-                    string mostChosenOption = CalculateMostChosen(game.Players);
-                    foreach (Player playerGame in game.Players)
+                    List<string> chosenOptions = new List<string>();
+
+                    foreach (Player pl in game.Players)
                     {
-                        player.ChosenOption = _context.Options.FirstOrDefault(x => x.RoleId == player.Role.Id && x.Name == mostChosenOption);
-                        player.ChosenOption.Name += "";
-                        playerGame.Payments.Add(new Payment
-                        {
-                            Amount = playerGame.ChosenOption.CostOfStartUp * -1,
-                            DueDay = Factors.RoundIncrement * 16 + 1,
-                            FromPlayer = false,
-                            PlayerId = playerGame.Id,
-                            Topic = "Setup " + playerGame.ChosenOption.Name
-                        });
+                        chosenOptions.Add(pl.ChosenOption.Name);
                     }
-                    await Clients.Group(game.Id).SendAsync("ClosePromptOptions", mostChosenOption);
+
+                    if (chosenOptions.Distinct().Count() == 1)
+                    {
+                        foreach (Player playerGame in game.Players)
+                        {
+                            playerGame.Payments.Add(new Payment
+                            {
+                                Amount = playerGame.ChosenOption.CostOfStartUp * -1,
+                                DueDay = Factors.RoundIncrement * 16 + 1,
+                                FromPlayer = false,
+                                PlayerId = playerGame.Id,
+                                Topic = "Setup " + playerGame.ChosenOption.Name
+                            });
+                        }
+                        
+                        await Clients.Group(game.Id).SendAsync("ClosePromptOptions", chosenOptions[0]);
+                    }
                 }
             }
 
@@ -259,27 +267,6 @@ namespace BlockchainDemonstratorApi.Hubs
             if(game.Processor == null) availableRoles.Add("Processor"); 
             if(game.Farmer == null) availableRoles.Add("Farmer");
             return availableRoles;
-        }
-
-        /// <summary>
-        /// This method is used to calculate the most chosen option. 
-        /// This method is mainly used to decide which option will be chosen 
-        /// in the third phase when the players must collectively make a decission.
-        /// </summary>
-        /// <param name="players">The players of the given game</param>
-        /// <returns>Returns the name of the most chosen option.</returns>
-        /// <remarks>If their are multiple most chosen options, a random one of the most chosen will be picked.</remarks>
-        private string CalculateMostChosen(List<Player> players)
-        {
-            Dictionary<string, int> options = new Dictionary<string, int>()
-                        { { "YouProvide", 0 },{ "YouProvideWithHelp", 0 },{ "TrustedParty", 0 },{ "DLT", 0 }  };
-            foreach (Player player in players)
-            {
-                options[player.ChosenOption.Name] += 1;
-            }
-            int maxChosen = options.Max(kp => kp.Value);
-            List<string> mostChosen = options.Where(kp => kp.Value == maxChosen).Select(kp => kp.Key).ToList();
-            return mostChosen[new Random().Next(0, mostChosen.Count)];
         }
     }
 }
