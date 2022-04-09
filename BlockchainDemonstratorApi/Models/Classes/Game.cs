@@ -120,6 +120,8 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		public string GameMasterId { get; set; }
 
+		public bool HasOptions { get; set; } = true;
+
 		public Game(string id)
 		{
 			Id = id;

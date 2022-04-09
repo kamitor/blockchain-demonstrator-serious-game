@@ -157,6 +157,9 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<bool>("GameStarted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("HasOptions")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ManufacturerId")
                         .HasColumnType("nvarchar(450)");
 
