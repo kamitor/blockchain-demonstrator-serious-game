@@ -401,19 +401,19 @@ const BeerGame = (() => {
                     <div style="display:flex;flex-direction:column;padding-left:10px"></div>
                 </div>
             </section>
-            <div class="endStatistics box">
-                <canvas id="inventoryChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
-                <canvas id="orderWorthChart" style="max-width:350px;max-height:350px;display:inline-block;"></canvas>
-                <canvas id="overallProfitChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
-                <canvas id="grossProfitChart" style="max-width:350px;max-height:350px; display:inline-block;"></canvas>
+            <div class="midStatistics box">
+                <canvas id="inventoryChart" style="max-width:300px;max-height:300px; display:inline-block;"></canvas>
+                <canvas id="orderWorthChart" style="max-width:300px;max-height:300px;display:inline-block;"></canvas>
+                <canvas id="overallProfitChart" style="max-width:300px;max-height:300px; display:inline-block;"></canvas>
+                <canvas id="grossProfitChart" style="max-width:300px;max-height:300px; display:inline-block;"></canvas>
             </div>`);
-        let players = JSON.parse(playersJson); //unexpected token error
+        let players = JSON.parse(playersJson);
         players.forEach(player => {
             if (player.Id == configMap.playerId) {
-                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.InventoryHistory), BeerGame.Graphs.createInventoryDataSet(player.InventoryHistory), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
-                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.OrderWorthHistory), BeerGame.Graphs.createOrderWorthDataSet(player.OrderWorthHistory), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
-                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.OverallProfitHistory), BeerGame.Graphs.createOverallProfitDataSet(player.OverallProfitHistory), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
-                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.GrossProfitHistory), BeerGame.Graphs.createGrossProfitDataSet(player.GrossProfitHistory), "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.InventoryHistory), player.InventoryHistory, "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.OrderWorthHistory), player.OrderWorthHistory, "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.OverallProfitHistory), player.OverallProfitHistory, "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.GrossProfitHistory), player.GrossProfitHistory, "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
             }
         });
     }
@@ -503,6 +503,7 @@ BeerGame.Signal = (() => {
             $(".option-prompt").append(`<h2>Chosen supplychain setup: <span class=gradient-font>${mostChosenOption.replace(/([A-Z])/g, ' $1').trim()}</span></h2>`);
             setTimeout(() => {
                 $(".option-prompt").remove();
+                $(".midStatistics").remove();
                 $(".top-container").show();
                 $(".bottom-container").show();
             }, 3000);
@@ -550,6 +551,7 @@ BeerGame.Signal = (() => {
         connection.invoke("ChooseOption", configMap.playerId, option).then((result) => {
             if (result) {
                 $(".option-prompt").remove();
+                $(".midStatistics").remove();
                 $(".top-container").show();
                 $(".bottom-container").show();
             }
@@ -708,22 +710,6 @@ BeerGame.Graphs = (() => {
                 };
     }
 
-    function createInventoryDataSet(history) {
-        return createDataSet(createData(history), "", "rgba(0, 0, 255, 1)");
-    }
-
-    function createOrderWorthDataSet(history) {
-        return createDataSet(createData(history), "", "rgba(0, 0, 255, 1)");
-    }
-
-    function createOverallProfitDataSet(history) {
-        return createDataSet(createData(history), "", "rgba(0, 0, 255, 1)");
-    }
-
-    function createGrossProfitDataSet(history) {
-        return createDataSet(createData(history), "", "rgba(0, 0, 255, 1)");
-    }
-
     function createInventoryDataSets(players) {
         let dataSets = [];
         for (let i = 0; i < players.length; i++)
@@ -785,10 +771,6 @@ BeerGame.Graphs = (() => {
         drawChart: drawChart,
         drawMultipleChart: drawMultipleChart,
         createLabels: createLabels,
-        createInventoryDataSet: createInventoryDataSet,
-        createOrderWorthDataSet: createOrderWorthDataSet,
-        createOverallProfitDataSet: createOverallProfitDataSet,
-        createGrossProfitDataSet: createGrossProfitDataSet,
         createInventoryDataSets: createInventoryDataSets,
         createOrderWorthDataSets: createOrderWorthDataSets,
         createOverallProfitDataSets: createOverallProfitDataSets,
