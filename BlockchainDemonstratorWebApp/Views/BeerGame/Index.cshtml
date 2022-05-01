@@ -82,7 +82,7 @@
 @if (!gameReady)
 {
     <div class="lds">
-        <h1 class="main-text"  style="margin-bottom: 80px">Waiting for players</h1>
+        <h1 class="main-text" style="margin-bottom: 80px">Waiting for players</h1>
         <div class="cssload-dots">
             <div class="cssload-dot"></div>
             <div class="cssload-dot"></div>
@@ -207,7 +207,7 @@
     <div style="padding:0px" class="bottom-canvas box">
         <input id="place-order-text" name="order" class="input secondary-text" type="number" placeholder="Insert order..." min="0" oninput="validity.valid||(value='');">
         <input id="place-order-button" style="color:white;filter:grayscale(100%);" class="order-button gradient secondary-text" type="button" value="Place order" disabled>
-        <div style="position: absolute; top: -44px; left: 108px;display:none"class="cssload-jumping">
+        <div style="position: absolute; top: -44px; left: 108px;display:none" class="cssload-jumping">
             <span></span><span></span><span></span><span></span><span></span>
         </div>
     </div>
@@ -221,6 +221,7 @@
 
 @section Scripts{
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
     <script src="~/js/BeerGame.js"></script>
     <script>
         $(document).ready(() => {
@@ -242,7 +243,7 @@
                                  {@Html.Raw("null")
                                      ;
                                  }" == "Basic") {
-                BeerGame.promptOptions();
+                BeerGame.promptOptions('@Html.Raw(JsonConvert.SerializeObject(players))');
                 @foreach (Player player in players)
                 {
                     if (player.ChosenOption != null) @Html.Raw($"BeerGame.updatePromptOptions('{JsonConvert.SerializeObject(player)}');\n")
@@ -272,7 +273,7 @@
                 $("#place-order-button").val("");
                 $(".cssload-jumping").show();
             }
-            
+
             if (@Model.Inventory < 1) {
                 $("#flushButton").prop("disabled", true);
                 $("#flushButton").css("filter", "grayscale(100%)");
