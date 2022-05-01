@@ -401,10 +401,10 @@ const BeerGame = (() => {
         let players = JSON.parse(playersJson); //unexpected token error
         players.forEach(player => {
             if (player.Id == configMap.playerId) {
-                BeerGame.Graphs.drawChart(Graphs.createLabels(player.InventoryHistory), Graphs.createData(player.InventoryHistory), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
-                BeerGame.Graphs.drawChart(Graphs.createLabels(player.OrderWorthHistory), Graphs.createData(player.OrderWorthHistory), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
-                BeerGame.Graphs.drawChart(Graphs.createLabels(player.OverallProfitHistory), Graphs.createData(player.OverallProfitHistory), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
-                BeerGame.Graphs.drawChart(Graphs.createLabels(player.GrossProfitHistory), Graphs.createData(player.GrossProfitHistory), "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.InventoryHistory), BeerGame.Graphs.createInventoryDataSet(player.InventoryHistory), "inventoryChart", "Inventory", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.OrderWorthHistory), BeerGame.Graphs.createOrderWorthDataSet(player.OrderWorthHistory), "orderWorthChart", "Order worth", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.OverallProfitHistory), BeerGame.Graphs.createOverallProfitDataSet(player.OverallProfitHistory), "overallProfitChart", "Overall profit", "rgba(46, 49, 146, 1)");
+                BeerGame.Graphs.drawChart(BeerGame.Graphs.createLabels(player.GrossProfitHistory), BeerGame.Graphs.createGrossProfitDataSet(player.GrossProfitHistory), "grossProfitChart", "Gross profit", "rgba(46, 49, 146, 1)");
             }
         });
     }
@@ -699,6 +699,22 @@ BeerGame.Graphs = (() => {
                 };
     }
 
+    function createInventoryDataSet(history) {
+        return createDataSet(createData(history), "", "rgba(0, 0, 255, 1)");
+    }
+
+    function createOrderWorthDataSet(history) {
+        return createDataSet(createData(history), "", "rgba(0, 0, 255, 1)");
+    }
+
+    function createOverallProfitDataSet(history) {
+        return createDataSet(createData(history), "", "rgba(0, 0, 255, 1)");
+    }
+
+    function createGrossProfitDataSet(history) {
+        return createDataSet(createData(history), "", "rgba(0, 0, 255, 1)");
+    }
+
     function createInventoryDataSets(players) {
         let dataSets = [];
         for (let i = 0; i < players.length; i++)
@@ -760,6 +776,10 @@ BeerGame.Graphs = (() => {
         drawChart: drawChart,
         drawMultipleChart: drawMultipleChart,
         createLabels: createLabels,
+        createInventoryDataSet: createInventoryDataSet,
+        createOrderWorthDataSet: createOrderWorthDataSet,
+        createOverallProfitDataSet: createOverallProfitDataSet,
+        createGrossProfitDataSet: createGrossProfitDataSet,
         createInventoryDataSets: createInventoryDataSets,
         createOrderWorthDataSets: createOrderWorthDataSets,
         createOverallProfitDataSets: createOverallProfitDataSets,

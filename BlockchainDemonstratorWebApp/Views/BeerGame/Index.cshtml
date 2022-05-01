@@ -68,7 +68,7 @@
 @if (!gameReady)
 {
     <div class="lds">
-        <h1 class="main-text"  style="margin-bottom: 80px">Waiting for players</h1>
+        <h1 class="main-text" style="margin-bottom: 80px">Waiting for players</h1>
         <div class="cssload-dots">
             <div class="cssload-dot"></div>
             <div class="cssload-dot"></div>
@@ -99,38 +99,38 @@
                 <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayer.Role.Id</span>
                 <span id="first-player-name" style="text-align:center" class="secondary-text">@firstPlayerName</span>
                 <span style="margin-top: 50px">Inventory: @firstPlayer.Inventory</span>
-                <span >Backorder: @firstPlayer.Backorder</span>
+                <span>Backorder: @firstPlayer.Backorder</span>
             </div>
             <div class="second-player-text" style="top: 65px">
                 <span id="second-player-role" style="text-align:center" class="tertiary-text">@secondPlayerRole</span>
                 <span id="second-player-name" style="text-align:center" class="secondary-text">@secondPlayerName</span>
                 <span style="margin-top: 50px">Inventory: @secondPlayer.Inventory</span>
-                <span >Backorder: @secondPlayer.Backorder</span>
+                <span>Backorder: @secondPlayer.Backorder</span>
             </div>
             <div class="third-player-text" style="top: 65px">
                 <span id="third-player-role" style="text-align:center" class="tertiary-text">@thirdPlayerRole</span>
                 <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
                 <span style="margin-top: 50px">Inventory: @thirdPlayer.Inventory</span>
-                <span >Backorder: @thirdPlayer.Backorder</span>
-                </div>
+                <span>Backorder: @thirdPlayer.Backorder</span>
+            </div>
         }
         else
         {
-                <div class="first-player-text">
-                    <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayer.Role.Id</span>
-                    <span id="first-player-name" style="text-align:center" class="secondary-text">@firstPlayerName</span>
-                </div>
-                <div class="second-player-text">
-                    <span id="second-player-role" style="text-align:center" class="tertiary-text">@secondPlayerRole</span>
-                    <span id="second-player-name" style="text-align:center" class="secondary-text">@secondPlayerName</span>
-                </div>
-                <div class="third-player-text">
-                    <span id="third-player-role" style="text-align:center" class="tertiary-text">@thirdPlayerRole</span>
-                    <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
-                    </div>
-        
-            }
-  
+            <div class="first-player-text">
+                <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayer.Role.Id</span>
+                <span id="first-player-name" style="text-align:center" class="secondary-text">@firstPlayerName</span>
+            </div>
+            <div class="second-player-text">
+                <span id="second-player-role" style="text-align:center" class="tertiary-text">@secondPlayerRole</span>
+                <span id="second-player-name" style="text-align:center" class="secondary-text">@secondPlayerName</span>
+            </div>
+            <div class="third-player-text">
+                <span id="third-player-role" style="text-align:center" class="tertiary-text">@thirdPlayerRole</span>
+                <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
+            </div>
+
+        }
+
         <div class="harvester-text">
             <span style="text-align:center" class="tertiary-text">Harvester</span>
         </div>
@@ -193,7 +193,7 @@
     <div style="padding:0px" class="bottom-canvas box">
         <input id="place-order-text" name="order" class="input secondary-text" type="number" placeholder="Insert order..." min="0" oninput="validity.valid||(value='');">
         <input id="place-order-button" style="color:white;filter:grayscale(100%);" class="order-button gradient secondary-text" type="button" value="Place order" disabled>
-        <div style="position: absolute; top: -44px; left: 108px;display:none"class="cssload-jumping">
+        <div style="position: absolute; top: -44px; left: 108px;display:none" class="cssload-jumping">
             <span></span><span></span><span></span><span></span><span></span>
         </div>
     </div>
@@ -207,6 +207,7 @@
 
 @section Scripts{
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.min.js"></script>
     <script src="~/js/BeerGame.js"></script>
     <script>
         $(document).ready(() => {
@@ -228,7 +229,7 @@
                                  {@Html.Raw("null")
                                      ;
                                  }" == "Basic") {
-                BeerGame.promptOptions();
+                BeerGame.promptOptions('@Html.Raw(JsonConvert.SerializeObject(players))');
                 @foreach (Player player in players)
                 {
                     if (player.ChosenOption != null) @Html.Raw($"BeerGame.updatePromptOptions('{JsonConvert.SerializeObject(player)}');\n")
@@ -258,7 +259,7 @@
                 $("#place-order-button").val("");
                 $(".cssload-jumping").show();
             }
-            
+
             if (@Model.Inventory < 1) {
                 $("#flushButton").prop("disabled", true);
                 $("#flushButton").css("filter", "grayscale(100%)");
