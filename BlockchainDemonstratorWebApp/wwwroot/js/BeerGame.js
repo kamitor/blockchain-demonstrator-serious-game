@@ -246,11 +246,20 @@ const BeerGame = (() => {
         $("#first-player-name").text(game.Players[(0 >= modelIndex) ? 1 : 0].Name);
         $("#second-player-name").text(game.Players[(1 >= modelIndex) ? 2 : 1].Name);
         $("#third-player-name").text(game.Players[(2 >= modelIndex) ? 3 : 2].Name);
+        
         $("#first-player-role").text(game.Players[(0 >= modelIndex) ? 1 : 0].Role.Id);
         $("#second-player-role").text(game.Players[(1 >= modelIndex) ? 2 : 1].Role.Id);
         $("#third-player-role").text(game.Players[(2 >= modelIndex) ? 3 : 2].Role.Id);
-    }
 
+        $("#first-player-inventory").text("Inventory: " + game.Players[(0 >= modelIndex) ? 1 : 0].Inventory);
+        $("#second-player-inventory").text("Inventory: " + game.Players[(1 >= modelIndex) ? 2 : 1].Inventory);
+        $("#third-player-inventory").text("Inventory: " + game.Players[(2 >= modelIndex) ? 3 : 2].Inventory);
+
+        $("#first-player-backorder").text("Backorder: " + game.Players[(0 >= modelIndex) ? 1 : 0].Backorder);
+        $("#second-player-backorder").text("Backorder: " + game.Players[(1 >= modelIndex) ? 2 : 1].Backorder);
+        $("#third-player-backorder").text("Backorder: " + game.Players[(2 >= modelIndex) ? 3 : 2].Backorder);
+    }
+    
     const updateGamePlayerBackorder = (game) => {
         game.Players.forEach(player => {
             $(`#backorder-${player.Role.Id}`).text(player.Backorder);

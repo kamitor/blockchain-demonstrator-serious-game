@@ -12,12 +12,19 @@
     List<Player> players = (List<Player>)ViewData["Players"];
 
     int modelIndex = players.FindIndex(p => p.Id == Model.Id);
-    Player firstPlayer = null;
-    Player secondPlayer = null;
-    Player thirdPlayer = null;
+    
+    string firstPlayerInventory = "";
+    string secondPlayerInventory = "";
+    string thirdPlayerInventory = "";
+    
+    string firstPlayerBackorder = "";
+    string secondPlayerBackorder = "";
+    string thirdPlayerBackorder = "";
+    
     string firstPlayerName = "";
     string secondPlayerName = "";
     string thirdPlayerName = "";
+    
     string firstPlayerRole = "";
     string secondPlayerRole = "";
     string thirdPlayerRole = "";
@@ -32,12 +39,19 @@
     if (players.Count == 4)
     {
         modelIndex = players.FindIndex(p => p.Id == Model.Id);
-        firstPlayer = players[(0 >= modelIndex) ? 1 : 0];
-        secondPlayer = players[(1 >= modelIndex) ? 2 : 1];
-        thirdPlayer = players[(2 >= modelIndex) ? 3 : 2];
+        
+        firstPlayerInventory = players[(0 >= modelIndex) ? 1 : 0].Inventory.ToString();
+        secondPlayerInventory = players[(1 >= modelIndex) ? 2 : 1].Inventory.ToString();
+        thirdPlayerInventory = players[(2 >= modelIndex) ? 3 : 2].Inventory.ToString();
+    
+        firstPlayerBackorder = players[(0 >= modelIndex) ? 1 : 0].Backorder.ToString();
+        secondPlayerBackorder = players[(1 >= modelIndex) ? 2 : 1].Backorder.ToString();
+        thirdPlayerBackorder = players[(2 >= modelIndex) ? 3 : 2].Backorder.ToString();
+        
         firstPlayerName = players[(0 >= modelIndex) ? 1 : 0].Name;
         secondPlayerName = players[(1 >= modelIndex) ? 2 : 1].Name;
         thirdPlayerName = players[(2 >= modelIndex) ? 3 : 2].Name;
+        
         firstPlayerRole = players[(0 >= modelIndex) ? 1 : 0].Role.Id;
         secondPlayerRole = players[(1 >= modelIndex) ? 2 : 1].Role.Id;
         thirdPlayerRole = players[(2 >= modelIndex) ? 3 : 2].Role.Id;
@@ -96,28 +110,28 @@
         @if (Model.ChosenOption.Name == "DLT")
         {
             <div class="first-player-text" style="top: 65px">
-                <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayer.Role.Id</span>
+                <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayerRole</span>
                 <span id="first-player-name" style="text-align:center" class="secondary-text">@firstPlayerName</span>
-                <span style="margin-top: 50px">Inventory: @firstPlayer.Inventory</span>
-                <span >Backorder: @firstPlayer.Backorder</span>
+                <span id="first-player-inventory" style="margin-top: 50px">Inventory: @firstPlayerInventory</span>
+                <span id="first-player-backorder">Backorder: @firstPlayerBackorder</span>
             </div>
             <div class="second-player-text" style="top: 65px">
                 <span id="second-player-role" style="text-align:center" class="tertiary-text">@secondPlayerRole</span>
                 <span id="second-player-name" style="text-align:center" class="secondary-text">@secondPlayerName</span>
-                <span style="margin-top: 50px">Inventory: @secondPlayer.Inventory</span>
-                <span >Backorder: @secondPlayer.Backorder</span>
+                <span id="second-player-inventory" style="margin-top: 50px">Inventory: @secondPlayerInventory</span>
+                <span id="second-player-backorder">Backorder: @secondPlayerBackorder</span>
             </div>
             <div class="third-player-text" style="top: 65px">
                 <span id="third-player-role" style="text-align:center" class="tertiary-text">@thirdPlayerRole</span>
                 <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
-                <span style="margin-top: 50px">Inventory: @thirdPlayer.Inventory</span>
-                <span >Backorder: @thirdPlayer.Backorder</span>
+                <span id="third-player-inventory" style="margin-top: 50px">Inventory: @thirdPlayerInventory</span>
+                <span id="third-player-backorder">Backorder: @thirdPlayerBackorder</span>
                 </div>
         }
         else
         {
                 <div class="first-player-text">
-                    <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayer.Role.Id</span>
+                    <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayerRole</span>
                     <span id="first-player-name" style="text-align:center" class="secondary-text">@firstPlayerName</span>
                 </div>
                 <div class="second-player-text">
