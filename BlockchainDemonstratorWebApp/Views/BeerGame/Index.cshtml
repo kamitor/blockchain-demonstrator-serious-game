@@ -226,28 +226,63 @@
     <div>
         <div class="profitcosts-canvas box">
             <span class="main-text">Profit</span>
-            <div class="profitcosts-box">
-                <span class="secondary-text"><span style="color:green">€10.000,-</span> asdasdas</span>
-                <span class="secondary-text"><span style="color:green">€20.000,-</span> asdddas</span>
-                <span class="secondary-text"><span style="color:green">€400,-</span> aasdas</span>
-                <span class="secondary-text"><span style="color:green">€1.000,-</span> dasdas</span>
+            <div id="profit-box" class="profitcosts-box">
+                <span class="secondary-text">Delivery: <span style="color:green">€10.000,-</span></span>
+                <span class="secondary-text">Delivery: <span style="color:green">€20.000,-</span></span>
+                <span class="secondary-text">Flexibility: <span style="color:green">€400,-</span></span>
             </div>
         </div>
         <div class="profitcosts-canvas box">
             <span class="main-text">Costs</span>
-            <div class="profitcosts-box">
-                <span class="secondary-text"><span style="color:red">€10.000,-</span> asdasdas</span>
-                <span class="secondary-text"><span style="color:red">€20.000,-</span> asdddas</span>
-                <span class="secondary-text"><span style="color:red">€400,-</span> aasdas</span>
-                <span class="secondary-text"><span style="color:red">€1.000,-</span> dasdas</span>
+            <div id="costs-box" class="profitcosts-box">
+                <span class="secondary-text">Holding cost: <span style="color:red">-€10.000,-</span></span>
+                <span class="secondary-text">Transport: <span style="color:red">-€20.000,-</span></span>
+                <span class="secondary-text">Order: <span style="color:red">-€400,-</span></span>
+                <span class="secondary-text">Maintenance: <span style="color:red">-€1.000,-</span></span>
             </div>
         </div>
         <div class="total-canvas gradient box">
             <span class="main-text" style="color: white">Total: <span id="total-text" style="color:red">-€10.000,-</span></span>
         </div>
     </div>
-    <div class="order-history-canvas box">
-
+    <div class="history-canvas box" style="padding:0px">
+        <table id="history-table" class="history-table">
+            <tr class="gradient">
+                <th class="secondary-text">Round</th>
+                <th class="secondary-text">Order</th>
+                <th class="secondary-text">Effective inventory</th>
+                <th class="secondary-text">Received</th>
+                <th class="secondary-text">Sent</th>
+            </tr>
+            <tr>
+                <td class="tertiary-text">Round 1</td>
+                <td class="tertiary-text">12</td>
+                <td class="tertiary-text">5</td>
+                <td class="tertiary-text">10</td>
+                <td class="tertiary-text">8</td>
+            </tr>
+            <tr>
+                <td class="tertiary-text">Round 2</td>
+                <td class="tertiary-text">12</td>
+                <td class="tertiary-text">5</td>
+                <td class="tertiary-text">10</td>
+                <td class="tertiary-text">8</td>
+            </tr>
+            <tr>
+                <td class="tertiary-text">Round 3</td>
+                <td class="tertiary-text">12</td>
+                <td class="tertiary-text">5</td>
+                <td class="tertiary-text">10</td>
+                <td class="tertiary-text">8</td>
+            </tr>
+            <tr>
+                <td class="tertiary-text">Round 4</td>
+                <td class="tertiary-text">12</td>
+                <td class="tertiary-text">5</td>
+                <td class="tertiary-text">10</td>
+                <td class="tertiary-text">8</td>
+            </tr>
+        </table>
     </div>
 </div>
 

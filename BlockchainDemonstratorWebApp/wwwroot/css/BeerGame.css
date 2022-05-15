@@ -273,7 +273,7 @@
 
 .info-container {
     display: grid;
-    grid-template-columns: 4fr 2fr;
+    grid-template-columns: 2fr 4fr;
     padding-left: 2em;
     padding-right: 2em;
     margin-bottom: 8em;
@@ -281,7 +281,7 @@
 
 .profitcosts-canvas {
     border-radius: 18px;
-    width: 80%;
+    width: 95%;
     height: 250px;
     display: flex;
     flex-direction: column;
@@ -298,7 +298,7 @@
 
 .total-canvas {
     border-radius: 18px;
-    width: 80%;
+    width: 95%;
     height: 100px;
     display: flex;
     flex-direction: column;
@@ -306,12 +306,36 @@
 }
 
 
-.order-history-canvas {
+.history-canvas {
     border-radius: 18px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    margin-left: 10px;
 }
+
+.history-table {
+    border-collapse: collapse;
+    border-radius: 18px;
+    overflow:hidden;
+}
+
+    .history-table td, .history-table th {
+        border: 0px solid #ddd;
+        padding: 8px;
+    }
+
+    .history-table tr:nth-child(even) {
+        background-color:#ddd ;
+    }
+
+
+    .history-table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align:left;
+        color:white;
+    }
 
 
 .input {
