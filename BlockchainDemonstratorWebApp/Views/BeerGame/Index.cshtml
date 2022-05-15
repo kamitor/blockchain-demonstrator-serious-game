@@ -107,7 +107,7 @@
         <div class="customer-text">
             <span style="text-align:center" class="tertiary-text">Customer</span>
         </div>
-        @if (Model.ChosenOption.Name == "DLT")
+        @if (Model.ChosenOption.Name.Equals("DLT"))
         {
             <div class="first-player-text" style="top: 65px">
                 <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayerRole</span>
@@ -133,14 +133,20 @@
                 <div class="first-player-text">
                     <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayerRole</span>
                     <span id="first-player-name" style="text-align:center" class="secondary-text">@firstPlayerName</span>
+                     <span id="first-player-inventory" style="margin-top: 50px"></span>
+                    <span id="first-player-backorder"></span>
                 </div>
                 <div class="second-player-text">
                     <span id="second-player-role" style="text-align:center" class="tertiary-text">@secondPlayerRole</span>
                     <span id="second-player-name" style="text-align:center" class="secondary-text">@secondPlayerName</span>
+                    <span id="second-player-inventory" style="margin-top: 50px"></span>
+                    <span id="second-player-backorder"></span>
                 </div>
                 <div class="third-player-text">
                     <span id="third-player-role" style="text-align:center" class="tertiary-text">@thirdPlayerRole</span>
                     <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
+                    <span id="third-player-inventory" style="margin-top: 50px"></span>
+                    <span id="third-player-backorder"></span>
                     </div>
         
             }

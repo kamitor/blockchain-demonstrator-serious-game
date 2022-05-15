@@ -231,6 +231,8 @@ const BeerGame = (() => {
 
         updateGamePlayerCurrentRound(game);
         updateGamePlayerLastOrder(game);
+        
+        updateGamePlayerDLTInfo(game);
 
         $("#place-order-text").val("");
         $(".cssload-jumping").hide();
@@ -355,6 +357,30 @@ const BeerGame = (() => {
             });
             $(`#last-order-${player.Role.Id}`).text(player.OutgoingOrders[player.OutgoingOrders.length - 1].Volume);
         });
+    }
+    
+    const updateGamePlayerDLTInfo = (game) => {
+        game.Players.forEach( player => {
+            if (player.Id == configMap.playerId){
+                if (player.ChosenOption.Name == "DLT"){
+                    $("#first-player-inventory").text("Inventory: " + game.Players[(0 >= modelIndex) ? 1 : 0].Inventory);
+                    $("#second-player-inventory").text("Inventory: " + game.Players[(1 >= modelIndex) ? 2 : 1].Inventory);
+                    $("#third-player-inventory").text("Inventory: " + game.Players[(2 >= modelIndex) ? 3 : 2].Inventory);
+
+                    $("#first-player-backorder").text("Backorder: " + game.Players[(0 >= modelIndex) ? 1 : 0].Backorder);
+                    $("#second-player-backorder").text("Backorder: " + game.Players[(1 >= modelIndex) ? 2 : 1].Backorder);
+                    $("#third-player-backorder").text("Backorder: " + game.Players[(2 >= modelIndex) ? 3 : 2].Backorder);
+                } else {
+                    $("#first-player-inventory").text("");
+                    $("#second-player-inventory").text("");
+                    $("#third-player-inventory").text("");
+
+                    $("#first-player-backorder").text("");
+                    $("#second-player-backorder").text("");
+                    $("#third-player-backorder").text("");
+                }
+            }
+        })
     }
     //#endregion
 
@@ -508,7 +534,7 @@ BeerGame.Signal = (() => {
                 $(".bottom-container").show();
             }, 3000);
         });
-
+        
         connection.on("EndGame", function () {
             $('body').append($(`<form method="post" id="endGameForm" action="/beergame/endgame" style="display:none;">
                                     <input name=gameId type="hidden" value="${configMap.gameId}"/>
