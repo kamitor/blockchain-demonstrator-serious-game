@@ -12,19 +12,19 @@
     List<Player> players = (List<Player>)ViewData["Players"];
 
     int modelIndex = players.FindIndex(p => p.Id == Model.Id);
-    
+
     string firstPlayerInventory = "";
     string secondPlayerInventory = "";
     string thirdPlayerInventory = "";
-    
+
     string firstPlayerBackorder = "";
     string secondPlayerBackorder = "";
     string thirdPlayerBackorder = "";
-    
+
     string firstPlayerName = "";
     string secondPlayerName = "";
     string thirdPlayerName = "";
-    
+
     string firstPlayerRole = "";
     string secondPlayerRole = "";
     string thirdPlayerRole = "";
@@ -39,19 +39,19 @@
     if (players.Count == 4)
     {
         modelIndex = players.FindIndex(p => p.Id == Model.Id);
-        
+
         firstPlayerInventory = players[(0 >= modelIndex) ? 1 : 0].Inventory.ToString();
         secondPlayerInventory = players[(1 >= modelIndex) ? 2 : 1].Inventory.ToString();
         thirdPlayerInventory = players[(2 >= modelIndex) ? 3 : 2].Inventory.ToString();
-    
+
         firstPlayerBackorder = players[(0 >= modelIndex) ? 1 : 0].Backorder.ToString();
         secondPlayerBackorder = players[(1 >= modelIndex) ? 2 : 1].Backorder.ToString();
         thirdPlayerBackorder = players[(2 >= modelIndex) ? 3 : 2].Backorder.ToString();
-        
+
         firstPlayerName = players[(0 >= modelIndex) ? 1 : 0].Name;
         secondPlayerName = players[(1 >= modelIndex) ? 2 : 1].Name;
         thirdPlayerName = players[(2 >= modelIndex) ? 3 : 2].Name;
-        
+
         firstPlayerRole = players[(0 >= modelIndex) ? 1 : 0].Role.Id;
         secondPlayerRole = players[(1 >= modelIndex) ? 2 : 1].Role.Id;
         thirdPlayerRole = players[(2 >= modelIndex) ? 3 : 2].Role.Id;
@@ -74,6 +74,11 @@
     if (currentRound == 3) ordinalSuffix = "rd";
 
     string lastOrder = (currentRound == 1) ? "none" : Model.OutgoingOrders.Last().Volume.ToString();
+    double totalProfitCosts = Model.Payments.Where(p => p.DueDay <= currentDay && p.DueDay > currentDay - Factors.RoundIncrement).Select(p => p.Amount).Sum();
+    string totalProfitCostsString = totalProfitCosts >= 0 ? "€" : "-€";
+    totalProfitCostsString += Math.Abs(totalProfitCosts) + ",-";
+    string totalProfitCostsColor = totalProfitCosts >= 0 ? "green" : "red";
+    int round = 1;
 }
 <head>
     <link rel="stylesheet" href="~/css/BeerGame.css">
@@ -126,31 +131,31 @@
                 <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
                 <span id="third-player-inventory" style="margin-top: 50px">Inventory: @thirdPlayerInventory</span>
                 <span id="third-player-backorder">Backorder: @thirdPlayerBackorder</span>
-                </div>
+            </div>
         }
         else
         {
-                <div class="first-player-text">
-                    <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayerRole</span>
-                    <span id="first-player-name" style="text-align:center" class="secondary-text">@firstPlayerName</span>
-                     <span id="first-player-inventory" style="margin-top: 50px"></span>
-                    <span id="first-player-backorder"></span>
-                </div>
-                <div class="second-player-text">
-                    <span id="second-player-role" style="text-align:center" class="tertiary-text">@secondPlayerRole</span>
-                    <span id="second-player-name" style="text-align:center" class="secondary-text">@secondPlayerName</span>
-                    <span id="second-player-inventory" style="margin-top: 50px"></span>
-                    <span id="second-player-backorder"></span>
-                </div>
-                <div class="third-player-text">
-                    <span id="third-player-role" style="text-align:center" class="tertiary-text">@thirdPlayerRole</span>
-                    <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
-                    <span id="third-player-inventory" style="margin-top: 50px"></span>
-                    <span id="third-player-backorder"></span>
-                    </div>
-        
-            }
-  
+            <div class="first-player-text">
+                <span id="first-player-role" style="text-align:center" class="tertiary-text">@firstPlayerRole</span>
+                <span id="first-player-name" style="text-align:center" class="secondary-text">@firstPlayerName</span>
+                <span id="first-player-inventory" style="margin-top: 50px"></span>
+                <span id="first-player-backorder"></span>
+            </div>
+            <div class="second-player-text">
+                <span id="second-player-role" style="text-align:center" class="tertiary-text">@secondPlayerRole</span>
+                <span id="second-player-name" style="text-align:center" class="secondary-text">@secondPlayerName</span>
+                <span id="second-player-inventory" style="margin-top: 50px"></span>
+                <span id="second-player-backorder"></span>
+            </div>
+            <div class="third-player-text">
+                <span id="third-player-role" style="text-align:center" class="tertiary-text">@thirdPlayerRole</span>
+                <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
+                <span id="third-player-inventory" style="margin-top: 50px"></span>
+                <span id="third-player-backorder"></span>
+            </div>
+
+        }
+
         <div class="harvester-text">
             <span style="text-align:center" class="tertiary-text">Harvester</span>
         </div>
@@ -227,22 +232,29 @@
         <div class="profitcosts-canvas box">
             <span class="main-text">Profit</span>
             <div id="profit-box" class="profitcosts-box">
-                <span class="secondary-text">Delivery: <span style="color:green">€10.000,-</span></span>
-                <span class="secondary-text">Delivery: <span style="color:green">€20.000,-</span></span>
-                <span class="secondary-text">Flexibility: <span style="color:green">€400,-</span></span>
+                @foreach (Payment payment in Model.Payments)
+                {
+                    if (payment.Amount >= 0 && payment.DueDay <= currentDay && payment.DueDay > currentDay - Factors.RoundIncrement)
+                    {
+                        <span class="secondary-text">@payment.Topic: <span style="color:green">€@payment.Amount,-</span></span>
+                    }
+                }
             </div>
         </div>
         <div class="profitcosts-canvas box">
             <span class="main-text">Costs</span>
             <div id="costs-box" class="profitcosts-box">
-                <span class="secondary-text">Holding cost: <span style="color:red">-€10.000,-</span></span>
-                <span class="secondary-text">Transport: <span style="color:red">-€20.000,-</span></span>
-                <span class="secondary-text">Order: <span style="color:red">-€400,-</span></span>
-                <span class="secondary-text">Maintenance: <span style="color:red">-€1.000,-</span></span>
+                @foreach (Payment payment in Model.Payments)
+                {
+                    if (payment.Amount < 0 && payment.DueDay <= currentDay && payment.DueDay > currentDay - Factors.RoundIncrement)
+                    {
+                        <span class="secondary-text">@payment.Topic: <span style="color:red">-€@payment.Amount,-</span></span>
+                    }
+                }
             </div>
         </div>
         <div class="total-canvas gradient box">
-            <span class="main-text" style="color: white">Total: <span id="total-text" style="color:red">-€10.000,-</span></span>
+            <span class="main-text" style="color: white">Total: <span id="total-text" style="color:@totalProfitCostsColor">@totalProfitCostsString</span></span>
         </div>
     </div>
     <div class="history-canvas box" style="padding:0px">
@@ -254,6 +266,17 @@
                 <th class="secondary-text">Received</th>
                 <th class="secondary-text">Sent</th>
             </tr>
+            @for (int i = 0; i <= currentDay - Factors.RoundIncrement; i += Factors.RoundIncrement)
+            {
+                <tr>
+                    <td class="tertiary-text">Round @round</td>
+                    <td class="tertiary-text">@Model.OutgoingOrders[round - 1].Volume</td>
+                    <td class="tertiary-text">@(Model.InventoryHistory[round - 1] - @Model.BackorderHistory[round - 1])</td>
+                    <td class="tertiary-text"></td>
+                    <td class="tertiary-text"></td>
+                </tr>
+                { round++; }
+            }
             <tr>
                 <td class="tertiary-text">Round 1</td>
                 <td class="tertiary-text">12</td>

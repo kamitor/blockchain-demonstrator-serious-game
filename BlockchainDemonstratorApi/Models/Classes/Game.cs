@@ -216,8 +216,43 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
 			}
 		}
-		
-		
+
+		private void SaveRecievedOrderHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<int> newRecievedOrder = new List<int>()
+				{
+					player.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay <= CurrentDay && d.ArrivalDay > CurrentDay - 7).Sum(d => d.Volume))
+				};
+				player.RecievedOrderHistory = player.RecievedOrderHistory.Concat(newRecievedOrder).ToList();
+			}
+		}
+
+		private void SaveSentOrderHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<int> newSentOrder = new List<int>()
+				{
+					//Continue later
+				};
+				player.RecievedOrderHistory = player.RecievedOrderHistory.Concat(newSentOrder).ToList();
+			}
+		}
+
+		private void SaveSendOderdHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<double> newGrossProfit = new List<double>()
+				{
+					player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) +
+					player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount)
+				};
+				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
+			}
+		}
 
 		/// <summary>
 		/// Used to setup the game when it first starts.
