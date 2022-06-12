@@ -403,6 +403,7 @@ const BeerGame = (() => {
     const promptOptions = (playersJson) => {
         $(".top-container").hide();
         $(".bottom-container").hide();
+        $(".info-container").hide();
         $("body").append(`
             <section class='option-prompt box'>
                 <h3 class='option-prompt--text'>Choose your supplychain setup</h3>
@@ -506,6 +507,7 @@ BeerGame.Signal = (() => {
             $(".lds").hide();
             $(".top-container").show();
             $(".bottom-container").show();
+            $(".info-container").show();
             if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
             else if (document.title == "BeerGame Admin - Blockchain Demonstrator") BeerGame.updateGameTuningPage(game);
         });
@@ -532,6 +534,7 @@ BeerGame.Signal = (() => {
                 $(".midStatistics").remove();
                 $(".top-container").show();
                 $(".bottom-container").show();
+                $(".info-container").show();
             }, 3000);
         });
         
@@ -580,6 +583,7 @@ BeerGame.Signal = (() => {
                 $(".midStatistics").remove();
                 $(".top-container").show();
                 $(".bottom-container").show();
+                $(".info-container").show();
             }
         });
     }

@@ -270,41 +270,13 @@
             {
                 <tr>
                     <td class="tertiary-text">Round @round</td>
-                    <td class="tertiary-text">@Model.OutgoingOrders[round - 1].Volume</td>
-                    <td class="tertiary-text">@(Model.InventoryHistory[round - 1] - @Model.BackorderHistory[round - 1])</td>
-                    <td class="tertiary-text"></td>
-                    <td class="tertiary-text"></td>
+                    <td class="tertiary-text">@Model.SentCurrentOrderHistory[round - 1]</td>
+                    <td class="tertiary-text">@(Model.InventoryHistory[round - 1] - Model.BackorderHistory[round - 1])</td>
+                    <td class="tertiary-text">@Model.RecievedOrderHistory[round - 1]</td>
+                    <td class="tertiary-text">@Model.SentOrdersHistory[round - 1]</td>
                 </tr>
                 { round++; }
             }
-            <tr>
-                <td class="tertiary-text">Round 1</td>
-                <td class="tertiary-text">12</td>
-                <td class="tertiary-text">5</td>
-                <td class="tertiary-text">10</td>
-                <td class="tertiary-text">8</td>
-            </tr>
-            <tr>
-                <td class="tertiary-text">Round 2</td>
-                <td class="tertiary-text">12</td>
-                <td class="tertiary-text">5</td>
-                <td class="tertiary-text">10</td>
-                <td class="tertiary-text">8</td>
-            </tr>
-            <tr>
-                <td class="tertiary-text">Round 3</td>
-                <td class="tertiary-text">12</td>
-                <td class="tertiary-text">5</td>
-                <td class="tertiary-text">10</td>
-                <td class="tertiary-text">8</td>
-            </tr>
-            <tr>
-                <td class="tertiary-text">Round 4</td>
-                <td class="tertiary-text">12</td>
-                <td class="tertiary-text">5</td>
-                <td class="tertiary-text">10</td>
-                <td class="tertiary-text">8</td>
-            </tr>
         </table>
     </div>
 </div>

@@ -156,6 +156,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			SaveGrossProfitHistory();
 			SaveBalanceHistory();
 			SaveBackorderHistory();
+			SaveRecievedOrderHistory();
+			SaveCurrentOrderHistory();
+			SaveSentOrdersHistory();
 		}
 
 		private void SaveInventoryHistory()
@@ -219,38 +222,56 @@ namespace BlockchainDemonstratorApi.Models.Classes
 
 		private void SaveRecievedOrderHistory()
 		{
-			foreach (Player player in Players)
-			{
-				List<int> newRecievedOrder = new List<int>()
-				{
-					player.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay <= CurrentDay && d.ArrivalDay > CurrentDay - 7).Sum(d => d.Volume))
-				};
-				player.RecievedOrderHistory = player.RecievedOrderHistory.Concat(newRecievedOrder).ToList();
-			}
-		}
+            foreach (Player player in Players)
+            {
+                List<int> newRecievedOrder = new List<int>()
+                {
+                    player.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay <= CurrentDay && d.ArrivalDay > CurrentDay - 7).Sum(d => d.Volume))
+                };
+                player.RecievedOrderHistory = player.RecievedOrderHistory.Concat(newRecievedOrder).ToList();
+            }
+        }
 
-		private void SaveSentOrderHistory()
+		private void SaveCurrentOrderHistory()
 		{
 			foreach (Player player in Players)
 			{
-				List<int> newSentOrder = new List<int>()
+				List<int> newCurrentOrder = new List<int>()
 				{
-					//Continue later
+					player.CurrentOrder.Volume
 				};
-				player.RecievedOrderHistory = player.RecievedOrderHistory.Concat(newSentOrder).ToList();
+				player.SentCurrentOrderHistory = player.SentCurrentOrderHistory.Concat(newCurrentOrder).ToList();
 			}
 		}
 
-		private void SaveSendOderdHistory()
+		private void SaveSentOrdersHistory()
 		{
 			foreach (Player player in Players)
 			{
-				List<double> newGrossProfit = new List<double>()
+				int sentAmount = 0;
+				List<Order> copyIncomingOrders = new List<Order>(player.IncomingOrders);
+				for (int i = 0; i < copyIncomingOrders.Count; i++)
+                {
+					int pendingVolume = copyIncomingOrders[i].Volume - copyIncomingOrders[i].Deliveries.Sum(d => d.Volume);
+					if (pendingVolume <= player.Inventory)
+                    {
+						sentAmount += pendingVolume;
+						copyIncomingOrders.RemoveAt(i);
+						i--;
+					}
+					else if (player.Inventory > 0)
+                    {
+						sentAmount += player.Inventory;
+					}
+
+				}
+
+				List<int> newSentOrders = new List<int>()
 				{
-					player.OutgoingOrders.Sum(o => o.Deliveries.Sum(d => d.Price)) +
-					player.Payments.Where(p => p.Topic == "Order").Sum(p => p.Amount)
+					//sentAmount continue here
+					//player.IncomingOrders.Sum(o => o.Deliveries.Where(d => d.SendDeliveryDay <= CurrentDay && d.SendDeliveryDay > CurrentDay - 7).Sum(d => d.Volume))
 				};
-				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
+				player.SentOrdersHistory = player.SentOrdersHistory.Concat(newSentOrders).ToList();
 			}
 		}
 

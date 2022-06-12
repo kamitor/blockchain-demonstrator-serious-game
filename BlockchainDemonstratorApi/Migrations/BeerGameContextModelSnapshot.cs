@@ -335,8 +335,17 @@ namespace BlockchainDemonstratorApi.Migrations
                     b.Property<string>("OverallProfitHistoryJson")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ReceivedOrderHistoryJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SentCurrentOrderHistoryJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SentOrdersHistoryJson")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
