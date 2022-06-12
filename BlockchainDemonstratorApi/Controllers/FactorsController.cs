@@ -94,7 +94,7 @@ namespace BlockchainDemonstratorApi.Controllers
 		/// PUT: api/Factors/Option/5
 		/// </summary>
 		[HttpPut("Option/{id}")]
-		public async Task<IActionResult> PutFactors(string id, Option option)
+		public async Task<IActionResult> PutOption(string id, Option option)
 		{
 			if (id != option.Id)
 			{

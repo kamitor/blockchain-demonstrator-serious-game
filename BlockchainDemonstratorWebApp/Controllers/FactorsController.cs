@@ -99,6 +99,28 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 
 			return BadRequest();
 		}
+		
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditAll(string id,
+			[Bind(
+				"Id,Name,CostOfStartUp,CostOfMaintenance,TransportCostOneTrip,TransportCostPerDay,LeadTime,Flexibility,GuaranteedCapacityPenalty,RoleId,MinimumGuaranteedCapacity")]
+			List<Option> option)
+		{
+			using (var client = new HttpClient())
+			{
+				var stringContent = new StringContent(JsonConvert.SerializeObject(option), System.Text.Encoding.UTF8,
+					"application/json");
+				var response = client.PutAsync(Config.RestApiUrl + "/api/Factors/Option/" + id, stringContent).Result;
+
+				if (response.IsSuccessStatusCode)
+				{
+					return RedirectToAction("Index", "Factors");
+				}
+			}
+
+			return BadRequest();
+		}
 
 		[HttpGet]
 		public IActionResult Simulation(int orderAmount, string chosenOption)

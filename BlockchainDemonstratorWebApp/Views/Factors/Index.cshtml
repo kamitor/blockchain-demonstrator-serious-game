@@ -133,7 +133,7 @@
         @foreach (var option in options.Where(x => x.RoleId == role.Id))
         {
             <div id="@role.Id-@option.Name" class="tabs--content--options-content">
-                <form asp-action="EditOption">
+                <form asp-action="EditOption" id="OptionForm">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="@option.Id"/>
                     <input type="hidden" name="id" value="@option.Id"/>
@@ -178,12 +178,18 @@
                         <span asp-validation-for="@option.GuaranteedCapacityPenalty" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary"/>
-                    </div>
+                            <input type="submit" value="Save" class="btn btn-primary"/>
+                        </div>
                 </form>
+                
             </div>
+            
+           
         }
-
+        <div>
+            <input type="button" value="Submit Changes" onclick="submitForms()"/>
+            <input type="button" value="test"/>
+        </div>
     </div>
 }
 
@@ -225,5 +231,159 @@
         $(`.${tabClass}`).css('background-color', '#f1f1f1')
         $(`#${buttonId}`).css('background-color', '#5ca1ec')
     }
+    
+    function submitForms() {
+        $("#OptionForm").ajaxForm();  
+    }
+    
+    /* all in one factors page: 
+    <form>
+        <h1>Generic factors</h1>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id"/>
+        <div class="form-group">
+            <label asp-for="holdingFactor" class="control-label">Holding factor: The factor used to determine Holding cost.</label>
+            <input asp-for="holdingFactor" class="form-control"/>
+            <span asp-validation-for="holdingFactor" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="roundIncrement" class="control-label">Round increment: How many days is each round.</label>
+            <input asp-for="roundIncrement" class="form-control"/>
+            <span asp-validation-for="roundIncrement" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="retailProductPrice" class="control-label">Retailer product price: The asking price of the retailer.</label>
+            <input asp-for="retailProductPrice" class="form-control"/>
+            <span asp-validation-for="retailProductPrice" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="manuProductPrice" class="control-label">Manufacturer product price: The asking price of the manufacturer.</label>
+            <input asp-for="manuProductPrice" class="form-control"/>
+            <span asp-validation-for="manuProductPrice" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="procProductPrice" class="control-label">Processor product price: The asking price of the producer.</label>
+            <input asp-for="procProductPrice" class="form-control"/>
+            <span asp-validation-for="procProductPrice" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="farmerProductPrice" class="control-label">Farmer product price: The asking price of the farmer.</label>
+            <input asp-for="farmerProductPrice" class="form-control"/>
+            <span asp-validation-for="farmerProductPrice" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="harvesterProductPrice" class="control-label">Harvester product price: The asking price of the harvester.</label>
+            <input asp-for="harvesterProductPrice" class="form-control"/>
+            <span asp-validation-for="harvesterProductPrice" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="setupCost" class="control-label">Setup cost: The initial setup cost to startup a business.</label>
+            <input asp-for="setupCost" class="form-control"/>
+            <span asp-validation-for="setupCost" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="initialCapital" class="control-label">Initial capital: The bank balance each player starts with. NOTE: this is the amount before the setup cost get subtracted.</label>
+            <input asp-for="initialCapital" class="form-control"/>
+            <span asp-validation-for="initialCapital" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ratioALeadtime" class="control-label">Ratio A leadtime: First ratio used in generating a weigted random.</label>
+            <input asp-for="ratioALeadtime" class="form-control"/>
+            <span asp-validation-for="ratioALeadtime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ratioAChance" class="control-label">Ratio A chance: The chance for the weighted random to pick Ratio A.</label>
+            <input asp-for="ratioAChance" class="form-control"/>
+            <span asp-validation-for="ratioAChance" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ratioBLeadtime" class="control-label">Ratio B leadtime: Second ratio used in generating a weigted random.</label>
+            <input asp-for="ratioBLeadtime" class="form-control"/>
+            <span asp-validation-for="ratioBLeadtime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ratioBChance" class="control-label">Ratio B chance: The chance for the weighted random to pick Ratio B.</label>
+            <input asp-for="ratioBChance" class="form-control"/>
+            <span asp-validation-for="ratioBChance" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ratioCLeadtime" class="control-label">Ratio C leadtime: Third ratio used in generating a weigted random.</label>
+            <input asp-for="ratioCLeadtime" class="form-control"/>
+            <span asp-validation-for="ratioCLeadtime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ratioCChance" class="control-label">Ratio C chance: The chance for the weighted random to pick Ratio C.</label>
+            <input asp-for="ratioCChance" class="form-control"/>
+            <span asp-validation-for="ratioCChance" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="flushInventoryPrice" class="control-label">Flush inventory price: The amount a player gets penalized when flushing inventory</label>
+            <input asp-for="flushInventoryPrice" class="form-control"/>
+            <span asp-validation-for="flushInventoryPrice" class="text-danger"></span>
+        </div>
+    
+        @foreach (var role in roles)
+        {
+            <div id="@role.Id">
+                <h1>@role.Id factors</h1>
+                <hr/>
+    
+                @foreach (var option in options.Where(x => x.RoleId == role.Id))
+                {
+                    <h4>@option.Name option for @role.Id</h4>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="@option.Id"/>
+                    <input type="hidden" name="id" value="@option.Id"/>
+                    <input type="hidden" asp-for="@option.Name"/>
+                    <input type="hidden" asp-for="@option.RoleId"/>
+                    <div>
+                        <label asp-for="@option.CostOfStartUp" class="control-label">The startup cost</label>
+                        <input asp-for="@option.CostOfStartUp" class="form-control"/>
+                        <span asp-validation-for="@option.CostOfStartUp" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="@option.CostOfMaintenance" class="control-label">Cost of maintenance</label>
+                        <input asp-for="@option.CostOfMaintenance" class="form-control"/>
+                        <span asp-validation-for="@option.CostOfMaintenance" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="@option.TransportCostOneTrip" class="control-label">Transport cost one trip</label>
+                        <input asp-for="@option.TransportCostOneTrip" class="form-control"/>
+                        <span asp-validation-for="@option.TransportCostOneTrip" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label class="control-label">Transport cost per day</label>
+                        <input class="form-control" type="number" value="@option.TransportCostPerDay" name="transportPerDay"/>
+    
+                        <label asp-for="@option.TransportCostPerDay" class="control-label">Transport cost per day</label>
+                        <input asp-for="@option.TransportCostPerDay" class="form-control"/>
+                        <span asp-validation-for="@option.TransportCostPerDay" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="@option.LeadTime" class="control-label">leadtime</label>
+                        <input asp-for="@option.LeadTime" class="form-control"/>
+                        <span asp-validation-for="@option.LeadTime" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="@option.Flexibility" class="control-label"></label>
+                        <input asp-for="@option.Flexibility" class="form-control"/>
+                        <span asp-validation-for="@option.Flexibility" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="@option.GuaranteedCapacityPenalty" class="control-label">Guaranteed capacity penalty</label>
+                        <input asp-for="@option.GuaranteedCapacityPenalty" class="form-control"/>
+                        <span asp-validation-for="@option.GuaranteedCapacityPenalty" class="text-danger"></span>
+                    </div>
+                }
+    
+            </div>
+        }
+    
+    
+        <div class="form-group" style="position: fixed; bottom: 2.5%; right: 3%">
+            <input type="submit" value="Save changes" class="btn btn-primary"/>
+        </div>
+    </form>
+     */
     </script>
 }
