@@ -81,7 +81,7 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
         }
 
         /// <summary>
-        /// This function redirects tot the statical beer game view which the game master also sees.
+        /// This function redirects tot the statistical beer game view which the game master also sees.
         /// </summary>
         /// <param name="gameId">ID of the given game.</param>
         /// <returns></returns>

@@ -249,27 +249,27 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			foreach (Player player in Players)
 			{
 				int sentAmount = 0;
+				int copyInventory = player.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay <= CurrentDay && d.ArrivalDay > CurrentDay - Factors.RoundIncrement).Sum(d => d.Volume));
 				List<Order> copyIncomingOrders = new List<Order>(player.IncomingOrders);
 				for (int i = 0; i < copyIncomingOrders.Count; i++)
                 {
 					int pendingVolume = copyIncomingOrders[i].Volume - copyIncomingOrders[i].Deliveries.Sum(d => d.Volume);
-					if (pendingVolume <= player.Inventory)
+					if (pendingVolume <= copyInventory)
                     {
 						sentAmount += pendingVolume;
 						copyIncomingOrders.RemoveAt(i);
 						i--;
 					}
-					else if (player.Inventory > 0)
+					else if (copyInventory > 0)
                     {
-						sentAmount += player.Inventory;
+						sentAmount += copyInventory;
 					}
 
 				}
 
 				List<int> newSentOrders = new List<int>()
 				{
-					//sentAmount continue here
-					//player.IncomingOrders.Sum(o => o.Deliveries.Where(d => d.SendDeliveryDay <= CurrentDay && d.SendDeliveryDay > CurrentDay - 7).Sum(d => d.Volume))
+					sentAmount
 				};
 				player.SentOrdersHistory = player.SentOrdersHistory.Concat(newSentOrders).ToList();
 			}
