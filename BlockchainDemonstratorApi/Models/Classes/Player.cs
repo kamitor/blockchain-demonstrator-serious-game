@@ -181,6 +181,47 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			set { BackorderHistoryJson = JsonConvert.SerializeObject(value); }
 		}
 
+		public string ReceivedOrderHistoryJson { get; set; }
+
+		[NotMapped]
+		public List<int> RecievedOrderHistory
+		{
+			get
+			{
+				return (ReceivedOrderHistoryJson == null)
+					? new List<int>()
+					: JsonConvert.DeserializeObject<List<int>>(ReceivedOrderHistoryJson);
+			}
+			set { ReceivedOrderHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
+		public string SentCurrentOrderHistoryJson { get; set; }
+
+		[NotMapped]
+		public List<int> SentCurrentOrderHistory
+		{
+			get
+			{
+				return (SentCurrentOrderHistoryJson == null)
+					? new List<int>()
+					: JsonConvert.DeserializeObject<List<int>>(SentCurrentOrderHistoryJson);
+			}
+			set { SentCurrentOrderHistoryJson = JsonConvert.SerializeObject(value); }
+		}
+
+		public string SentOrdersHistoryJson { get; set; }
+
+		[NotMapped]
+		public List<int> SentOrdersHistory
+		{
+			get
+			{
+				return (SentOrdersHistoryJson == null)
+					? new List<int>()
+					: JsonConvert.DeserializeObject<List<int>>(SentOrdersHistoryJson);
+			}
+			set { SentOrdersHistoryJson = JsonConvert.SerializeObject(value); }
+		}
 
 		public Player(string name)
 		{

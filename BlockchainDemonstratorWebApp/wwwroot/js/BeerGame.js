@@ -231,8 +231,9 @@ const BeerGame = (() => {
 
         updateGamePlayerCurrentRound(game);
         updateGamePlayerLastOrder(game);
-        
+
         updateGamePlayerDLTInfo(game);
+        updateGamePlayerInfo(game);
 
         $("#place-order-text").val("");
         $(".cssload-jumping").hide();
@@ -360,8 +361,12 @@ const BeerGame = (() => {
     }
     
     const updateGamePlayerDLTInfo = (game) => {
+        let modelIndex = game.Players.findIndex(player => {
+            return player.Id == configMap.playerId;
+        })
+
         game.Players.forEach( player => {
-            if (player.Id == configMap.playerId){
+            if (player.Id == configMap.playerId) {
                 if (player.ChosenOption.Name == "DLT"){
                     $("#first-player-inventory").text("Inventory: " + game.Players[(0 >= modelIndex) ? 1 : 0].Inventory);
                     $("#second-player-inventory").text("Inventory: " + game.Players[(1 >= modelIndex) ? 2 : 1].Inventory);
@@ -381,6 +386,45 @@ const BeerGame = (() => {
                 }
             }
         })
+    }
+
+    const updateGamePlayerInfo = (game) => {
+        let currentRound = Math.ceil((game.CurrentDay - 7) / 7);
+        game.Players.forEach(player => {
+            if (player.Id == configMap.playerId) {
+                let totalProfitCosts = 0;
+                $("#profit-box").text("");
+                $("#costs-box").text("");
+                player.Payments.sort(function (a, b) {
+                    if (a.DueDay === b.DueDay) {
+                        return (a.Topic < b.Topic) ? -1 : (a.Topic > b.Topic) ? 1 : 0;
+                    }
+                    return a.DueDay > b.DueDay ? 1 : -1;
+                });
+                player.Payments.forEach(payment => {
+                    if (payment.DueDay <= game.CurrentDay - 7 && payment.DueDay > game.CurrentDay - 14) {
+                        if (payment.Amount >= 0) {
+                            $("#profit-box").append(`<span class="secondary-text">${payment.Topic}: <span style="color:green">\u20AC${payment.Amount},-</span></span>`)
+                        }
+                        else if (payment.Amount < 0) {
+                            $("#costs-box").append(`<span class="secondary-text">${payment.Topic}: <span style="color:red">-\u20AC${Math.abs(payment.Amount)},-</span></span>`)
+
+                        }
+                        totalProfitCosts += payment.Amount;
+                    }
+                });
+
+                $("total-text").text(`${totalProfitCosts >= 0 ? "\u20AC" + totalProfitCosts : "-\u20AC" + totalProfitCosts}`);
+                
+                $("#history-table").append(`<tr>
+                    <td class="tertiary-text">Round ${currentRound}</td>
+                    <td class="tertiary-text">${player.SentCurrentOrderHistory[currentRound - 1]}</td>
+                    <td class="tertiary-text">${(player.InventoryHistory[currentRound - 1] - player.BackorderHistory[currentRound - 1])}</td>
+                    <td class="tertiary-text">${player.RecievedOrderHistory[currentRound - 1]}</td>
+                    <td class="tertiary-text">${player.SentOrdersHistory[currentRound - 1]}</td>
+                </tr>`);
+            }
+        });
     }
     //#endregion
 
@@ -403,6 +447,7 @@ const BeerGame = (() => {
     const promptOptions = (playersJson) => {
         $(".top-container").hide();
         $(".bottom-container").hide();
+        $(".info-container").hide();
         $("body").append(`
             <section class='option-prompt box'>
                 <h3 class='option-prompt--text'>Choose your supplychain setup</h3>
@@ -506,6 +551,7 @@ BeerGame.Signal = (() => {
             $(".lds").hide();
             $(".top-container").show();
             $(".bottom-container").show();
+            $(".info-container").show();
             if (document.title == "BeerGame - Blockchain Demonstrator") BeerGame.updateGamePlayerPage(game);
             else if (document.title == "BeerGame Admin - Blockchain Demonstrator") BeerGame.updateGameTuningPage(game);
         });
@@ -532,6 +578,7 @@ BeerGame.Signal = (() => {
                 $(".midStatistics").remove();
                 $(".top-container").show();
                 $(".bottom-container").show();
+                $(".info-container").show();
             }, 3000);
         });
         
@@ -580,6 +627,7 @@ BeerGame.Signal = (() => {
                 $(".midStatistics").remove();
                 $(".top-container").show();
                 $(".bottom-container").show();
+                $(".info-container").show();
             }
         });
     }

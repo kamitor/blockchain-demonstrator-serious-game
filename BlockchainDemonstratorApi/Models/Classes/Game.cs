@@ -156,6 +156,9 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			SaveGrossProfitHistory();
 			SaveBalanceHistory();
 			SaveBackorderHistory();
+			SaveRecievedOrderHistory();
+			SaveCurrentOrderHistory();
+			SaveSentOrdersHistory();
 		}
 
 		private void SaveInventoryHistory()
@@ -216,8 +219,61 @@ namespace BlockchainDemonstratorApi.Models.Classes
 				player.GrossProfitHistory = player.GrossProfitHistory.Concat(newGrossProfit).ToList();
 			}
 		}
-		
-		
+
+		private void SaveRecievedOrderHistory()
+		{
+            foreach (Player player in Players)
+            {
+                List<int> newRecievedOrder = new List<int>()
+                {
+                    player.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay <= CurrentDay && d.ArrivalDay > CurrentDay - 7).Sum(d => d.Volume))
+                };
+                player.RecievedOrderHistory = player.RecievedOrderHistory.Concat(newRecievedOrder).ToList();
+            }
+        }
+
+		private void SaveCurrentOrderHistory()
+		{
+			foreach (Player player in Players)
+			{
+				List<int> newCurrentOrder = new List<int>()
+				{
+					player.CurrentOrder.Volume
+				};
+				player.SentCurrentOrderHistory = player.SentCurrentOrderHistory.Concat(newCurrentOrder).ToList();
+			}
+		}
+
+		private void SaveSentOrdersHistory()
+		{
+			foreach (Player player in Players)
+			{
+				int sentAmount = 0;
+				int copyInventory = player.OutgoingOrders.Sum(o => o.Deliveries.Where(d => d.ArrivalDay <= CurrentDay && d.ArrivalDay > CurrentDay - Factors.RoundIncrement).Sum(d => d.Volume));
+				List<Order> copyIncomingOrders = new List<Order>(player.IncomingOrders);
+				for (int i = 0; i < copyIncomingOrders.Count; i++)
+                {
+					int pendingVolume = copyIncomingOrders[i].Volume - copyIncomingOrders[i].Deliveries.Sum(d => d.Volume);
+					if (pendingVolume <= copyInventory)
+                    {
+						sentAmount += pendingVolume;
+						copyIncomingOrders.RemoveAt(i);
+						i--;
+					}
+					else if (copyInventory > 0)
+                    {
+						sentAmount += copyInventory;
+					}
+
+				}
+
+				List<int> newSentOrders = new List<int>()
+				{
+					sentAmount
+				};
+				player.SentOrdersHistory = player.SentOrdersHistory.Concat(newSentOrders).ToList();
+			}
+		}
 
 		/// <summary>
 		/// Used to setup the game when it first starts.

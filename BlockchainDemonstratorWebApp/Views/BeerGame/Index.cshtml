@@ -12,19 +12,19 @@
     List<Player> players = (List<Player>)ViewData["Players"];
 
     int modelIndex = players.FindIndex(p => p.Id == Model.Id);
-    
+
     string firstPlayerInventory = "";
     string secondPlayerInventory = "";
     string thirdPlayerInventory = "";
-    
+
     string firstPlayerBackorder = "";
     string secondPlayerBackorder = "";
     string thirdPlayerBackorder = "";
-    
+
     string firstPlayerName = "";
     string secondPlayerName = "";
     string thirdPlayerName = "";
-    
+
     string firstPlayerRole = "";
     string secondPlayerRole = "";
     string thirdPlayerRole = "";
@@ -39,19 +39,19 @@
     if (players.Count == 4)
     {
         modelIndex = players.FindIndex(p => p.Id == Model.Id);
-        
+
         firstPlayerInventory = players[(0 >= modelIndex) ? 1 : 0].Inventory.ToString();
         secondPlayerInventory = players[(1 >= modelIndex) ? 2 : 1].Inventory.ToString();
         thirdPlayerInventory = players[(2 >= modelIndex) ? 3 : 2].Inventory.ToString();
-    
+
         firstPlayerBackorder = players[(0 >= modelIndex) ? 1 : 0].Backorder.ToString();
         secondPlayerBackorder = players[(1 >= modelIndex) ? 2 : 1].Backorder.ToString();
         thirdPlayerBackorder = players[(2 >= modelIndex) ? 3 : 2].Backorder.ToString();
-        
+
         firstPlayerName = players[(0 >= modelIndex) ? 1 : 0].Name;
         secondPlayerName = players[(1 >= modelIndex) ? 2 : 1].Name;
         thirdPlayerName = players[(2 >= modelIndex) ? 3 : 2].Name;
-        
+
         firstPlayerRole = players[(0 >= modelIndex) ? 1 : 0].Role.Id;
         secondPlayerRole = players[(1 >= modelIndex) ? 2 : 1].Role.Id;
         thirdPlayerRole = players[(2 >= modelIndex) ? 3 : 2].Role.Id;
@@ -74,6 +74,10 @@
     if (currentRound == 3) ordinalSuffix = "rd";
 
     string lastOrder = (currentRound == 1) ? "none" : Model.OutgoingOrders.Last().Volume.ToString();
+    double totalProfitCosts = Model.Payments.Where(p => p.DueDay <= currentDay - 7 && p.DueDay > currentDay - 7 - Factors.RoundIncrement).Select(p => p.Amount).Sum();
+    string totalProfitCostsString = totalProfitCosts >= 0 ? "€" : "-€";
+    totalProfitCostsString += Math.Abs(totalProfitCosts) + ",-";
+    int round = 1;
 }
 <head>
     <link rel="stylesheet" href="~/css/BeerGame.css">
@@ -126,7 +130,7 @@
                 <span id="third-player-name" style="text-align:center" class="secondary-text">@thirdPlayerName</span>
                 <span id="third-player-inventory" style="margin-top: 3.5%">Inventory: @thirdPlayerInventory</span>
                 <span id="third-player-backorder">Backorder: @thirdPlayerBackorder</span>
-                </div>
+            </div>
         }
         else
         {
@@ -223,31 +227,56 @@
     </div>
 </div>
 <div class="info-container" style="@containerDisplay">
-    <div>
+    <div class="payments-container">
         <div class="profitcosts-canvas box">
             <span class="main-text">Profit</span>
-            <div class="profitcosts-box">
-                <span class="secondary-text"><span style="color:green">€10.000,-</span> asdasdas</span>
-                <span class="secondary-text"><span style="color:green">€20.000,-</span> asdddas</span>
-                <span class="secondary-text"><span style="color:green">€400,-</span> aasdas</span>
-                <span class="secondary-text"><span style="color:green">€1.000,-</span> dasdas</span>
+            <div id="profit-box" class="profitcosts-box">
+                @foreach (Payment payment in Model.Payments)
+                {
+                    if (payment.Amount >= 0 && payment.DueDay <= currentDay - 7 && payment.DueDay > currentDay - 7 - Factors.RoundIncrement)
+                    {
+                        <span class="secondary-text">@payment.Topic: <span style="color:green">€@payment.Amount,-</span></span>
+                    }
+                }
             </div>
         </div>
         <div class="profitcosts-canvas box">
             <span class="main-text">Costs</span>
-            <div class="profitcosts-box">
-                <span class="secondary-text"><span style="color:red">€10.000,-</span> asdasdas</span>
-                <span class="secondary-text"><span style="color:red">€20.000,-</span> asdddas</span>
-                <span class="secondary-text"><span style="color:red">€400,-</span> aasdas</span>
-                <span class="secondary-text"><span style="color:red">€1.000,-</span> dasdas</span>
+            <div id="costs-box" class="profitcosts-box">
+                @foreach (Payment payment in Model.Payments)
+                {
+                    if (payment.Amount < 0 && payment.DueDay <= currentDay - 7 && payment.DueDay > currentDay - 7 - Factors.RoundIncrement)
+                    {
+                        <span class="secondary-text">@payment.Topic: <span style="color:red">-€@Math.Abs(payment.Amount),-</span></span>
+                    }
+                }
             </div>
         </div>
         <div class="total-canvas gradient box">
-            <span class="main-text" style="color: white">Total: <span id="total-text" style="color:red">-€10.000,-</span></span>
+            <span class="main-text" style="color: white">Total: <span id="total-text">@totalProfitCostsString</span></span>
         </div>
     </div>
-    <div class="order-history-canvas box">
-
+    <div class="history-canvas box" style="padding:0px">
+        <table id="history-table" class="history-table">
+            <tr class="gradient">
+                <th class="secondary-text">Round</th>
+                <th class="secondary-text">Order</th>
+                <th class="secondary-text">Effective inventory</th>
+                <th class="secondary-text">Received</th>
+                <th class="secondary-text">Sent</th>
+            </tr>
+            @for (int i = 0; i <= currentDay - Factors.RoundIncrement; i += Factors.RoundIncrement)
+            {
+                <tr>
+                    <td class="tertiary-text">Round @round</td>
+                    <td class="tertiary-text">@Model.SentCurrentOrderHistory[round - 1]</td>
+                    <td class="tertiary-text">@(Model.InventoryHistory[round - 1] - Model.BackorderHistory[round - 1])</td>
+                    <td class="tertiary-text">@Model.RecievedOrderHistory[round - 1]</td>
+                    <td class="tertiary-text">@Model.SentOrdersHistory[round - 1]</td>
+                </tr>
+                { round++; }
+            }
+        </table>
     </div>
 </div>
 
