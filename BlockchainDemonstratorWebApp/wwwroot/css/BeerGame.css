@@ -279,10 +279,16 @@
     margin-bottom: 8em;
 }
 
+.payments-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .profitcosts-canvas {
     border-radius: 18px;
     width: 95%;
-    height: 250px;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -305,13 +311,13 @@
     justify-content: center;
 }
 
-
 .history-canvas {
     border-radius: 18px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     margin-left: 10px;
+    height: fit-content;
 }
 
 .history-table {
