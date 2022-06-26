@@ -458,9 +458,12 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			Inventory = 0;
 		}
 
-		public void SimulateCurrentOrder()
+		public int SimulateCurrentOrder()
 		{
-			CurrentOrder = new Order() { Volume = 10 };
+			// TODO: this takes all placed orders in account, even those which are completed and no longer in inv.
+			// TODO: make a new list of order objects which saves each order amount and if it has been completed.
+			// TODO: if order not completed take it into the sum, else it should be in inventory or backorder
+			return 20 - Inventory - SentCurrentOrderHistory.Sum() + Backorder;
 		}
 
 		public override string ToString()

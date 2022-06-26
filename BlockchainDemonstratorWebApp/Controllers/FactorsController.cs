@@ -101,13 +101,13 @@ namespace Blockchain_Demonstrator_Web_App.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult Simulation(int orderAmount, string chosenOption)
+		public IActionResult Simulation(string chosenOption)
 		{
-			if (orderAmount != 0 || chosenOption != "")
+			if (chosenOption != "")
 			{
 				using (var client = new HttpClient())
 				{
-					var response = client.GetAsync(Config.RestApiUrl + $"/api/Factors/{orderAmount}/{chosenOption}")
+					var response = client.GetAsync(Config.RestApiUrl + $"/api/Factors/simulate/{chosenOption}")
 						.Result;
 
 					if (response.IsSuccessStatusCode)

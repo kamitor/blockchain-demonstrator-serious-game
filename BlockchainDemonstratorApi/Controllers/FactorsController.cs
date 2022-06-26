@@ -166,8 +166,8 @@ namespace BlockchainDemonstratorApi.Controllers
 			return factors;
 		}
 
-		[HttpGet("{amount}/{option}")] 
-		public ActionResult<Game> SimulateGame(int amount, string option)
+		[HttpGet("simulate/{option}")] 
+		public ActionResult<Game> SimulateGame(string option)
 		{
 			Game _game = new Game("SimulateGame"); 
 			
@@ -197,7 +197,7 @@ namespace BlockchainDemonstratorApi.Controllers
 			{
 				foreach (Player player in _game.Players)
 				{
-					player.CurrentOrder = new Order() { Volume = amount };
+					player.CurrentOrder = new Order() { Volume = player.SimulateCurrentOrder() };
 				}
 				_game.Progress();
 			}

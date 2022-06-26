@@ -8,7 +8,7 @@
 
 <h2>@ViewBag.Title</h2>
 
-@if (Model != null)
+@if (Model != null && Model.Players != null && Model.Players.Count > 0)
 {
     <form>
         <input type="submit" value="Reset" class="btn btn-primary"/>
@@ -61,8 +61,6 @@
 else
 {
     <form>
-        <label>Order amount</label>
-        <input type="number" name="orderAmount">
         <select name="chosenOption">
             <option value="Basic">Basic</option>
             <option value="DLT">DLT</option>
