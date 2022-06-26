@@ -34,11 +34,12 @@
                     <input asp-for="holdingFactor" class="form-control"/>
                     <span asp-validation-for="holdingFactor" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="roundIncrement" class="control-label">How many days is each round</label>
-                    <input asp-for="roundIncrement" class="form-control"/>
-                    <span asp-validation-for="roundIncrement" class="text-danger"></span>
-                </div>
+                @* <div class="form-group"> *@
+                @*     <label asp-for="roundIncrement" class="control-label">How many days is each round</label> *@
+                @*     <input asp-for="roundIncrement" class="form-control"/> *@
+                @*     <span asp-validation-for="roundIncrement" class="text-danger"></span> *@
+                @* </div> *@
+                <input type="hidden" asp-for="roundIncrement"/>
                 <div class="form-group">
                     <label asp-for="retailProductPrice" class="control-label">What is the asking price of the retailer</label>
                     <input asp-for="retailProductPrice" class="form-control"/>
@@ -75,32 +76,41 @@
                     <span asp-validation-for="initialCapital" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ratioALeadtime" class="control-label"></label>
+                    <label>The application uses a weighted random to determine the leadtime. The weighted random is 
+                        devide in three segments: ratio A, ratio B and ratio C. Every segment has a leadtime, which is 
+                        the amount of leadtime that gets added and a chance the segment gets picked. <br>
+                        By default these are as follows: ratio A leadtime = 0 and chance = 50%, ratio B leadtime = 7 
+                        and chance = 35% and ratio C leadtime = 14 and chance = 15%. NOTE: the leadtime should be a 
+                        multiple of 7.
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ratioALeadtime" class="control-label">The leadtime of ration A</label>
                     <input asp-for="ratioALeadtime" class="form-control"/>
                     <span asp-validation-for="ratioALeadtime" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ratioAChance" class="control-label"></label>
+                    <label asp-for="ratioAChance" class="control-label">The chance ratio A gets picked</label>
                     <input asp-for="ratioAChance" class="form-control"/>
                     <span asp-validation-for="ratioAChance" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ratioBLeadtime" class="control-label"></label>
+                    <label asp-for="ratioBLeadtime" class="control-label">The leadtime of Ratio B</label>
                     <input asp-for="ratioBLeadtime" class="form-control"/>
                     <span asp-validation-for="ratioBLeadtime" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ratioBChance" class="control-label"></label>
+                    <label asp-for="ratioBChance" class="control-label">The chance ratio B gets picked</label>
                     <input asp-for="ratioBChance" class="form-control"/>
                     <span asp-validation-for="ratioBChance" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ratioCLeadtime" class="control-label"></label>
+                    <label asp-for="ratioCLeadtime" class="control-label">The leadtime of ratio C</label>
                     <input asp-for="ratioCLeadtime" class="form-control"/>
                     <span asp-validation-for="ratioCLeadtime" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ratioCChance" class="control-label"></label>
+                    <label asp-for="ratioCChance" class="control-label">The chance ratio gets picked</label>
                     <input asp-for="ratioCChance" class="form-control"/>
                     <span asp-validation-for="ratioCChance" class="text-danger"></span>
                 </div>
@@ -163,12 +173,12 @@
                         <span asp-validation-for="@option.TransportCostPerDay" class="text-danger"></span>
                     </div>
                     <div>
-                        <label asp-for="@option.LeadTime" class="control-label">leadtime</label>
+                        <label asp-for="@option.LeadTime" class="control-label">The base leadtime</label>
                         <input asp-for="@option.LeadTime" class="form-control"/>
                         <span asp-validation-for="@option.LeadTime" class="text-danger"></span>
                     </div>
                     <div>
-                        <label asp-for="@option.Flexibility" class="control-label"></label>
+                        <label asp-for="@option.Flexibility" class="control-label">The flexibility of the option</label>
                         <input asp-for="@option.Flexibility" class="form-control"/>
                         <span asp-validation-for="@option.Flexibility" class="text-danger"></span>
                     </div>

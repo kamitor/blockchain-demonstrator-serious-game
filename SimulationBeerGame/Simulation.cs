@@ -41,7 +41,7 @@ namespace SimulationBeerGame
 			{
 				foreach (Player player in _game.Players)
 				{
-					player.SimulateCurrentOrder();
+					//player.SimulateCurrentOrder();
 				}
 				_game.Progress();
 				Console.WriteLine("-----------------------------------------------------");

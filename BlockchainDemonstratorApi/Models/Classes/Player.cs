@@ -417,9 +417,11 @@ namespace BlockchainDemonstratorApi.Models.Classes
 			Inventory = 0;
 		}
 
-		public void SimulateCurrentOrder()
+		public int SimulateCurrentOrder()
 		{
-			CurrentOrder = new Order() { Volume = 10 };
+			// TODO: use SentCurrentOrderHistory.sum for amount ordered.
+			// ret 20 - inv - sum + bac 
+			return 0;
 		}
 
 		public override string ToString()

@@ -37,6 +37,7 @@
                         <td style="background-color: lightgray">@Model.Players[x].InventoryHistory[i]</td>
                         <td style="background-color: lightgray">@Model.Players[x].BalanceHistory[i]</td>
                         <td style="background-color: lightgray">@Model.Players[x].BackorderHistory[i]</td>
+                        <!-- TODO: Add the volume history -->
                     </tr>    
                 }
                 else
@@ -47,6 +48,7 @@
                         <td>@Model.Players[x].InventoryHistory[i]</td>
                         <td>@Model.Players[x].BalanceHistory[i]</td>
                         <td>@Model.Players[x].BackorderHistory[i]</td>
+                        <!-- TODO: Add the volume history -->
                     </tr>
                 }
                 if (x == Model.Players.Count - 1)
@@ -62,7 +64,6 @@ else
 {
     <form>
         <label>Order amount</label>
-        <input type="number" name="orderAmount">
         <select name="chosenOption">
             <option value="Basic">Basic</option>
             <option value="DLT">DLT</option>
