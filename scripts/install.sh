@@ -30,6 +30,7 @@ sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=B33rgam3" \
       -d mcr.microsoft.com/mssql/server:2019-latest
 echo "Created new database"
 echo "Waiting 30 extra seconds for database startup"
+sleep 30
 
 #Setup nginx
 echo "server {
