@@ -3,6 +3,8 @@
 #Run database
 echo "V--------------------Running database--------------------V"
 docker start database
+echo "Waiting 30 extra seconds for database startup"
+sleep 30
 
 #Run REST API and web app
 echo "V--------------------Running REST API and web app--------------------V"
