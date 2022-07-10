@@ -12,23 +12,24 @@ sudo sed -i 's/Server=(localdb)\\\\mssqllocaldb;Database=BeerGameContext;Trusted
 
 #Install dependencies
 echo "V--------------------Installing dependencies--------------------V"
-sudo apt install snapd -y 
+sudo apt install snapd -y
 sudo snap install docker
 sudo snap install dotnet-sdk --classic --channel=3.1
 sudo apt install nginx -y
 
 #Setup database
-echo "V--------------------Setting up database--------------------V"
+echo "V--------------------Setting up dependencies--------------------V"
 if [[ $(docker ps -a | grep 'database') ]]; then
-#        sudo docker image rm database
 	sudo docker rm -f database
 	echo "Removed old database"
 fi
 sudo docker pull mcr.microsoft.com/mssql/server:2019-latest
 sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=B33rgam3" \
       -p 1433:1433 --name database -h database \
+      --restart=always \
       -d mcr.microsoft.com/mssql/server:2019-latest
 echo "Created new database"
+echo "Waiting 30 extra seconds for database startup"
 
 #Setup nginx
 echo "server {
