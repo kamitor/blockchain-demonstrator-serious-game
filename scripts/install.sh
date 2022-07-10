@@ -4,9 +4,6 @@ sudo apt-get update
 sudo install git -y
 sudo apt-get install dnsutils -y
 
-#Get code from repository
-echo "V--------------------Getting code from repository--------------------V"
-
 #Change appsettings.json connection string
 sudo sed -i 's/Server=(localdb)\\\\mssqllocaldb;Database=BeerGameContext;Trusted_Connection=True;MultipleActiveResultSets=true/Server=172.17.0.2;Database=BeerGameContext;Trusted_Connection=True;MultipleActiveResultSets=true;User id=sa;Password=B33rgam3;Integrated Security=false/g' ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorApi/appsettings.json
 
