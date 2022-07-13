@@ -48,8 +48,8 @@ listen [::]:443;
 
     server_tokens off;
 
-    ssl_certificate             /root/cert.crt;
-    ssl_certificate_key         /root/cert.key;
+    ssl_certificate             /etc/ssl/certs/blockchain-demonstrator.crt;
+    ssl_certificate_key         /etc/ssl/private/blockchain-demonstrator.key;
     ssl_session_cache           builtin:1000 shared:SSL:10m;
     ssl_protocols               TLSv1.3;
     ssl_prefer_server_ciphers on;
