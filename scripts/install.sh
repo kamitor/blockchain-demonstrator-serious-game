@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "V--------------------Updating VM--------------------V"
-sudo apt-get update
+sudo apt-get update -y
 sudo install git -y
 sudo apt-get install dnsutils -y
 
