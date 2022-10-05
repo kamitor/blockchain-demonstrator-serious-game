@@ -63,8 +63,8 @@ listen [::]:443;
 }
 
 server {
-listen 8080 ssl http2;
-listen [::]:8080;
+listen 8443 ssl http2;
+listen [::]:8443;
 
     server_name _;
 
