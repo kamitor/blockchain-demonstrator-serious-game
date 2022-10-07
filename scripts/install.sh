@@ -31,14 +31,8 @@ sleep 30
 
 #Setup nginx
 echo "server {
-        listen 80;
-        server_name _;
-        return 301 https://\$host\$request_uri;
-}
-
-server {
-listen 443 ssl http2;
-listen [::]:443;
+listen 80 default_server;
+listen [::]:80 default_server;
 
     root ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorWebApp;
 
@@ -46,43 +40,36 @@ listen [::]:443;
 
     server_name _;
 
-    server_tokens off;
-
-    ssl_certificate             /etc/ssl/certs/blockchain-demonstrator.crt;
-    ssl_certificate_key         /etc/ssl/private/blockchain-demonstrator.key;
-    ssl_session_cache           builtin:1000 shared:SSL:10m;
-    ssl_protocols               TLSv1.3;
-    ssl_prefer_server_ciphers on;
-
     location / {
+
             proxy_pass         http://0.0.0.0:5000/;
+            proxy_http_version 1.1;
+            proxy_set_header   Upgrade \$http_upgrade;
+            proxy_set_header   Connection keep-alive;
             proxy_set_header   Host \$host;
+            proxy_cache_bypass \$http_upgrade;
             proxy_set_header   X-Forwarded-For \$proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto \$scheme;
     }
 }
 
 server {
-listen 8080 ssl http2;
+listen 8080;
 listen [::]:8080;
 
     server_name _;
 
     root ~/blockchain-demonstrator-serious-game/BlockchainDemonstratorApi;
 
-    server_tokens off;
-    
-    ssl_certificate             /etc/ssl/certs/blockchain-demonstrator.crt;
-    ssl_certificate_key         /etc/ssl/private/blockchain-demonstrator.key;
-    ssl_session_cache           builtin:1000 shared:SSL:10m;
-    ssl_protocols               TLSv1.3;
-    ssl_prefer_server_ciphers on;
-
     location / {
-            proxy_pass         http://0.0.0.0:5002/;
-            proxy_set_header   Host \$host;
-            proxy_set_header   X-Forwarded-For \$proxy_add_x_forwarded_for;
-            proxy_set_header   X-Forwarded-Proto \$scheme;
+    proxy_pass         http://0.0.0.0:5002/;
+    proxy_http_version 1.1;
+    proxy_set_header   Upgrade \$http_upgrade;
+    proxy_set_header   Connection keep-alive;
+    proxy_set_header   Host \$host;
+    proxy_cache_bypass \$http_upgrade;
+    proxy_set_header   X-Forwarded-For \$proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Proto \$scheme;
     }
 }
 " > /etc/nginx/sites-available/default
